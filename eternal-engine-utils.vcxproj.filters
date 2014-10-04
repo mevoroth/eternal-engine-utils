@@ -5,4 +5,14 @@
       <UniqueIdentifier>{e9775945-a4a1-4a7c-ad0f-49875c38bb0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utils\Transform.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Utils\Transform.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

@@ -11,20 +11,19 @@ namespace Eternal
 	{
 		class Transform
 		{
-		private:
+		public:
 			/**
 			 * Position
 			 */
-			XMVECTOR _p;
+			XMVECTOR Position;
 			/**
 			 * Rotation
 			 */
-			XMVECTOR _r;
+			XMVECTOR Rotation;
 			/**
 			 * Scaling
 			 */
-			XMVECTOR _s;
-		public:
+			XMVECTOR Scale;
 			Transform();
 		};
 	}
