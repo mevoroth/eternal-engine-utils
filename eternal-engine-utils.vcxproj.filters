@@ -4,15 +4,30 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{e9775945-a4a1-4a7c-ad0f-49875c38bb0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dxmath">
+      <UniqueIdentifier>{aa4bb079-1395-4210-82c9-c1cb770cf427}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Import">
+      <UniqueIdentifier>{36edfa8d-4266-41fc-83a7-6121ecfffe0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Import\fbx">
+      <UniqueIdentifier>{4785732c-1961-4e8c-b8f6-6d7781e359ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utils\Transform.hpp">
+    <ClInclude Include="include\Utils\Transform.hpp">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Import\fbx\ImportFbx.hpp">
+      <Filter>Import\fbx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Utils\Transform.cpp">
+    <ClCompile Include="src\Utils\Transform.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
+      <Filter>Import\fbx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -9,22 +9,11 @@ namespace Eternal
 {
 	namespace Utils
 	{
+		class Vector3;
 		class Transform
 		{
-		public:
-			/**
-			 * Position
-			 */
-			XMVECTOR Position;
-			/**
-			 * Rotation
-			 */
-			XMVECTOR Rotation;
-			/**
-			 * Scaling
-			 */
-			XMVECTOR Scale;
-			Transform();
+			virtual void Translate(const Vector3& d) = 0;
+			//virtual void 
 		};
 	}
 }
