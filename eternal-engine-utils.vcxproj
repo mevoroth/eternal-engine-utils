@@ -20,11 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
-    <ClInclude Include="include\Utils\Transform.hpp" />
+    <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
-    <ClCompile Include="src\Utils\Transform.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23D5DF8E-B7C8-40C2-B797-8C06280D1F24}</ProjectGuid>
@@ -75,6 +74,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)\include;$(SolutionDir)\eternal-engine-components\include;$(SolutionDir)\eternal-engine-graphics\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)\include;$(IncludePath)</IncludePath>
@@ -91,6 +91,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2015.1\lib\vs2013\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

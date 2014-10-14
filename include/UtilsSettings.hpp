@@ -1,0 +1,6 @@
+#ifndef _UTILS_SETTINGS_HPP_
+#define _UTILS_SETTINGS_HPP_
+
+#define ETERNAL_USE_DXMATH_TYPES
+
+#endif
