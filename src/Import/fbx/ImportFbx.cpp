@@ -8,6 +8,7 @@ ImportFbx* ImportFbx::_inst = 0;
 
 ImportFbx::ImportFbx()
 {
+	assert(!_inst);
 	_inst = this;
 
 	_sdkMgr = FbxManager::Create();
@@ -52,6 +53,23 @@ Mesh ImportFbx::_ImportNode(const FbxNode* node)
 		{
 			vertex.Pos = XMVectorSet(v[i][0] / v[i][2], v[i][1] / v[i][2], v[i][2] / v[i][2], 1.f);
 			mesh.PushVertex(vertex);
+		}
+		for (int i = 0, c = fbxMesh->GetPolygonCount(); i < c; ++i)
+		{
+			int polygonSize = fbxMesh->GetPolygonSize(i);
+			mesh.PushTriangle(
+				fbxMesh->GetPolygonVertex(i, 0),
+				fbxMesh->GetPolygonVertex(i, 1),
+				fbxMesh->GetPolygonVertex(i, 2)
+			);
+			if (polygonSize == 4) // Quad
+			{
+				mesh.PushTriangle(
+					fbxMesh->GetPolygonVertex(i, 0),
+					fbxMesh->GetPolygonVertex(i, 2),
+					fbxMesh->GetPolygonVertex(i, 3)
+				);
+			}
 		}
 		break;
 	}

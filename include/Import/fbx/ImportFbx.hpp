@@ -19,11 +19,10 @@ namespace Eternal
 			FbxIOSettings* _settings;
 			FbxImporter* _fbxImporter;
 
-			ImportFbx();
-
 			Mesh _ImportNode(const FbxNode* node);
 
 		public:
+			ImportFbx();
 			static ImportFbx* Get();
 			Mesh Import(const std::string& path);
 		};
