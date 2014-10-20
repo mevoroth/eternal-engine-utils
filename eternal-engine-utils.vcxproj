@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
