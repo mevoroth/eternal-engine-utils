@@ -7,18 +7,14 @@ namespace Eternal
 {
 	namespace Container
 	{
-		template<typename TypeT>
+		template<typename TypeT, int SIZE>
 		class Stack
 		{
 		private:
-			TypeT* _elements;
-			int _size;
+			TypeT _elements[SIZE];
 			int _count;
 		public:
-			/**
-			 * @param[in] Stack max size
-			 */
-			Stack(int size);
+			Stack();
 			~Stack();
 			/**
 			 * Is stack empty?
@@ -32,7 +28,7 @@ namespace Eternal
 			 */
 			bool Full() const
 			{
-				return Count() == _size;
+				return Count() == SIZE;
 			}
 			/**
 			 * Elements count in stack
@@ -46,7 +42,7 @@ namespace Eternal
 			 */
 			inline int Size() const
 			{
-				return _size;
+				return SIZE;
 			}
 			/**
 			 * Push element in stack
@@ -70,15 +66,12 @@ namespace Eternal
 			}
 		};
 
-		template<typename TypeT> Stack<TypeT>::Stack(int size)
-			: _size(size)
-			, _count(-1)
+		template<typename TypeT> Stack<TypeT>::Stack()
+			: _count(-1)
 		{
-			_elements = new TypeT[_size];
 		}
 		template<typename TypeT> Stack<TypeT>::~Stack()
 		{
-			delete [] _elements;
 		}
 		template<typename TypeT> void Stack<TypeT>::Push(const TypeT& element)
 		{

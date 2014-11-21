@@ -21,10 +21,13 @@
   <ItemGroup>
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
+    <ClInclude Include="include\Time\Time.hpp" />
+    <ClInclude Include="include\Time\Win\WinTime.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
+    <ClCompile Include="src\Time\Win\WinTime.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23D5DF8E-B7C8-40C2-B797-8C06280D1F24}</ProjectGuid>

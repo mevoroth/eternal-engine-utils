@@ -13,6 +13,12 @@
     <Filter Include="Container">
       <UniqueIdentifier>{eddf49d8-93bd-46d8-a068-2ad1e90e5ac0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Time">
+      <UniqueIdentifier>{269b0e68-cd62-4c53-bc34-140f70d3df36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Time\Win">
+      <UniqueIdentifier>{4144407e-25a9-4303-906b-2e3382f5eaf6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp">
@@ -22,10 +28,19 @@
     <ClInclude Include="include\Container\Stack.hpp">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="include\Time\Time.hpp">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Time\Win\WinTime.hpp">
+      <Filter>Time\Win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
       <Filter>Import\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Time\Win\WinTime.cpp">
+      <Filter>Time\Win</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
