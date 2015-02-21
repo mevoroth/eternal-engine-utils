@@ -21,7 +21,7 @@ namespace Eternal
 			 */
 			inline bool Empty() const
 			{
-				return _count < 0;
+				return _count == 0;
 			}
 			/**
 			 * Is stack full?
@@ -35,7 +35,7 @@ namespace Eternal
 			 */
 			inline int Count() const
 			{
-				return _count + 1;
+				return _count;
 			}
 			/**
 			 * Stack max size
@@ -53,8 +53,8 @@ namespace Eternal
 			 */
 			inline TypeT Head()
 			{
-				assert(_count >= 0);
-				return _elements[_count];
+				assert(!Empty());
+				return _elements[_count - 1];
 			}
 			/**
 			 * Pop stack head
@@ -66,14 +66,14 @@ namespace Eternal
 			}
 		};
 
-		template<typename TypeT> Stack<TypeT>::Stack()
-			: _count(-1)
+		template<typename TypeT, int SIZE> Stack<TypeT, SIZE>::Stack()
+			: _count(0)
 		{
 		}
-		template<typename TypeT> Stack<TypeT>::~Stack()
+		template<typename TypeT, int SIZE> Stack<TypeT, SIZE>::~Stack()
 		{
 		}
-		template<typename TypeT> void Stack<TypeT>::Push(const TypeT& element)
+		template<typename TypeT, int SIZE> void Stack<TypeT, SIZE>::Push(const TypeT& element)
 		{
 			assert(!Full());
 			_elements[_count++] = element;
