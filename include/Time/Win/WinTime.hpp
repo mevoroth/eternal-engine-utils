@@ -1,6 +1,10 @@
 #ifndef _WIN_TIME_HPP_
 #define _WIN_TIME_HPP_
 
+#define WIN32_LEAN_AND_MEAN
+#define VC_EXTRALEAN
+#include <Windows.h>
+
 #include "Time/Time.hpp"
 #include "Container/Stack.hpp"
 
