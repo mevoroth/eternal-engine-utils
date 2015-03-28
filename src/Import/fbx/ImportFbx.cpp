@@ -54,7 +54,7 @@ Mesh ImportFbx::_ImportNode(const FbxNode* node)
 			Eternal::Graphics::Vertex vertex;
 			for (int i = 0, c = fbxMesh->GetControlPointsCount(); i < c; ++i)
 			{
-				vertex.Pos = XMVectorSet(v[i][0], v[i][1], v[i][2], 1.f);
+				vertex.Pos = NewVector4(v[i][0], v[i][1], v[i][2], 1.f);
 				mesh.PushVertex(vertex);
 			}
 			for (int i = 0, c = fbxMesh->GetPolygonCount(); i < c; ++i)
