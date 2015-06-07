@@ -5,26 +5,30 @@
 #include "fbxsdk.h"
 
 #include "Mesh/Mesh.hpp"
+#include "d3d11/D3D11PosUVVertexBuffer.hpp"
+#include "d3d11/D3D11UInt32IndexBuffer.hpp"
 
 namespace Eternal
 {
 	namespace Import
 	{
-		using namespace Components;
+		using namespace Eternal::Components;
+		using namespace Eternal::Graphics;
+
 		class ImportFbx
 		{
 		private:
-			static ImportFbx* _inst;
-			FbxManager* _sdkMgr;
-			FbxIOSettings* _settings;
-			FbxImporter* _fbxImporter;
+			static ImportFbx* _Inst;
+			FbxManager* _SdkMgr;
+			FbxIOSettings* _Settings;
+			FbxImporter* _FbxImporter;
 
-			Mesh _ImportNode(const FbxNode* node);
+			void _ImportNode(const FbxNode* Node, Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out);
 
 		public:
 			ImportFbx();
 			static ImportFbx* Get();
-			Mesh Import(const std::string& path);
+			void Import(const std::string& Path, Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out);
 		};
 	}
 }

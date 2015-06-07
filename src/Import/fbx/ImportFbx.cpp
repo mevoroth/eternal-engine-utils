@@ -4,73 +4,73 @@
 #include "Types/Types.hpp"
 
 using namespace Eternal::Import;
+using namespace Eternal::Graphics;
 
-ImportFbx* ImportFbx::_inst = 0;
+ImportFbx* ImportFbx::_Inst = nullptr;
 
 ImportFbx::ImportFbx()
 {
-	assert(!_inst);
-	_inst = this;
+	assert(!_Inst);
+	_Inst = this;
 
-	_sdkMgr = FbxManager::Create();
-	_settings = FbxIOSettings::Create(_sdkMgr, IOSROOT);
+	_SdkMgr = FbxManager::Create();
+	_Settings = FbxIOSettings::Create(_SdkMgr, IOSROOT);
 
-	_sdkMgr->SetIOSettings(_settings);
-	_fbxImporter = FbxImporter::Create(_sdkMgr, "");
+	_SdkMgr->SetIOSettings(_Settings);
+	_FbxImporter = FbxImporter::Create(_SdkMgr, "");
 
 }
 
 ImportFbx* ImportFbx::Get()
 {
-	assert(_inst);
-	return _inst;
+	assert(_Inst);
+	return _Inst;
 }
 
-Mesh ImportFbx::Import(const std::string& path)
+void ImportFbx::Import(const std::string& Path, Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
 {
-	if (_fbxImporter->Initialize(path.c_str(), -1, _settings))
+	if (_FbxImporter->Initialize(Path.c_str(), -1, _Settings))
 	{
 		// LOG
+		assert(false);
 	}
 
-	FbxScene* scene = FbxScene::Create(_sdkMgr, "scene");
-	_fbxImporter->Import(scene);
+	FbxScene* scene = FbxScene::Create(_SdkMgr, "scene");
+	_FbxImporter->Import(scene);
 
-	return _ImportNode(scene->GetRootNode());
+	_ImportNode(scene->GetRootNode(), Out);
 }
 
-Mesh ImportFbx::_ImportNode(const FbxNode* node)
+void ImportFbx::_ImportNode(const FbxNode* Node, Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
 {
-	Mesh mesh;
-
-	const FbxNodeAttribute* attr = node->GetNodeAttribute();
-	if (attr)
+	const FbxNodeAttribute* Attribute = Node->GetNodeAttribute();
+	if (Attribute)
 	{
-		switch (attr->GetAttributeType())
+		switch (Attribute->GetAttributeType())
 		{
 		case FbxNodeAttribute::EType::eMesh:
-			FbxMesh* fbxMesh = (FbxMesh*)attr;
-			FbxVector4* v = fbxMesh->GetControlPoints();
-			Eternal::Graphics::Vertex vertex;
-			for (int i = 0, c = fbxMesh->GetControlPointsCount(); i < c; ++i)
+			FbxMesh* FbxMeshObj = (FbxMesh*)Attribute;
+			FbxVector4* V = FbxMeshObj->GetControlPoints();
+			D3D11PosUVVertexBuffer::PosUVVertex VertexObj;
+			for (int i = 0, c = FbxMeshObj->GetControlPointsCount(); i < c; ++i)
 			{
-				vertex.Pos = NewVector4(v[i][0], v[i][1], v[i][2], 1.f);
-				mesh.PushVertex(vertex);
+				VertexObj.Pos = NewVector4(V[i][0], V[i][1], V[i][2], 1.f);
+				Out.PushVertex(VertexObj);
 			}
-			for (int i = 0, c = fbxMesh->GetPolygonCount(); i < c; ++i)
+			for (int i = 0, c = FbxMeshObj->GetPolygonCount(); i < c; ++i)
 			{
-				int polygonSize = fbxMesh->GetPolygonSize(i);
-				mesh.PushTriangle(
-					fbxMesh->GetPolygonVertex(i, 0),
-					fbxMesh->GetPolygonVertex(i, 1),
-					fbxMesh->GetPolygonVertex(i, 2)
+				int PolygonSize = FbxMeshObj->GetPolygonSize(i);
+				Out.PushTriangle(
+					FbxMeshObj->GetPolygonVertex(i, 0),
+					FbxMeshObj->GetPolygonVertex(i, 1),
+					FbxMeshObj->GetPolygonVertex(i, 2)
 				);
-				if (polygonSize == 4) // Quad
+				if (PolygonSize == 4) // Quad
 				{
-					mesh.PushTriangle(
-						fbxMesh->GetPolygonVertex(i, 0),
-						fbxMesh->GetPolygonVertex(i, 2),
-						fbxMesh->GetPolygonVertex(i, 3)
+					Out.PushTriangle(
+						FbxMeshObj->GetPolygonVertex(i, 0),
+						FbxMeshObj->GetPolygonVertex(i, 2),
+						FbxMeshObj->GetPolygonVertex(i, 3)
 					);
 				}
 			}
@@ -78,34 +78,34 @@ Mesh ImportFbx::_ImportNode(const FbxNode* node)
 			break;
 		}
 	}
-	mesh.GetTransform().Translate(
-		NewVector3(
-			node->LclTranslation.Get()[0],
-			node->LclTranslation.Get()[1],
-			node->LclTranslation.Get()[2]
+	Out.GetTransform().Translate(
+		Vector3(
+			Node->LclTranslation.Get()[0],
+			Node->LclTranslation.Get()[1],
+			Node->LclTranslation.Get()[2]
 		)
 	);
 
-	mesh.GetTransform().Rotate(
-		NewVector3(
-			node->LclRotation.Get()[0],
-			node->LclRotation.Get()[1],
-			node->LclRotation.Get()[2]
+	Out.GetTransform().Rotate(
+		Vector3(
+			Node->LclRotation.Get()[0],
+			Node->LclRotation.Get()[1],
+			Node->LclRotation.Get()[2]
 		)
 	);
 
-	mesh.GetTransform().Scale(
-		NewVector3(
-			node->LclScaling.Get()[0],
-			node->LclScaling.Get()[1],
-			node->LclScaling.Get()[2]
+	Out.GetTransform().Scale(
+		Vector3(
+			Node->LclScaling.Get()[0],
+			Node->LclScaling.Get()[1],
+			Node->LclScaling.Get()[2]
 		)
 	);
 
-	for (int i = 0; i < node->GetChildCount(); ++i)
+	for (int i = 0; i < Node->GetChildCount(); ++i)
 	{
-		mesh.PushMesh(_ImportNode(node->GetChild(i)));
+		Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
+		_ImportNode(Node, SubMehObj);
+		Out.PushMesh(SubMehObj);
 	}
-
-	return mesh;
 }
