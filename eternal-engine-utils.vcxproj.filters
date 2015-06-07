@@ -19,6 +19,9 @@
     <Filter Include="Time\Win">
       <UniqueIdentifier>{4144407e-25a9-4303-906b-2e3382f5eaf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Parallel">
+      <UniqueIdentifier>{40b370c3-57b8-4622-8729-5257d8b819b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp">
@@ -34,6 +37,12 @@
     <ClInclude Include="include\Time\Win\WinTime.hpp">
       <Filter>Time\Win</Filter>
     </ClInclude>
+    <ClInclude Include="include\Parallel\Thread.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\StdThread.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
@@ -41,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
       <Filter>Time\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\StdThread.cpp">
+      <Filter>Parallel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -21,12 +21,15 @@
   <ItemGroup>
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
+    <ClInclude Include="include\Parallel\StdThread.hpp" />
+    <ClInclude Include="include\Parallel\Thread.hpp" />
     <ClInclude Include="include\Time\Time.hpp" />
     <ClInclude Include="include\Time\Win\WinTime.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
+    <ClCompile Include="src\Parallel\StdThread.cpp" />
     <ClCompile Include="src\Time\Win\WinTime.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
