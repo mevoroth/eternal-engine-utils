@@ -43,6 +43,18 @@
     <ClInclude Include="include\Parallel\StdThread.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
+    <ClInclude Include="include\Parallel\Task.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\TaskManager.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\Mutex.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\StdMutex.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
@@ -52,6 +64,12 @@
       <Filter>Time\Win</Filter>
     </ClCompile>
     <ClCompile Include="src\Parallel\StdThread.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\TaskManager.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\StdMutex.cpp">
       <Filter>Parallel</Filter>
     </ClCompile>
   </ItemGroup>
