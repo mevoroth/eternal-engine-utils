@@ -47,13 +47,17 @@ uint32_t TaskManager::TaskRun(void* Args)
 				Workers[WorkerIndex]->SetTask(NewTask);
 			}
 		}
+		TaskRunConditionVariableMutex->Lock();
 		TaskRunConditionVariable->Wait(*TaskRunConditionVariableMutex);
+		TaskRunConditionVariableMutex->Unlock();
 	}
+	return 0;
 }
 
 uint32_t TaskManager::WorkerRun(void* Args)
 {
 	((Worker*)Args)->DoTask();
+	return 0;
 }
 
 TaskManager::TaskManager()
@@ -68,6 +72,9 @@ TaskManager::TaskManager()
 		_WorkersThreads[WorkerIndex] = new StdThread();
 		_WorkersThreads[WorkerIndex]->Create(TaskManager::WorkerRun, _Workers[WorkerIndex]);
 	}
+
+	_TaskRunConditionVariable = new StdConditionVariable();
+	_TaskRunConditionVariableMutex = new StdMutex();
 
 	_Scheduler = new StdThread();
 	void* TaskRunArgs[] = {
@@ -87,9 +94,19 @@ TaskManager::~TaskManager()
 	_Inst = nullptr;
 
 	delete _Scheduler;
+	_Scheduler = nullptr;
+
+	delete _TaskRunConditionVariable;
+	_TaskRunConditionVariable = nullptr;
+
+	delete _TaskRunConditionVariableMutex;
+	_TaskRunConditionVariableMutex = nullptr;
 
 	for (uint32_t WorkerIndex = 0; WorkerIndex < TASK_MANAGER_WORKERS_COUNT; ++WorkerIndex)
 	{
+		delete _WorkersThreads[WorkerIndex];
+		_WorkersThreads[WorkerIndex] = nullptr;
+
 		delete _Workers[WorkerIndex];
 		_Workers[WorkerIndex] = nullptr;
 	}
@@ -109,5 +126,8 @@ void TaskManager::Push(Task* TaskObj)
 	_TasksListMutex->Lock();
 	_TasksList.push_back(TaskObj);
 	_TasksListMutex->Unlock();
+
+	_TaskRunConditionVariableMutex->Lock();
 	_TaskRunConditionVariable->NotifyAll();
+	_TaskRunConditionVariableMutex->Unlock();
 }

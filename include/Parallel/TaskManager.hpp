@@ -1,6 +1,7 @@
 #ifndef _TASK_MANAGER_HPP_
 #define _TASK_MANAGER_HPP_
 
+#include <cstdint>
 #include <list>
 
 #define TASK_MANAGER_WORKERS_COUNT 8
@@ -14,6 +15,8 @@ namespace Eternal
 		class Worker;
 		class Task;
 		class Mutex;
+		class Thread;
+		class ConditionVariable;
 
 		class TaskManager
 		{

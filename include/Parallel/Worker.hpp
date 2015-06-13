@@ -8,6 +8,7 @@ namespace Eternal
 	namespace Parallel
 	{
 		class ConditionVariable;
+		class Mutex;
 
 		class Worker : public Task
 		{

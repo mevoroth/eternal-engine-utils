@@ -21,21 +21,27 @@
   <ItemGroup>
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
+    <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\Mutex.hpp" />
+    <ClInclude Include="include\Parallel\StdConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\StdMutex.hpp" />
     <ClInclude Include="include\Parallel\StdThread.hpp" />
     <ClInclude Include="include\Parallel\Task.hpp" />
     <ClInclude Include="include\Parallel\TaskManager.hpp" />
     <ClInclude Include="include\Parallel\Thread.hpp" />
+    <ClInclude Include="include\Parallel\Worker.hpp" />
     <ClInclude Include="include\Time\Time.hpp" />
     <ClInclude Include="include\Time\Win\WinTime.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
+    <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />
     <ClCompile Include="src\Parallel\StdMutex.cpp" />
     <ClCompile Include="src\Parallel\StdThread.cpp" />
+    <ClCompile Include="src\Parallel\Task.cpp" />
     <ClCompile Include="src\Parallel\TaskManager.cpp" />
+    <ClCompile Include="src\Parallel\Worker.cpp" />
     <ClCompile Include="src\Time\Win\WinTime.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

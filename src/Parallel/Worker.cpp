@@ -17,11 +17,13 @@ void Worker::DoTask()
 {
 	for (;;)
 	{
-		if (!_CurrentTask->IsFinished())
+		if (_CurrentTask && !_CurrentTask->IsFinished())
 		{
 			_CurrentTask->DoTask();
 		}
+		_ConditionVariableMutex->Lock();
 		_ConditionVariable->Wait(*_ConditionVariableMutex);
+		_ConditionVariableMutex->Unlock();
 	}
 }
 
@@ -39,5 +41,7 @@ void Worker::SetTask(Task* TaskObj)
 {
 	assert(TaskIsFinished());
 	_CurrentTask = TaskObj;
+	_ConditionVariableMutex->Lock();
 	_ConditionVariable->NotifyAll();
+	_ConditionVariableMutex->Unlock();
 }

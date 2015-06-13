@@ -55,6 +55,15 @@
     <ClInclude Include="include\Parallel\StdMutex.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
+    <ClInclude Include="include\Parallel\ConditionVariable.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\Worker.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\StdConditionVariable.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
@@ -70,6 +79,15 @@
       <Filter>Parallel</Filter>
     </ClCompile>
     <ClCompile Include="src\Parallel\StdMutex.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\Task.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\Worker.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\StdConditionVariable.cpp">
       <Filter>Parallel</Filter>
     </ClCompile>
   </ItemGroup>
