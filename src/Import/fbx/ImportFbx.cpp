@@ -1,5 +1,9 @@
 #include "Import/fbx/ImportFbx.hpp"
 
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include "UtilsSettings.hpp"
 #include "Types/Types.hpp"
 
@@ -31,8 +35,10 @@ void ImportFbx::Import(const std::string& Path, Mesh<D3D11PosUVVertexBuffer::Pos
 {
 	if (_FbxImporter->Initialize(Path.c_str(), -1, _Settings))
 	{
+		FbxStatus& Status = _FbxImporter->GetStatus();
+		OutputDebugString(Status.GetErrorString());
 		// LOG
-		assert(false);
+		//assert(false);
 	}
 
 	FbxScene* scene = FbxScene::Create(_SdkMgr, "scene");
@@ -102,10 +108,10 @@ void ImportFbx::_ImportNode(const FbxNode* Node, Mesh<D3D11PosUVVertexBuffer::Po
 		)
 	);
 
-	for (int i = 0; i < Node->GetChildCount(); ++i)
+	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
 		Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
-		_ImportNode(Node, SubMehObj);
+		_ImportNode(Node->GetChild(NodeChildIndex), SubMehObj);
 		Out.PushMesh(SubMehObj);
 	}
 }

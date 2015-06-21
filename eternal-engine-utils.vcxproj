@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
+    <ClInclude Include="include\Macros\Macros.hpp" />
     <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\Mutex.hpp" />
     <ClInclude Include="include\Parallel\StdConditionVariable.hpp" />
