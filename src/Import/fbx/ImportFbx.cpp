@@ -31,7 +31,7 @@ ImportFbx* ImportFbx::Get()
 	return _Inst;
 }
 
-void ImportFbx::Import(const std::string& Path, Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::Import(const std::string& Path, GenericMesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
 {
 	if (_FbxImporter->Initialize(Path.c_str(), -1, _Settings))
 	{
@@ -47,7 +47,7 @@ void ImportFbx::Import(const std::string& Path, Mesh<D3D11PosUVVertexBuffer::Pos
 	_ImportNode(scene->GetRootNode(), Out);
 }
 
-void ImportFbx::_ImportNode(const FbxNode* Node, Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::_ImportNode(const FbxNode* Node, GenericMesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
 {
 	const FbxNodeAttribute* Attribute = Node->GetNodeAttribute();
 	if (Attribute)
@@ -110,7 +110,7 @@ void ImportFbx::_ImportNode(const FbxNode* Node, Mesh<D3D11PosUVVertexBuffer::Po
 
 	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
-		Mesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
+		GenericMesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
 		_ImportNode(Node->GetChild(NodeChildIndex), SubMehObj);
 		Out.PushMesh(SubMehObj);
 	}

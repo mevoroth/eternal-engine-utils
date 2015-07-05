@@ -1,7 +1,9 @@
 #ifndef _MACROS_HPP_
 #define _MACROS_HPP_
 
-#define ETERNAL_ASSERT(Condition)	if (!Condition) { __debugbreak(); }
+#ifdef ETERNAL_DEBUG
+#define ETERNAL_ASSERT(Condition)	if (!(Condition)) { __debugbreak(); }
+#endif
 
 #define ETERNAL_ARRAYSIZE(Array)	_countof(Array)
 
