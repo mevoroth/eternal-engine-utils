@@ -1,7 +1,6 @@
 #include "Parallel/TaskManager.hpp"
 
-#include <cassert>
-
+#include "Macros/Macros.hpp"
 #include "Parallel/StdMutex.hpp"
 #include "Parallel/StdThread.hpp"
 #include "Parallel/StdConditionVariable.hpp"
@@ -30,6 +29,8 @@ uint32_t TaskManager::TaskRun(void* Args)
 				{
 					continue;
 				}
+
+				Workers[WorkerIndex]->RemoveTask();
 
 				TasksListMutex->Lock();
 				
@@ -62,7 +63,7 @@ uint32_t TaskManager::WorkerRun(void* Args)
 
 TaskManager::TaskManager()
 {
-	assert(!_Inst);
+	ETERNAL_ASSERT(!_Inst);
 
 	_TasksListMutex = new StdMutex();
 	
@@ -117,7 +118,7 @@ TaskManager::~TaskManager()
 
 TaskManager* TaskManager::Get()
 {
-	assert(_Inst);
+	ETERNAL_ASSERT(_Inst);
 	return _Inst;
 }
 

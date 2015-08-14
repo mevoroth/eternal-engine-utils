@@ -60,7 +60,7 @@ void ImportFbx::_ImportNode(const FbxNode* Node, GenericMesh<D3D11PosUVVertexBuf
 			D3D11PosUVVertexBuffer::PosUVVertex VertexObj;
 			for (int i = 0, c = FbxMeshObj->GetControlPointsCount(); i < c; ++i)
 			{
-				VertexObj.Pos = NewVector4(V[i][0], V[i][1], V[i][2], 1.f);
+				VertexObj.Pos = Vector4(V[i][0], V[i][1], V[i][2], 1.f);
 				Out.PushVertex(VertexObj);
 			}
 			for (int i = 0, c = FbxMeshObj->GetPolygonCount(); i < c; ++i)

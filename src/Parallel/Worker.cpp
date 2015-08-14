@@ -1,7 +1,6 @@
 #include "Parallel/Worker.hpp"
 
-#include <cassert>
-
+#include "Macros/Macros.hpp"
 #include "Parallel/StdConditionVariable.hpp"
 #include "Parallel/StdMutex.hpp"
 
@@ -37,9 +36,19 @@ bool Worker::TaskIsFinished() const
 	return _CurrentTask->IsFinished();
 }
 
+void Worker::RemoveTask()
+{
+	ETERNAL_ASSERT(TaskIsFinished());
+	if (_CurrentTask)
+	{
+		delete _CurrentTask;
+		_CurrentTask = nullptr;
+	}
+}
+
 void Worker::SetTask(Task* TaskObj)
 {
-	assert(TaskIsFinished());
+	ETERNAL_ASSERT(!_CurrentTask);
 	_CurrentTask = TaskObj;
 	_ConditionVariableMutex->Lock();
 	_ConditionVariable->NotifyAll();

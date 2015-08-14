@@ -1,7 +1,7 @@
 #ifndef _STACK_HPP_
 #define _STACK_HPP_
 
-#include <cassert>
+#include "Macros/Macros.hpp"
 
 namespace Eternal
 {
@@ -11,8 +11,8 @@ namespace Eternal
 		class Stack
 		{
 		private:
-			TypeT _elements[SIZE];
-			int _count;
+			TypeT _Elements[SIZE];
+			int _Count;
 		public:
 			Stack();
 			~Stack();
@@ -21,7 +21,7 @@ namespace Eternal
 			 */
 			inline bool Empty() const
 			{
-				return _count == 0;
+				return _Count == 0;
 			}
 			/**
 			 * Is stack full?
@@ -35,7 +35,7 @@ namespace Eternal
 			 */
 			inline int Count() const
 			{
-				return _count;
+				return _Count;
 			}
 			/**
 			 * Stack max size
@@ -53,30 +53,30 @@ namespace Eternal
 			 */
 			inline TypeT Head()
 			{
-				assert(!Empty());
-				return _elements[_count - 1];
+				ETERNAL_ASSERT(!Empty());
+				return _Elements[_Count - 1];
 			}
 			/**
 			 * Pop stack head
 			 */
 			void Pop()
 			{
-				assert(_count >= 0);
-				--_count;
+				ETERNAL_ASSERT(_Count >= 0);
+				--_Count;
 			}
 		};
 
 		template<typename TypeT, int SIZE> Stack<TypeT, SIZE>::Stack()
-			: _count(0)
+			: _Count(0)
 		{
 		}
 		template<typename TypeT, int SIZE> Stack<TypeT, SIZE>::~Stack()
 		{
 		}
-		template<typename TypeT, int SIZE> void Stack<TypeT, SIZE>::Push(const TypeT& element)
+		template<typename TypeT, int SIZE> void Stack<TypeT, SIZE>::Push(const TypeT& Element)
 		{
-			assert(!Full());
-			_elements[_count++] = element;
+			ETERNAL_ASSERT(!Full());
+			_Elements[_Count++] = Element;
 		}
 	}
 }

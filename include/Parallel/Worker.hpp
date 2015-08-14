@@ -17,6 +17,7 @@ namespace Eternal
 			virtual void DoTask() override;
 			bool TaskIsFinished() const;
 			void SetTask(Task* TaskObj);
+			void RemoveTask();
 
 		private:
 			Task* _CurrentTask = nullptr;
