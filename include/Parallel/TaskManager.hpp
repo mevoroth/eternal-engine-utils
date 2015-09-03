@@ -29,7 +29,6 @@ namespace Eternal
 			TaskManager();
 			~TaskManager();
 			void Push(Task* TaskObj);
-			void Update();
 
 		private:
 			static TaskManager* _Inst;
