@@ -31,7 +31,7 @@ ImportFbx* ImportFbx::Get()
 	return _Inst;
 }
 
-void ImportFbx::Import(const std::string& Path, GenericMesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
 {
 	if (_FbxImporter->Initialize(Path.c_str(), -1, _Settings))
 	{
@@ -47,7 +47,7 @@ void ImportFbx::Import(const std::string& Path, GenericMesh<D3D11PosUVVertexBuff
 	_ImportNode(scene->GetRootNode(), Out);
 }
 
-void ImportFbx::_ImportNode(const FbxNode* Node, GenericMesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
 {
 	const FbxNodeAttribute* Attribute = Node->GetNodeAttribute();
 	if (Attribute)
@@ -57,30 +57,33 @@ void ImportFbx::_ImportNode(const FbxNode* Node, GenericMesh<D3D11PosUVVertexBuf
 		case FbxNodeAttribute::EType::eMesh:
 			FbxMesh* FbxMeshObj = (FbxMesh*)Attribute;
 			FbxVector4* V = FbxMeshObj->GetControlPoints();
-			D3D11PosUVVertexBuffer::PosUVVertex VertexObj;
-			for (int i = 0, c = FbxMeshObj->GetControlPointsCount(); i < c; ++i)
+			D3D11PosUVNormalVertexBuffer::PosUVNormalVertex VertexObj;
+			for (int ControlPointIndex = 0, c = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < c; ++ControlPointIndex)
 			{
-				VertexObj.Pos = Vector4(V[i][0], V[i][1], V[i][2], 1.f);
+				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], V[ControlPointIndex][3]);
+				
 				Out.PushVertex(VertexObj);
 			}
-			for (int i = 0, c = FbxMeshObj->GetPolygonCount(); i < c; ++i)
+			for (int PolygonIndex = 0, c = FbxMeshObj->GetPolygonCount(); PolygonIndex < c; ++PolygonIndex)
 			{
-				int PolygonSize = FbxMeshObj->GetPolygonSize(i);
+				int PolygonSize = FbxMeshObj->GetPolygonSize(PolygonIndex);
 				Out.PushTriangle(
-					FbxMeshObj->GetPolygonVertex(i, 0),
-					FbxMeshObj->GetPolygonVertex(i, 1),
-					FbxMeshObj->GetPolygonVertex(i, 2)
+					FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
+					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1),
+					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
 				);
 				if (PolygonSize == 4) // Quad
 				{
 					Out.PushTriangle(
-						FbxMeshObj->GetPolygonVertex(i, 0),
-						FbxMeshObj->GetPolygonVertex(i, 2),
-						FbxMeshObj->GetPolygonVertex(i, 3)
+						FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
+						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
+						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3)
 					);
 				}
-			}
 
+				_GetUV(FbxMeshObj, PolygonIndex, Out);
+				_GetNormal(FbxMeshObj, PolygonIndex, Out);
+			}
 			break;
 		}
 	}
@@ -110,8 +113,38 @@ void ImportFbx::_ImportNode(const FbxNode* Node, GenericMesh<D3D11PosUVVertexBuf
 
 	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
-		GenericMesh<D3D11PosUVVertexBuffer::PosUVVertex, D3D11PosUVVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
+		GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
 		_ImportNode(Node->GetChild(NodeChildIndex), SubMehObj);
 		Out.PushMesh(SubMehObj);
+	}
+}
+
+void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inout_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+{
+	for (uint32_t VertexIndex = 0, VerticesCount = MeshObj->GetPolygonSize(PolygonIndex); VertexIndex < VerticesCount; ++VertexIndex)
+	{
+		uint32_t Vertex = MeshObj->GetPolygonVertex(PolygonIndex, VertexIndex);
+
+		FbxVector2 UV;
+		bool UnMapped;
+		bool Ret = MeshObj->GetPolygonVertexUV(PolygonIndex, VertexIndex, MeshObj->GetLayer(0)->GetUVSets()[0]->GetName(), UV, UnMapped);
+		ETERNAL_ASSERT(Ret);
+		ETERNAL_ASSERT(!UnMapped);
+
+		Out.GetVertex(Vertex).UV = Vector2(UV[0], UV[1]);
+	}
+}
+
+void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inout_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+{
+	for (uint32_t VertexIndex = 0, VerticesCount = MeshObj->GetPolygonSize(PolygonIndex); VertexIndex < VerticesCount; ++VertexIndex)
+	{
+		uint32_t Vertex = MeshObj->GetPolygonVertex(PolygonIndex, VertexIndex);
+
+		FbxVector4 Normal;
+		bool Ret = MeshObj->GetPolygonVertexNormal(PolygonIndex, VertexIndex, Normal);
+		ETERNAL_ASSERT(Ret);
+
+		Out.GetVertex(Vertex).Normal = Vector4(Normal[0], Normal[1], Normal[2], Normal[3]);
 	}
 }
