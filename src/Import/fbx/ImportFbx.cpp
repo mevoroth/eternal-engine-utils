@@ -125,11 +125,15 @@ void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inou
 	{
 		uint32_t Vertex = MeshObj->GetPolygonVertex(PolygonIndex, VertexIndex);
 
-		FbxVector2 UV;
-		bool UnMapped;
-		bool Ret = MeshObj->GetPolygonVertexUV(PolygonIndex, VertexIndex, MeshObj->GetLayer(0)->GetUVSets()[0]->GetName(), UV, UnMapped);
-		ETERNAL_ASSERT(Ret);
-		ETERNAL_ASSERT(!UnMapped);
+		FbxVector2 UV(0.0, 0.0);
+
+		if (MeshObj->GetLayer(0) && MeshObj->GetLayer(0)->GetUVSets().GetCount() > 0)
+		{
+			bool UnMapped;
+			bool Ret = MeshObj->GetPolygonVertexUV(PolygonIndex, VertexIndex, MeshObj->GetLayer(0)->GetUVSets()[0]->GetName(), UV, UnMapped);
+			ETERNAL_ASSERT(Ret);
+			ETERNAL_ASSERT(!UnMapped);
+		}
 
 		Out.GetVertex(Vertex).UV = Vector2(UV[0], UV[1]);
 	}
