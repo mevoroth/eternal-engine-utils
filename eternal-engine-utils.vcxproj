@@ -22,8 +22,12 @@
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
     <ClInclude Include="include\Macros\Macros.hpp" />
+    <ClInclude Include="include\Parallel\AtomicInt.hpp" />
     <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\Mutex.hpp" />
+    <ClInclude Include="include\Parallel\MutexAutoLock.hpp" />
+    <ClInclude Include="include\Parallel\Scheduler.hpp" />
+    <ClInclude Include="include\Parallel\StdAtomicInt.hpp" />
     <ClInclude Include="include\Parallel\StdConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\StdMutex.hpp" />
     <ClInclude Include="include\Parallel\StdThread.hpp" />
@@ -37,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
+    <ClCompile Include="src\Parallel\Scheduler.cpp" />
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />
     <ClCompile Include="src\Parallel\StdMutex.cpp" />
     <ClCompile Include="src\Parallel\StdThread.cpp" />
@@ -123,6 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2015.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FBXSDK_SHARED;ETERNAL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ForcedIncludeFiles>sal.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

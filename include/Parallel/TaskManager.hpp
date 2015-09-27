@@ -17,29 +17,52 @@ namespace Eternal
 		class Mutex;
 		class Thread;
 		class ConditionVariable;
+		class Scheduler;
 
 		class TaskManager
 		{
 		public:
 			static TaskManager* Get();
 			
-			static uint32_t WorkerRun(void* Args);
-			static uint32_t TaskRun(void* Args);
+			static uint32_t TaskRun(_In_ void* Args);
+			static uint32_t TaskClean(_In_ void* Args);
 
 			TaskManager();
 			~TaskManager();
-			void Push(Task* TaskObj);
+			void Push(_In_ Task* TaskObj, _In_ Task* DependsOn = nullptr);
 
 		private:
 			static TaskManager* _Inst;
 
-			Thread* _Scheduler;
+			Thread* _TaskManager = nullptr;
 			Worker* _Workers[TASK_MANAGER_WORKERS_COUNT];
 			Thread* _WorkersThreads[TASK_MANAGER_WORKERS_COUNT];
-			Mutex* _TasksListMutex;
-			list<Task*> _TasksList;
-			ConditionVariable* _TaskRunConditionVariable;
-			Mutex* _TaskRunConditionVariableMutex;
+			Mutex* _TasksListMutex = nullptr;
+			Scheduler* _TasksList = nullptr;
+			ConditionVariable* _SchedulerConditionVariable = nullptr;
+			Mutex* _SchedulerConditionVariableMutex = nullptr;
+
+			Thread* _CleanTasks = nullptr;
+			list<Task*> _TasksToClean;
+			Mutex* _TasksToCleanMutex = nullptr;
+
+			struct TaskManagerArguments
+			{
+				Worker** Workers;
+				Scheduler* TasksList;
+				ConditionVariable* SchedulerConditionVariable;
+				Mutex* SchedulerConditionVariableMutex;
+				Thread* TaskManagerThread;
+				list<Task*>* TasksToClean;
+				Mutex* TasksToCleanMutex;
+			};
+
+			struct CleanTasksArguments
+			{
+				list<Task*>* TasksList;
+				Mutex* TasksListMutex;
+				Thread* CleanTaskThread;
+			};
 		};
 	}
 }

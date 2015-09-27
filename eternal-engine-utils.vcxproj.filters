@@ -67,6 +67,18 @@
     <ClInclude Include="include\Macros\Macros.hpp">
       <Filter>Macros</Filter>
     </ClInclude>
+    <ClInclude Include="include\Parallel\MutexAutoLock.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\Scheduler.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\AtomicInt.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\StdAtomicInt.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
@@ -91,6 +103,9 @@
       <Filter>Parallel</Filter>
     </ClCompile>
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\Scheduler.cpp">
       <Filter>Parallel</Filter>
     </ClCompile>
   </ItemGroup>

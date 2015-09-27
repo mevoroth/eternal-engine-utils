@@ -3,13 +3,35 @@
 #include "Macros/Macros.hpp"
 #include "Parallel/StdConditionVariable.hpp"
 #include "Parallel/StdMutex.hpp"
+#include "Parallel/Thread.hpp"
 
 using namespace Eternal::Parallel;
 
-Worker::Worker()
+uint32_t Worker::WorkerRun(void* Args)
+{
+	WorkerArguments* WorkerArgs = (WorkerArguments*)Args;
+	WorkerArgs->WorkerObj->DoTask();
+	return 0;
+}
+
+Worker::Worker(Thread* ThreadObj)
+	: _Thread(ThreadObj)
 {
 	_ConditionVariable = new StdConditionVariable();
 	_ConditionVariableMutex = new StdMutex();
+
+	WorkerArguments* Arguments = new WorkerArguments;
+	Arguments->WorkerObj = this;
+
+	_Thread->Create(Worker::WorkerRun, Arguments);
+}
+
+Worker::~Worker()
+{
+	delete _ConditionVariable;
+	_ConditionVariable = nullptr;
+	delete _ConditionVariableMutex;
+	_ConditionVariableMutex = nullptr;
 }
 
 void Worker::DoTask()
@@ -36,19 +58,8 @@ bool Worker::TaskIsFinished() const
 	return _CurrentTask->IsFinished();
 }
 
-void Worker::RemoveTask()
-{
-	ETERNAL_ASSERT(TaskIsFinished());
-	if (_CurrentTask)
-	{
-		delete _CurrentTask;
-		_CurrentTask = nullptr;
-	}
-}
-
 void Worker::SetTask(Task* TaskObj)
 {
-	ETERNAL_ASSERT(!_CurrentTask);
 	_CurrentTask = TaskObj;
 	_ConditionVariableMutex->Lock();
 	_ConditionVariable->NotifyAll();
