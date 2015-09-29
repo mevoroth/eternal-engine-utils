@@ -27,6 +27,7 @@
     <ClInclude Include="include\Parallel\Mutex.hpp" />
     <ClInclude Include="include\Parallel\MutexAutoLock.hpp" />
     <ClInclude Include="include\Parallel\Scheduler.hpp" />
+    <ClInclude Include="include\Parallel\Sleep.hpp" />
     <ClInclude Include="include\Parallel\StdAtomicInt.hpp" />
     <ClInclude Include="include\Parallel\StdConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\StdMutex.hpp" />
@@ -42,6 +43,7 @@
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
     <ClCompile Include="src\Parallel\Scheduler.cpp" />
+    <ClCompile Include="src\Parallel\Sleep.cpp" />
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />
     <ClCompile Include="src\Parallel\StdMutex.cpp" />
     <ClCompile Include="src\Parallel\StdThread.cpp" />

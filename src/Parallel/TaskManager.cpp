@@ -8,6 +8,7 @@
 #include "Parallel/Worker.hpp"
 #include "Parallel/MutexAutoLock.hpp"
 #include "Parallel/Scheduler.hpp"
+#include "Parallel/Sleep.hpp"
 
 using namespace Eternal::Parallel;
 
@@ -39,7 +40,7 @@ uint32_t TaskManager::TaskRun(_In_ void* Args)
 			{
 				NewTask = TaskManagerArgs.TasksList->Pop();
 				if (!NewTask)
-					TaskManagerArgs.TaskManagerThread->Sleep(1);
+					Sleep(1);
 			}
 
 			TaskManagerArgs.Workers[WorkerIndex]->SetTask(NewTask);
@@ -73,7 +74,7 @@ uint32_t TaskManager::TaskClean(_In_ void* Args)
 				++TaskIt;
 			}
 		}
-		CleanTasks.CleanTaskThread->Sleep(1);
+		Sleep(1);
 	}
 
 	return 0;
@@ -104,7 +105,6 @@ TaskManager::TaskManager()
 	TaskManagerArgs->TasksList = _TasksList;
 	TaskManagerArgs->SchedulerConditionVariable = _SchedulerConditionVariable;
 	TaskManagerArgs->SchedulerConditionVariableMutex = _SchedulerConditionVariableMutex;
-	TaskManagerArgs->TaskManagerThread = _TaskManager;
 	TaskManagerArgs->TasksToClean = &_TasksToClean;
 	TaskManagerArgs->TasksToCleanMutex = _TasksToCleanMutex;
 
@@ -115,7 +115,6 @@ TaskManager::TaskManager()
 	CleanTasksArguments* CleanTasksArgs = new CleanTasksArguments;
 	CleanTasksArgs->TasksList = &_TasksToClean;
 	CleanTasksArgs->TasksListMutex = _TasksToCleanMutex;
-	CleanTasksArgs->CleanTaskThread = _CleanTasks;
 
 	_CleanTasks->Create(TaskManager::TaskClean, CleanTasksArgs);
 
@@ -164,4 +163,12 @@ void TaskManager::Push(_In_ Task* TaskObj, _In_ Task* DependsOn /* = nullptr*/)
 	_SchedulerConditionVariableMutex->Lock();
 	_SchedulerConditionVariable->NotifyAll();
 	_SchedulerConditionVariableMutex->Unlock();
+}
+
+void TaskManager::Barrier()
+{
+	while (_TasksList->GetRemainingTasks())
+	{
+		Sleep(1);
+	}
 }

@@ -15,7 +15,6 @@ namespace Eternal
 		{
 		public:
 			virtual void Create(ThreadFunction Function, void* FunctionParams) override;
-			virtual void Sleep(TimeT Milliseconds) override;
 
 		private:
 			thread _Thread;

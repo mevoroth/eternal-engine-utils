@@ -60,7 +60,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 			D3D11PosUVNormalVertexBuffer::PosUVNormalVertex VertexObj;
 			for (int ControlPointIndex = 0, c = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < c; ++ControlPointIndex)
 			{
-				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], V[ControlPointIndex][3]);
+				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][2], V[ControlPointIndex][1], V[ControlPointIndex][3]);
 				
 				Out.PushVertex(VertexObj);
 			}
@@ -69,15 +69,15 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 				int PolygonSize = FbxMeshObj->GetPolygonSize(PolygonIndex);
 				Out.PushTriangle(
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
-					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1),
-					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
+					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
+					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1)
 				);
 				if (PolygonSize == 4) // Quad
 				{
 					Out.PushTriangle(
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
-						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
-						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3)
+						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3),
+						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
 					);
 				}
 

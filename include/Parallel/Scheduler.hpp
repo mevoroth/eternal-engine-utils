@@ -18,6 +18,10 @@ namespace Eternal
 			Scheduler(_In_ Mutex* MutexObj);
 			void Push(_In_ Task* TaskObj, _In_ Task* TaskDependency = nullptr);
 			Task* Pop();
+			inline size_t GetRemainingTasks() const
+			{
+				return _TasksList.size();
+			}
 
 		private:
 			struct SchedulerNode

@@ -30,6 +30,7 @@ namespace Eternal
 			TaskManager();
 			~TaskManager();
 			void Push(_In_ Task* TaskObj, _In_ Task* DependsOn = nullptr);
+			void Barrier();
 
 		private:
 			static TaskManager* _Inst;
@@ -52,7 +53,6 @@ namespace Eternal
 				Scheduler* TasksList;
 				ConditionVariable* SchedulerConditionVariable;
 				Mutex* SchedulerConditionVariableMutex;
-				Thread* TaskManagerThread;
 				list<Task*>* TasksToClean;
 				Mutex* TasksToCleanMutex;
 			};
@@ -61,7 +61,6 @@ namespace Eternal
 			{
 				list<Task*>* TasksList;
 				Mutex* TasksListMutex;
-				Thread* CleanTaskThread;
 			};
 		};
 	}
