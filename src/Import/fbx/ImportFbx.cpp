@@ -6,6 +6,7 @@
 
 #include "UtilsSettings.hpp"
 #include "Types/Types.hpp"
+#include "Macros/Macros.hpp"
 
 using namespace Eternal::Import;
 using namespace Eternal::Graphics;
@@ -14,7 +15,7 @@ ImportFbx* ImportFbx::_Inst = nullptr;
 
 ImportFbx::ImportFbx()
 {
-	assert(!_Inst);
+	ETERNAL_ASSERT(!_Inst);
 	_Inst = this;
 
 	_SdkMgr = FbxManager::Create();
@@ -27,7 +28,7 @@ ImportFbx::ImportFbx()
 
 ImportFbx* ImportFbx::Get()
 {
-	assert(_Inst);
+	ETERNAL_ASSERT(_Inst);
 	return _Inst;
 }
 

@@ -29,7 +29,7 @@ uint32_t TaskManager::TaskRun(_In_ void* Args)
 			}
 
 			{
-				MutexAutoLock(TaskManagerArgs.TasksToCleanMutex);
+				MutexAutoLock CleanMutex(TaskManagerArgs.TasksToCleanMutex);
 				Task* CurrentTaskInWorker = TaskManagerArgs.Workers[WorkerIndex]->GetTask();
 				if (CurrentTaskInWorker)
 					TaskManagerArgs.TasksToClean->push_back(CurrentTaskInWorker);
@@ -60,20 +60,23 @@ uint32_t TaskManager::TaskClean(_In_ void* Args)
 
 	for (;;)
 	{
-		for (list<Task*>::iterator TaskIt = CleanTasks.TasksList->begin(); TaskIt != CleanTasks.TasksList->end(); )
 		{
-			MutexAutoLock(CleanTasks.TasksListMutex);
-			Task* Current = *TaskIt;
-			if (Current->IsFinished() && Current->IsNotReferenced())
+			MutexAutoLock CleanMutex(CleanTasks.TasksToCleanMutex);
+			for (list<Task*>::iterator TaskIt = CleanTasks.TasksToClean->begin(); TaskIt != CleanTasks.TasksToClean->end(); )
 			{
-				TaskIt = CleanTasks.TasksList->erase(TaskIt);
-				delete Current;
-			}
-			else
-			{
-				++TaskIt;
+				Task* Current = *TaskIt;
+				if (Current->IsFinished() && Current->IsNotReferenced())
+				{
+					TaskIt = CleanTasks.TasksToClean->erase(TaskIt);
+					delete Current;
+				}
+				else
+				{
+					++TaskIt;
+				}
 			}
 		}
+		
 		Sleep(1);
 	}
 
@@ -113,8 +116,8 @@ TaskManager::TaskManager()
 	_CleanTasks = new StdThread();
 
 	CleanTasksArguments* CleanTasksArgs = new CleanTasksArguments;
-	CleanTasksArgs->TasksList = &_TasksToClean;
-	CleanTasksArgs->TasksListMutex = _TasksToCleanMutex;
+	CleanTasksArgs->TasksToClean = &_TasksToClean;
+	CleanTasksArgs->TasksToCleanMutex = _TasksToCleanMutex;
 
 	_CleanTasks->Create(TaskManager::TaskClean, CleanTasksArgs);
 
@@ -167,8 +170,15 @@ void TaskManager::Push(_In_ Task* TaskObj, _In_ Task* DependsOn /* = nullptr*/)
 
 void TaskManager::Barrier()
 {
-	while (_TasksList->GetRemainingTasks())
+	for (;;)
 	{
+		_TasksToCleanMutex->Lock();
+		size_t TasksToCleanSize = _TasksToClean.size();
+		_TasksToCleanMutex->Unlock();
+
+		if (!(_TasksList->GetRemainingTasks() && TasksToCleanSize))
+			break;
+		
 		Sleep(1);
 	}
 }

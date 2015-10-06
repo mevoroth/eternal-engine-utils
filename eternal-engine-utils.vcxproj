@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
+    <ClInclude Include="include\Import\tga\ImportTga.hpp" />
     <ClInclude Include="include\Macros\Macros.hpp" />
     <ClInclude Include="include\Parallel\AtomicInt.hpp" />
     <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
+    <ClCompile Include="src\Import\tga\ImportTga.cpp" />
     <ClCompile Include="src\Parallel\Scheduler.cpp" />
     <ClCompile Include="src\Parallel\Sleep.cpp" />
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />
@@ -55,6 +57,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23D5DF8E-B7C8-40C2-B797-8C06280D1F24}</ProjectGuid>
     <RootNamespace>eternalengineutils</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -104,7 +107,7 @@
     <LibraryPath>$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\include;$(SolutionDir)\eternal-engine-components\include;$(SolutionDir)\eternal-engine-graphics\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\include;$(SolutionDir)\eternal-engine-components\include;$(SolutionDir)\eternal-engine-graphics\include;$(SolutionDir)\eternal-engine-extern\libtga;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

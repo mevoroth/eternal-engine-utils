@@ -12,6 +12,7 @@ Scheduler::Scheduler(Mutex* MutexObj)
 
 void Scheduler::Push(_In_ Task* TaskObj, _In_ Task* TaskDependency /* = nullptr */)
 {
+	MutexAutoLock TaskListMutex(this->_MutexObj);
 	SchedulerNode Node;
 	Node.TaskObj = TaskObj;
 	Node.DependsOn = TaskDependency;
@@ -19,15 +20,12 @@ void Scheduler::Push(_In_ Task* TaskObj, _In_ Task* TaskDependency /* = nullptr 
 	{
 		Node.DependsOn->AddRef();
 	}
-	{
-		MutexAutoLock(this->_MutexObj);
-		_TasksList.push_back(Node);
-	}
+	_TasksList.push_back(Node);
 }
 
 Task* Scheduler::Pop()
 {
-	MutexAutoLock(this->_MutexObj);
+	MutexAutoLock TaskListMutex(this->_MutexObj);
 	for (list<SchedulerNode>::const_iterator NodeIt = _TasksList.cbegin(); NodeIt != _TasksList.cend(); ++NodeIt)
 	{
 		if (!NodeIt->DependsOn || NodeIt->DependsOn->IsFinished())
@@ -42,4 +40,10 @@ Task* Scheduler::Pop()
 		}
 	}
 	return nullptr;
+}
+
+size_t Scheduler::GetRemainingTasks() const
+{
+	MutexAutoLock TaskListMutex(this->_MutexObj);
+	return _TasksList.size();
 }

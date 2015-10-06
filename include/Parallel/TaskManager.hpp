@@ -59,8 +59,8 @@ namespace Eternal
 
 			struct CleanTasksArguments
 			{
-				list<Task*>* TasksList;
-				Mutex* TasksListMutex;
+				list<Task*>* TasksToClean;
+				Mutex* TasksToCleanMutex;
 			};
 		};
 	}

@@ -22,11 +22,11 @@
     <Filter Include="Macros">
       <UniqueIdentifier>{f26fcfd9-1c08-4799-96db-e4d308812978}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Import\tga">
+      <UniqueIdentifier>{7fe8a1a1-bf59-4001-8676-3f25701097fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Import\fbx\ImportFbx.hpp">
-      <Filter>Import\fbx</Filter>
-    </ClInclude>
     <ClInclude Include="include\UtilsSettings.hpp" />
     <ClInclude Include="include\Container\Stack.hpp">
       <Filter>Container</Filter>
@@ -82,11 +82,14 @@
     <ClInclude Include="include\Parallel\Sleep.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
+    <ClInclude Include="include\Import\fbx\ImportFbx.hpp">
+      <Filter>Import\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Import\tga\ImportTga.hpp">
+      <Filter>Import\tga</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
-      <Filter>Import\fbx</Filter>
-    </ClCompile>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
       <Filter>Time\Win</Filter>
     </ClCompile>
@@ -113,6 +116,12 @@
     </ClCompile>
     <ClCompile Include="src\Parallel\Sleep.cpp">
       <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Import\fbx\ImportFbx.cpp">
+      <Filter>Import\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Import\tga\ImportTga.cpp">
+      <Filter>Import\tga</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
