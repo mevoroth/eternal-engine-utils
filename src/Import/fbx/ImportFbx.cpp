@@ -4,6 +4,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include <cstdlib>
+
 #include "UtilsSettings.hpp"
 #include "Types/Types.hpp"
 #include "Macros/Macros.hpp"
@@ -56,7 +58,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 		switch (Attribute->GetAttributeType())
 		{
 		case FbxNodeAttribute::EType::eMesh:
-			FbxMesh* FbxMeshObj = (FbxMesh*)Attribute;
+			fbxsdk_2015_1::FbxMesh* FbxMeshObj = (fbxsdk_2015_1::FbxMesh*)Attribute;
 			FbxVector4* V = FbxMeshObj->GetControlPoints();
 			D3D11PosUVNormalVertexBuffer::PosUVNormalVertex VertexObj;
 			for (int ControlPointIndex = 0, c = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < c; ++ControlPointIndex)
@@ -84,6 +86,26 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 
 				_GetUV(FbxMeshObj, PolygonIndex, Out);
 				_GetNormal(FbxMeshObj, PolygonIndex, Out);
+			}
+			{
+				ETERNAL_ASSERT(Node->GetSrcObjectCount<fbxsdk_2015_1::FbxSurfaceMaterial>() > 0);
+				fbxsdk_2015_1::FbxSurfaceMaterial* Material = Node->GetSrcObject<fbxsdk_2015_1::FbxSurfaceMaterial>(0);
+				FbxProperty DiffuseColorChannel = Material->FindProperty(fbxsdk_2015_1::FbxLayerElement::sTextureChannelNames[DIFFUSE_COLOR_CHANNEL]);
+				ETERNAL_ASSERT(DiffuseColorChannel.IsValid());
+
+				FbxTexture* DiffuseColorTexture = DiffuseColorChannel.GetSrcObject<FbxTexture>(0);
+				if (!DiffuseColorTexture)
+					break;
+				//FbxTexture* DiffuseColorTexture = DiffuseColorChannel.GetSrcObject<FbxLayeredTexture>(0)->GetSrcObject<FbxTexture>(0);
+				//OutputDebugString("\n");
+				//OutputDebugString(DiffuseColorChannel.GetName());
+				//OutputDebugString(DiffuseColorTexture->GetName());
+				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
+				char FileName[255];
+				char Extension[8];
+				_splitpath_s(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
+				sprintf_s(FileName, "%s%s", FileName, Extension);
+				Out.SetTexture(FileName);
 			}
 			break;
 		}

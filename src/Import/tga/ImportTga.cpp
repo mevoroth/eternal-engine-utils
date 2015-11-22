@@ -1,14 +1,17 @@
 #include "Import/tga/ImportTga.hpp"
 
-#define WIN32_LEAN_AND_MEAN
-#define VC_EXTRALEAN
-#include <Windows.h>
+//#define WIN32_LEAN_AND_MEAN
+//#define VC_EXTRALEAN
+//#include <Windows.h>
+//#include <Shlwapi.h>
 
 #include "Macros/Macros.hpp"
-
-#include "tga.h"
+#include "File/FileFactory.hpp"
+#include "File/File.hpp"
+#include "include/Tga.h"
 
 using namespace Eternal::Import;
+using namespace Eternal::File;
 
 ImportTga* ImportTga::_Inst = nullptr;
 
@@ -26,39 +29,33 @@ ImportTga* ImportTga::Get()
 
 uint8_t* ImportTga::Import(_In_ const string& Path, _Out_ uint32_t& Height, _Out_ uint32_t& Width)
 {
-	TGA* TGAFile = TGAOpen(Path.c_str(), "r");
-	TGAData TGADataObj;
-
-	char buffer[256];
-
-	int Ret = TGAReadImage(TGAFile, &TGADataObj);
-	ETERNAL_ASSERT(Ret == TGA_OK);
-
-	Width = TGAFile->hdr.width;
-	Height = TGAFile->hdr.height;
-
-	// Only 32bits format supported now
-	ETERNAL_ASSERT(TGAFile->hdr.depth == 32);
-
-	uint8_t* ImageBuffer = new uint8_t[Width * Height * 4];
-
-	int Pixel = 0;
-	for (int Y = TGAFile->hdr.height - 1; Y >= 0; --Y)
+	if (Path[Path.size() - 3] != 't' ||
+		Path[Path.size() - 2] != 'g' ||
+		Path[Path.size() - 1] != 'a')
 	{
-		int Row = Y * TGAFile->hdr.width;
-		for (int X = 0; X < TGAFile->hdr.width; ++X)
-		{
-			int ImgDataPixel = (Row + X) * 4;
-			int ImgBufferPixel = Pixel * 4;
-			ImageBuffer[ImgBufferPixel] = TGADataObj.img_data[ImgDataPixel];
-			ImageBuffer[ImgBufferPixel + 1] = TGADataObj.img_data[ImgDataPixel + 1];
-			ImageBuffer[ImgBufferPixel + 2] = TGADataObj.img_data[ImgDataPixel + 2];
-			ImageBuffer[ImgBufferPixel + 3] = TGADataObj.img_data[ImgDataPixel + 3];
-			++Pixel;
-		}
+		Height = Width = 0;
+		return nullptr;
 	}
+	//char Dir[255];
+	//GetCurrentDirectory(255, Dir);
+	//ETERNAL_ASSERT(PathFileExists(Path.c_str()) == 1);
 
-	TGAClose(TGAFile);
+	uint8_t* ImageBuffer;
+
+	File::File* TgaFile = File::CreateFile(Path);
+	TgaFile->Open(File::File::READ);
+	uint64_t TgaFileSize = TgaFile->GetFileSize();
+	uint8_t* TgaContent = new uint8_t[TgaFileSize];
+	TgaFile->Read(TgaContent, TgaFileSize);
+	TgaFile->Close();
+	delete TgaFile;
+
+	Tga::TgaImage TgaImageObj(TgaContent, TgaFileSize);
+	TgaImageObj.GetImage(Width, Height, ImageBuffer);
+	
+	delete[] TgaContent;
+	TgaContent = nullptr;
+	TgaFile = nullptr;
 
 	return ImageBuffer;
 }

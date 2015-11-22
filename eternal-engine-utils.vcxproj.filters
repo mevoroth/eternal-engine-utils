@@ -25,6 +25,12 @@
     <Filter Include="Import\tga">
       <UniqueIdentifier>{7fe8a1a1-bf59-4001-8676-3f25701097fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{53121b16-73cb-4606-af6e-860d24902857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File">
+      <UniqueIdentifier>{db67e1a5-1a4d-4666-8fe2-e3cee9eba0f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -88,6 +94,18 @@
     <ClInclude Include="include\Import\tga\ImportTga.hpp">
       <Filter>Import\tga</Filter>
     </ClInclude>
+    <ClInclude Include="include\Resources\TextureFactory.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\File\File.hpp">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="include\File\CFile.hpp">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="include\File\FileFactory.hpp">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -122,6 +140,15 @@
     </ClCompile>
     <ClCompile Include="src\Import\tga\ImportTga.cpp">
       <Filter>Import\tga</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\TextureFactory.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\CFile.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\FileFactory.cpp">
+      <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

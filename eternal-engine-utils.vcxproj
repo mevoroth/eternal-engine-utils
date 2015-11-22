@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Container\Stack.hpp" />
+    <ClInclude Include="include\File\CFile.hpp" />
+    <ClInclude Include="include\File\File.hpp" />
+    <ClInclude Include="include\File\FileFactory.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
     <ClInclude Include="include\Import\tga\ImportTga.hpp" />
     <ClInclude Include="include\Macros\Macros.hpp" />
@@ -37,11 +40,14 @@
     <ClInclude Include="include\Parallel\TaskManager.hpp" />
     <ClInclude Include="include\Parallel\Thread.hpp" />
     <ClInclude Include="include\Parallel\Worker.hpp" />
+    <ClInclude Include="include\Resources\TextureFactory.hpp" />
     <ClInclude Include="include\Time\Time.hpp" />
     <ClInclude Include="include\Time\Win\WinTime.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\File\CFile.cpp" />
+    <ClCompile Include="src\File\FileFactory.cpp" />
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
     <ClCompile Include="src\Import\tga\ImportTga.cpp" />
     <ClCompile Include="src\Parallel\Scheduler.cpp" />
@@ -52,6 +58,7 @@
     <ClCompile Include="src\Parallel\Task.cpp" />
     <ClCompile Include="src\Parallel\TaskManager.cpp" />
     <ClCompile Include="src\Parallel\Worker.cpp" />
+    <ClCompile Include="src\Resources\TextureFactory.cpp" />
     <ClCompile Include="src\Time\Win\WinTime.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -134,6 +141,7 @@
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2015.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FBXSDK_SHARED;ETERNAL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>sal.h</ForcedIncludeFiles>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
