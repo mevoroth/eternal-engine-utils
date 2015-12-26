@@ -2,9 +2,11 @@
 
 #include "Import/tga/ImportTga.hpp"
 #include "Macros/Macros.hpp"
+#include "d3d11/D3D11Texture.hpp"
 
 using namespace Eternal::Resources;
 using namespace Eternal::Import;
+using namespace Eternal::Graphics;
 
 TextureFactory* TextureFactory::_Inst = nullptr;
 
@@ -20,21 +22,18 @@ TextureFactory* TextureFactory::Get()
 	return _Inst;
 }
 
-uint8_t* TextureFactory::GetTexture(_In_ const string& NameSrc, _Out_ uint32_t& Height, _Out_ uint32_t& Width)
+Texture* TextureFactory::GetTexture(_In_ const string& NameSrc)
 {
 	map<string, TextureCache>::iterator FoundTexture = _Textures.find(NameSrc);
 	if (FoundTexture != _Textures.cend())
 	{
-		Height = FoundTexture->second.Height;
-		Width = FoundTexture->second.Width;
-		return FoundTexture->second.TextureData;
+		return FoundTexture->second.TextureObj;
 	}
+	uint32_t Height, Width;
 	uint8_t* TextureData = ImportTga::Get()->Import(NameSrc, Height, Width);
-	
-	TextureCache& TextureCacheLine = _Textures[NameSrc];
-	TextureCacheLine.TextureData = TextureData;
-	TextureCacheLine.Height = Height;
-	TextureCacheLine.Width = Width;
 
-	return TextureData;
+	TextureCache& TextureCacheLine = _Textures[NameSrc];
+	TextureCacheLine.TextureObj = new Graphics::D3D11Texture(Graphics::Texture::BGRA8888, Graphics::D3D11Resource::DYNAMIC, Graphics::Resource::WRITE, Width, Height, TextureData);
+
+	return TextureCacheLine.TextureObj;
 }

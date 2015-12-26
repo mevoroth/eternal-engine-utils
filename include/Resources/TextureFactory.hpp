@@ -9,24 +9,28 @@ using namespace std;
 
 namespace Eternal
 {
+	namespace Graphics
+	{
+		class Texture;
+	}
 	namespace Resources
 	{
+		using namespace Graphics;
+
 		class TextureFactory
 		{
 		public:
 			static TextureFactory* Get();
 
 			TextureFactory();
-			uint8_t* GetTexture(_In_ const string& NameSrc, _Out_ uint32_t& Height, _Out_ uint32_t& Width);
+			Texture* GetTexture(_In_ const string& NameSrc);
 
 		private:
 			static TextureFactory* _Inst;
 
 			struct TextureCache
 			{
-				uint8_t* TextureData = nullptr;
-				uint32_t Width = 0;
-				uint32_t Height = 0;
+				Texture* TextureObj = nullptr;
 			};
 			map<string, TextureCache> _Textures;
 		};

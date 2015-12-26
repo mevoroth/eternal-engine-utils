@@ -7,6 +7,6 @@
 #define ETERNAL_ASSERT(Condition)
 #endif
 
-#define ETERNAL_ARRAYSIZE(Array)	_countof(Array)
+#define ETERNAL_ARRAYSIZE(Array)	(_countof(Array))
 
 #endif
