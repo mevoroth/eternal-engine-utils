@@ -110,7 +110,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\include;$(SolutionDir)\eternal-engine-components\include;$(SolutionDir)\eternal-engine-graphics\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\include;$(SolutionDir)\eternal-engine-components\include;$(SolutionDir)\eternal-engine-graphics\include;$(SolutionDir)\eternal-engine-extern\libtga;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -124,6 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2015.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ForcedIncludeFiles>sal.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
