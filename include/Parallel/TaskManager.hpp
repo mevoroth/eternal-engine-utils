@@ -38,10 +38,19 @@ namespace Eternal
 			Thread* _TaskManager = nullptr;
 			Worker* _Workers[TASK_MANAGER_WORKERS_COUNT];
 			Thread* _WorkersThreads[TASK_MANAGER_WORKERS_COUNT];
-			Mutex* _TasksListMutex = nullptr;
-			Scheduler* _TasksList = nullptr;
-			ConditionVariable* _SchedulerConditionVariable = nullptr;
-			Mutex* _SchedulerConditionVariableMutex = nullptr;
+
+			list<Task*> _NewTasks;
+			Mutex* _NewTasksMutex = nullptr;
+
+			list<Task*> _ExecutingTasks;
+			Mutex* _ExecutingTasksMutex = nullptr;
+
+			list<Task*> _ExecutedTasks;
+			Mutex* _ExecutedTasksMutex = nullptr;
+
+			//Scheduler* _TasksList = nullptr;
+			//ConditionVariable* _SchedulerConditionVariable = nullptr;
+			//Mutex* _SchedulerConditionVariableMutex = nullptr;
 
 			Thread* _CleanTasks = nullptr;
 			list<Task*> _TasksToClean;
@@ -50,11 +59,15 @@ namespace Eternal
 			struct TaskManagerArguments
 			{
 				Worker** Workers;
-				Scheduler* TasksList;
-				ConditionVariable* SchedulerConditionVariable;
-				Mutex* SchedulerConditionVariableMutex;
-				list<Task*>* TasksToClean;
-				Mutex* TasksToCleanMutex;
+				//Scheduler* TasksList;
+				//ConditionVariable* SchedulerConditionVariable;
+				//Mutex* SchedulerConditionVariableMutex;
+				list<Task*>* NewTasks;
+				Mutex* NewTasksMutex;
+				list<Task*>* ExecutingTasks;
+				Mutex* ExecutingTasksMutex;
+				list<Task*>* ExecutedTasks;
+				Mutex* ExecutedTasksMutex;
 			};
 
 			struct CleanTasksArguments

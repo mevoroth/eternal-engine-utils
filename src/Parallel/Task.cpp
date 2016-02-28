@@ -1,26 +1,36 @@
 #include "Parallel/Task.hpp"
 
-#include "Parallel/StdAtomicInt.hpp"
+#include "Macros/Macros.hpp"
 
 using namespace Eternal::Parallel;
 
 Task::Task()
 {
-	_RefCount = new StdAtomicInt(0);
 }
 
 Task::~Task()
 {
-	delete _RefCount;
-	_RefCount = nullptr;
 }
 
-void Task::SetFinished()
+bool Task::TaskIsExecutable()
 {
-	_Finished = true;
+	bool AllExecuted = true;
+	for (uint32_t TaskIndex = 0; AllExecuted && TaskIndex < _Dependencies.size(); ++TaskIndex)
+	{
+		AllExecuted &= _Dependencies[TaskIndex]->TaskIsExecuted();
+	}
+	return AllExecuted;
 }
 
-bool Task::IsFinished() const
+void Task::DependsOn(Task* TaskObj)
 {
-	return _Finished;
+	ETERNAL_ASSERT(TaskObj != this);
+#ifdef ETERNAL_DEBUG
+	for (uint32_t TaskIndex = 0; TaskIndex < _Dependencies.size(); ++TaskIndex)
+	{
+		ETERNAL_ASSERT(_Dependencies[TaskIndex] != this);
+	}
+#endif
+
+	_Dependencies.push_back(TaskObj);
 }

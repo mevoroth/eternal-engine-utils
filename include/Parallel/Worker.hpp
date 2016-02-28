@@ -19,19 +19,25 @@ namespace Eternal
 
 			Worker(Thread* ThreadObj);
 			~Worker();
-			virtual void DoTask() override;
-			bool TaskIsFinished() const;
+
+			virtual bool TaskIsExecuted() override;
+			virtual void Setup() override;
+			virtual void Execute() override;
+
 			void SetTask(Task* TaskObj);
-			inline Task* GetTask()
+			Task* GetTask()
 			{
-				return _CurrentTask;
+				return _Task;
 			}
 
 		private:
 			Thread* _Thread = nullptr;
-			Task* _CurrentTask = nullptr;
+			
 			ConditionVariable* _ConditionVariable = nullptr;
 			Mutex* _ConditionVariableMutex = nullptr;
+
+			Task* _Task = nullptr;
+			Mutex* _TaskMutex = nullptr;
 
 			struct WorkerArguments
 			{

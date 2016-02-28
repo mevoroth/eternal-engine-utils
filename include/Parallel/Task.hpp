@@ -1,38 +1,28 @@
 #ifndef _TASK_HPP_
 #define _TASK_HPP_
 
-#include "Macros/Macros.hpp"
-#include "Parallel/AtomicInt.hpp"
+#include <vector>
 
 namespace Eternal
 {
 	namespace Parallel
 	{
+		using namespace std;
+
 		class Task
 		{
 		public:
 			Task();
 			virtual ~Task();
-			void SetFinished();
-			bool IsFinished() const;
-			virtual void DoTask() = 0;
-			inline void AddRef()
-			{
-				_RefCount->Add();
-			}
-			inline void Release()
-			{
-				ETERNAL_ASSERT(_RefCount->Load() > 0);
-				_RefCount->Sub();
-			}
-			inline bool IsNotReferenced() const
-			{
-				return _RefCount->Load() == 0;
-			}
+
+			void DependsOn(Task* TaskObj);
+			bool TaskIsExecutable();
+			virtual bool TaskIsExecuted() = 0;
+			virtual void Setup() = 0;
+			virtual void Execute() = 0;
 
 		private:
-			bool _Finished = false;
-			AtomicInt* _RefCount = nullptr;
+			vector<Task*> _Dependencies;
 		};
 	}
 }
