@@ -2,17 +2,18 @@
 #define _WORKER_HPP_
 
 #include <cstdint>
-#include "Task.hpp"
 
 namespace Eternal
 {
 	namespace Parallel
 	{
-		class ConditionVariable;
-		class Mutex;
+		class Task;
 		class Thread;
+		class AtomicInt;
+		class Mutex;
+		class ConditionVariable;
 
-		class Worker : public Task
+		class Worker
 		{
 		public:
 			static uint32_t WorkerRun(void* Args);
@@ -20,29 +21,39 @@ namespace Eternal
 			Worker(Thread* ThreadObj);
 			~Worker();
 
-			virtual bool TaskIsExecuted() override;
-			virtual void Setup() override;
-			virtual void Execute() override;
-
-			void SetTask(Task* TaskObj);
-			Task* GetTask()
-			{
-				return _Task;
-			}
+			void PushTask(Task* TaskObj);
+			void Shutdown();
+			bool IsAvailable() const;
 
 		private:
-			Thread* _Thread = nullptr;
-			
-			ConditionVariable* _ConditionVariable = nullptr;
-			Mutex* _ConditionVariableMutex = nullptr;
-
-			Task* _Task = nullptr;
-			Mutex* _TaskMutex = nullptr;
-
-			struct WorkerArguments
+			struct WorkerArgs
 			{
-				Worker* WorkerObj;
+				AtomicInt*& Running;
+				ConditionVariable*& WorkerConditionVariable;
+				Mutex*& WorkerConditionVariableMutex;
+				Task*& TaskObj;
+				bool& IsExecutingTask;
+				bool& IsAvailable;
+
+				WorkerArgs(AtomicInt*& Running, ConditionVariable*& WorkerConditionVariable, Mutex*& WorkerConditionVariableMutex, Task*& TaskObj, bool& IsExecutingTask, bool& IsAvailable)
+					: Running(Running)
+					, WorkerConditionVariable(WorkerConditionVariable)
+					, WorkerConditionVariableMutex(WorkerConditionVariableMutex)
+					, TaskObj(TaskObj)
+					, IsExecutingTask(IsExecutingTask)
+					, IsAvailable(IsAvailable)
+				{
+				}
 			};
+
+			WorkerArgs* _WorkerArgs = nullptr;
+			AtomicInt* _Running = nullptr;
+			Task* _Task = nullptr;
+
+			ConditionVariable* _WorkerConditionVariable = nullptr;
+			Mutex* _WorkerConditionVariableMutex = nullptr;
+			bool _IsExecutingTask = false;
+			bool _IsAvailable = true;
 		};
 	}
 }

@@ -4,33 +4,15 @@
 
 using namespace Eternal::Parallel;
 
-Task::Task()
+void Task::Schedule()
 {
+	ETERNAL_ASSERT(_TaskState == IDLE);
+	SetState(SCHEDULED);
 }
 
-Task::~Task()
+void Task::SetTaskName(const string& TaskName)
 {
-}
-
-bool Task::TaskIsExecutable()
-{
-	bool AllExecuted = true;
-	for (uint32_t TaskIndex = 0; AllExecuted && TaskIndex < _Dependencies.size(); ++TaskIndex)
-	{
-		AllExecuted &= _Dependencies[TaskIndex]->TaskIsExecuted();
-	}
-	return AllExecuted;
-}
-
-void Task::DependsOn(Task* TaskObj)
-{
-	ETERNAL_ASSERT(TaskObj != this);
 #ifdef ETERNAL_DEBUG
-	for (uint32_t TaskIndex = 0; TaskIndex < _Dependencies.size(); ++TaskIndex)
-	{
-		ETERNAL_ASSERT(_Dependencies[TaskIndex] != this);
-	}
+	_TaskName = TaskName;
 #endif
-
-	_Dependencies.push_back(TaskObj);
 }

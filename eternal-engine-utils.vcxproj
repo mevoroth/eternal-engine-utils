@@ -28,6 +28,7 @@
     <ClInclude Include="include\Macros\Macros.hpp" />
     <ClInclude Include="include\Parallel\AtomicInt.hpp" />
     <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
+    <ClInclude Include="include\Parallel\CpuCoreCount.hpp" />
     <ClInclude Include="include\Parallel\Mutex.hpp" />
     <ClInclude Include="include\Parallel\MutexAutoLock.hpp" />
     <ClInclude Include="include\Parallel\Sleep.hpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="include\Parallel\StdThread.hpp" />
     <ClInclude Include="include\Parallel\Task.hpp" />
     <ClInclude Include="include\Parallel\TaskManager.hpp" />
+    <ClInclude Include="include\Parallel\TaskScheduler.hpp" />
     <ClInclude Include="include\Parallel\Thread.hpp" />
     <ClInclude Include="include\Parallel\Worker.hpp" />
     <ClInclude Include="include\Resources\TextureFactory.hpp" />
@@ -49,12 +51,14 @@
     <ClCompile Include="src\File\FileFactory.cpp" />
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
     <ClCompile Include="src\Import\tga\ImportTga.cpp" />
-    <ClCompile Include="src\Parallel\Sleep.cpp" />
+    <ClCompile Include="src\Parallel\StdCpuCoreCount.cpp" />
+    <ClCompile Include="src\Parallel\StdSleep.cpp" />
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />
     <ClCompile Include="src\Parallel\StdMutex.cpp" />
     <ClCompile Include="src\Parallel\StdThread.cpp" />
     <ClCompile Include="src\Parallel\Task.cpp" />
     <ClCompile Include="src\Parallel\TaskManager.cpp" />
+    <ClCompile Include="src\Parallel\TaskScheduler.cpp" />
     <ClCompile Include="src\Parallel\Worker.cpp" />
     <ClCompile Include="src\Resources\TextureFactory.cpp" />
     <ClCompile Include="src\Time\Win\WinTime.cpp" />

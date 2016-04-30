@@ -2,9 +2,11 @@
 #define _TASK_MANAGER_HPP_
 
 #include <cstdint>
-#include <list>
 
-#define TASK_MANAGER_WORKERS_COUNT 8
+#include "Macros/Macros.hpp"
+#include "TaskScheduler.hpp"
+
+#include <cstdint>
 
 using namespace std;
 
@@ -17,64 +19,64 @@ namespace Eternal
 		class Mutex;
 		class Thread;
 		class ConditionVariable;
-		class Scheduler;
+		class AtomicInt;
 
 		class TaskManager
 		{
 		public:
+			static uint32_t TaskManagerRun(void* Args);
 			static TaskManager* Get();
-			
-			static uint32_t TaskRun(_In_ void* Args);
-			static uint32_t TaskClean(_In_ void* Args);
-
 			TaskManager();
-			~TaskManager();
-			void Push(_In_ Task* TaskObj, _In_ Task* DependsOn = nullptr);
+			virtual ~TaskManager();
+
+			inline TaskScheduler& GetTaskScheduler()
+			{
+				ETERNAL_ASSERT(_Done);
+				return _Scheduler;
+			}
+
+			void Schedule();
 			void Barrier();
+			void Shutdown();
 
 		private:
+			struct TaskManagerArgs
+			{
+				AtomicInt*& Running;
+				Worker**& Workers;
+				const uint32_t& WorkersCount;
+				TaskScheduler& Scheduler;
+				ConditionVariable*& SchedulerConditionVariable;
+				Mutex*& SchedulerConditionVariableMutex;
+				bool& SchedulingTask;
+				bool& Done;
+				
+				TaskManagerArgs(AtomicInt*& Running, Worker**& Workers, const uint32_t& WorkersCount, TaskScheduler& Scheduler, ConditionVariable*& SchedulerConditionVariable, Mutex*& SchedulerConditionVariableMutex, bool& SchedulingTask, bool& Done)
+					: Running(Running)
+					, Workers(Workers)
+					, WorkersCount(WorkersCount)
+					, Scheduler(Scheduler)
+					, SchedulerConditionVariable(SchedulerConditionVariable)
+					, SchedulerConditionVariableMutex(SchedulerConditionVariableMutex)
+					, SchedulingTask(SchedulingTask)
+					, Done(Done)
+				{
+				}
+			};
 			static TaskManager* _Inst;
 
-			Thread* _TaskManager = nullptr;
-			Worker* _Workers[TASK_MANAGER_WORKERS_COUNT];
-			Thread* _WorkersThreads[TASK_MANAGER_WORKERS_COUNT];
+			Thread* _TaskManagerThread = nullptr;
 
-			list<Task*> _NewTasks;
-			Mutex* _NewTasksMutex = nullptr;
-
-			list<Task*> _ExecutingTasks;
-			Mutex* _ExecutingTasksMutex = nullptr;
-
-			list<Task*> _ExecutedTasks;
-			Mutex* _ExecutedTasksMutex = nullptr;
-
-			//Scheduler* _TasksList = nullptr;
-			//ConditionVariable* _SchedulerConditionVariable = nullptr;
-			//Mutex* _SchedulerConditionVariableMutex = nullptr;
-
-			Thread* _CleanTasks = nullptr;
-			list<Task*> _TasksToClean;
-			Mutex* _TasksToCleanMutex = nullptr;
-
-			struct TaskManagerArguments
-			{
-				Worker** Workers;
-				//Scheduler* TasksList;
-				//ConditionVariable* SchedulerConditionVariable;
-				//Mutex* SchedulerConditionVariableMutex;
-				list<Task*>* NewTasks;
-				Mutex* NewTasksMutex;
-				list<Task*>* ExecutingTasks;
-				Mutex* ExecutingTasksMutex;
-				list<Task*>* ExecutedTasks;
-				Mutex* ExecutedTasksMutex;
-			};
-
-			struct CleanTasksArguments
-			{
-				list<Task*>* TasksToClean;
-				Mutex* TasksToCleanMutex;
-			};
+			AtomicInt* _Running = nullptr;
+			TaskManagerArgs* _TaskManagerArgs = nullptr;
+			Thread** _Threads = nullptr;
+			Worker** _Workers = nullptr;
+			uint32_t _ThreadsWorkersCount = 0;
+			TaskScheduler _Scheduler;
+			ConditionVariable* _SchedulerConditionVariable = nullptr;
+			Mutex* _SchedulerConditionVariableMutex = nullptr;
+			bool _SchedulingTask = false;
+			bool _Done = true;
 		};
 	}
 }

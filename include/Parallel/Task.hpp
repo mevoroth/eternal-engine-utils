@@ -1,7 +1,10 @@
 #ifndef _TASK_HPP_
 #define _TASK_HPP_
 
-#include <vector>
+#ifdef ETERNAL_DEBUG
+#include <string>
+using namespace std;
+#endif
 
 namespace Eternal
 {
@@ -12,17 +15,41 @@ namespace Eternal
 		class Task
 		{
 		public:
-			Task();
-			virtual ~Task();
+			enum TaskState
+			{
+				IDLE,
+				SCHEDULED,
+				SETTINGUP,
+				SETUP,
+				EXECUTING,
+				DONE
+			};
+			virtual ~Task() {}
 
-			void DependsOn(Task* TaskObj);
-			bool TaskIsExecutable();
-			virtual bool TaskIsExecuted() = 0;
 			virtual void Setup() = 0;
+			virtual void Reset() = 0;
 			virtual void Execute() = 0;
+			void Schedule();
+
+			const TaskState& GetState() const
+			{
+				return _TaskState;
+			}
+
+			void SetTaskName(const string& TaskName);
+
+		protected:
+			inline void SetState(const TaskState& State)
+			{
+				_TaskState = State;
+			}
 
 		private:
-			vector<Task*> _Dependencies;
+			TaskState _TaskState = IDLE;
+			
+#ifdef ETERNAL_DEBUG
+			string _TaskName;
+#endif
 		};
 	}
 }

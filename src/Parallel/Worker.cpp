@@ -1,86 +1,84 @@
 #include "Parallel/Worker.hpp"
 
 #include "Macros/Macros.hpp"
+#include "Parallel/Thread.hpp"
+#include "Parallel/StdAtomicInt.hpp"
 #include "Parallel/StdConditionVariable.hpp"
 #include "Parallel/StdMutex.hpp"
-#include "Parallel/Thread.hpp"
-#include "Parallel/MutexAutoLock.hpp"
+#include "Parallel/Task.hpp"
+#include "Parallel/Sleep.hpp"
 
 using namespace Eternal::Parallel;
 
 uint32_t Worker::WorkerRun(void* Args)
 {
-	WorkerArguments* WorkerArgs = (WorkerArguments*)Args;
-	WorkerArgs->WorkerObj->Setup();
-	WorkerArgs->WorkerObj->Execute();
+	WorkerArgs* Arguments = (WorkerArgs*)Args;
+
+	while (Arguments->Running->Load())
+	{
+		Arguments->WorkerConditionVariableMutex->Lock();
+		Arguments->WorkerConditionVariable->Wait(*Arguments->WorkerConditionVariableMutex);
+		Arguments->WorkerConditionVariableMutex->Unlock();
+
+		Arguments->IsExecutingTask = true;
+		//ETERNAL_ASSERT(Arguments->TaskObj->GetState() == Task::SETUP);
+		Arguments->TaskObj->Setup();
+		Arguments->TaskObj->Execute();
+
+		Arguments->IsAvailable = true;
+	}
+
 	return 0;
 }
 
 Worker::Worker(Thread* ThreadObj)
-	: _Thread(ThreadObj)
 {
-	_ConditionVariable = new StdConditionVariable();
-	_ConditionVariableMutex = new StdMutex();
-	_TaskMutex = new StdMutex();
+	_Running = new StdAtomicInt(1);
+	_WorkerConditionVariableMutex = new StdMutex();
+	_WorkerConditionVariable = new StdConditionVariable();
 
-	WorkerArguments* Arguments = new WorkerArguments;
-	Arguments->WorkerObj = this;
+	_WorkerArgs = new WorkerArgs(
+		_Running,
+		_WorkerConditionVariable,
+		_WorkerConditionVariableMutex,
+		_Task,
+		_IsExecutingTask,
+		_IsAvailable
+	);
 
-	_Thread->Create(Worker::WorkerRun, Arguments);
+	ThreadObj->Create(Worker::WorkerRun, _WorkerArgs);
 }
 
 Worker::~Worker()
 {
-	delete _ConditionVariable;
-	_ConditionVariable = nullptr;
-	delete _ConditionVariableMutex;
-	_ConditionVariableMutex = nullptr;
-	delete _TaskMutex;
-	_TaskMutex = nullptr;
+	delete _WorkerArgs;
+	_WorkerArgs = nullptr;
 }
 
-bool Worker::TaskIsExecuted()
+void Worker::Shutdown()
 {
-	Task* CurrentTask = _Task;
-	return !CurrentTask || CurrentTask->TaskIsExecuted();
+	ETERNAL_ASSERT(_Running->Load());
+	_Running->Store(0);
 }
 
-void Worker::Setup()
+bool Worker::IsAvailable() const
 {
+	return _IsAvailable;
 }
 
-void Worker::Execute()
+void Worker::PushTask(Task* TaskObj)
 {
-	for (;;)
+	ETERNAL_ASSERT(_IsAvailable);
+	_IsAvailable = false;
+	_IsExecutingTask = false;
+	_Task = TaskObj;
+
+	while (!_IsExecutingTask)
 	{
-		Task* CurrentTask = _Task;
-		if (CurrentTask && !CurrentTask->TaskIsExecuted())
-		{
-			CurrentTask->Execute();
-			{
-				MutexAutoLock TaskMutex(_TaskMutex);
-				_Task = nullptr;
-			}
-		}
+		_WorkerConditionVariableMutex->Lock();
+		_WorkerConditionVariable->NotifyOne();
+		_WorkerConditionVariableMutex->Unlock();
 
-		_ConditionVariableMutex->Lock();
-		_ConditionVariable->Wait(*_ConditionVariableMutex);
-		_ConditionVariableMutex->Unlock();
+		Sleep(1);
 	}
-}
-
-void Worker::SetTask(Task* TaskObj)
-{
-	ETERNAL_ASSERT(TaskObj->TaskIsExecutable());
-	ETERNAL_ASSERT(!TaskObj->TaskIsExecuted());
-	ETERNAL_ASSERT(TaskIsExecuted());
-
-	{
-		MutexAutoLock TaskMutex(_TaskMutex);
-		_Task = TaskObj;
-	}
-
-	_ConditionVariableMutex->Lock();
-	_ConditionVariable->NotifyAll();
-	_ConditionVariableMutex->Unlock();
 }
