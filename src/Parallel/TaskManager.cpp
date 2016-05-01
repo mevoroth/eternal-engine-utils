@@ -7,6 +7,7 @@
 #include "Parallel/StdConditionVariable.hpp"
 #include "Parallel/StdAtomicInt.hpp"
 #include "Parallel/Sleep.hpp"
+#include "Parallel/Task.hpp"
 
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
@@ -31,7 +32,23 @@ uint32_t TaskManager::TaskManagerRun(void* Args)
 
 		while (Arguments->Scheduler.RemainingUnscheduledTasks())
 		{
-			Task* TaskObj = Arguments->Scheduler.PopTask();
+			Task* TaskObj = nullptr;
+			while (!TaskObj)
+			{
+				Sleep(1);
+				TaskObj = Arguments->Scheduler.PopTask();
+			}
+
+#ifdef ETERNAL_DEBUG
+			OutputDebugString("[TaskManager::TaskManagerRun]Picking ");
+			OutputDebugString(TaskObj->GetTaskName().c_str());
+			OutputDebugString("\n");
+
+			char UnscheduledTasksCount[256];
+			sprintf_s(UnscheduledTasksCount, "[TaskManager::TaskManagerRun]Remaining tasks after picking : %d\n", Arguments->Scheduler.RemainingUnscheduledTasks());
+			OutputDebugString(UnscheduledTasksCount);
+#endif
+
 			bool TaskToBeScheduled = true;
 			while (TaskToBeScheduled)
 			{
@@ -92,6 +109,7 @@ TaskManager* TaskManager::Get()
 
 void TaskManager::Schedule()
 {
+	OutputDebugString("TaskManager::Schedule\n");
 	_Done = false;
 	_SchedulingTask = false;
 
@@ -107,9 +125,10 @@ void TaskManager::Schedule()
 
 void TaskManager::Barrier()
 {
-	OutputDebugString("Barrier\n");
+	OutputDebugString("TaskManager::Barrier [BEGIN]\n");
 	while (!(_Done && _Scheduler.Done()))
 		Sleep(1);
+	OutputDebugString("TaskManager::Barrier [END]\n");
 }
 
 void TaskManager::Shutdown()

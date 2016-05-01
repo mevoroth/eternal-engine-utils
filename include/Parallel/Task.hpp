@@ -37,6 +37,14 @@ namespace Eternal
 			}
 
 			void SetTaskName(const string& TaskName);
+			const string& GetTaskName() const
+			{
+#ifdef ETERNAL_DEBUG
+				return _TaskName;
+#else
+				return "";
+#endif
+			}
 
 		protected:
 			inline void SetState(const TaskState& State)

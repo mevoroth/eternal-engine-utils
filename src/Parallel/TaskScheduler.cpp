@@ -1,5 +1,9 @@
 #include "Parallel/TaskScheduler.hpp"
 
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include "Macros/Macros.hpp"
 
 #include "Parallel/StdMutex.hpp"
@@ -94,6 +98,12 @@ void TaskScheduler::Reset()
 {
 	ETERNAL_ASSERT(!RemainingUnscheduledTasks());
 	ETERNAL_ASSERT(Done());
+
+#ifdef ETERNAL_DEBUG
+	char UnscheduledTasksCount[256];
+	sprintf_s(UnscheduledTasksCount, "[TaskScheduler::Reset]Task Count : %d\n", RemainingUnscheduledTasks());
+	OutputDebugString(UnscheduledTasksCount);
+#endif
 
 	for (int TaskIndex = 0; TaskIndex < _TasksList.size(); ++TaskIndex)
 	{

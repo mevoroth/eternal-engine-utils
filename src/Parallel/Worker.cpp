@@ -1,5 +1,9 @@
 #include "Parallel/Worker.hpp"
 
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include "Macros/Macros.hpp"
 #include "Parallel/Thread.hpp"
 #include "Parallel/StdAtomicInt.hpp"
@@ -7,6 +11,8 @@
 #include "Parallel/StdMutex.hpp"
 #include "Parallel/Task.hpp"
 #include "Parallel/Sleep.hpp"
+
+#include "Parallel/Task.hpp"
 
 using namespace Eternal::Parallel;
 
@@ -22,8 +28,21 @@ uint32_t Worker::WorkerRun(void* Args)
 
 		Arguments->IsExecutingTask = true;
 		//ETERNAL_ASSERT(Arguments->TaskObj->GetState() == Task::SETUP);
+
+#ifdef ETERNAL_DEBUG
+		OutputDebugString("Executing ");
+		OutputDebugString(Arguments->TaskObj->GetTaskName().c_str());
+		OutputDebugString("\n");
+#endif
+
 		Arguments->TaskObj->Setup();
 		Arguments->TaskObj->Execute();
+
+#ifdef ETERNAL_DEBUG
+		OutputDebugString("Finishing ");
+		OutputDebugString(Arguments->TaskObj->GetTaskName().c_str());
+		OutputDebugString("\n");
+#endif
 
 		Arguments->IsAvailable = true;
 	}
