@@ -26,6 +26,7 @@ ImportFbx::ImportFbx()
 	_SdkMgr->SetIOSettings(_Settings);
 	_FbxImporter = FbxImporter::Create(_SdkMgr, "");
 
+	OutputDebugString("WARNING: UV.y has been inversed!\n");
 }
 
 ImportFbx* ImportFbx::Get()
@@ -158,7 +159,7 @@ void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inou
 			ETERNAL_ASSERT(!UnMapped);
 		}
 
-		Out.GetVertex(Vertex).UV = Vector2(UV[0], UV[1]);
+		Out.GetVertex(Vertex).UV = Vector2(UV[0], 1.f - UV[1]);
 	}
 }
 
