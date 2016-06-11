@@ -2,6 +2,7 @@
 
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
 #include <windows.h>
 
 #include "Macros/Macros.hpp"
@@ -44,11 +45,10 @@ void TaskScheduler::PushTask(Task* ChildTask, Task* ParentTask /* = nullptr */)
 		_TasksList.push_back(Dependency());
 		TaskDependency = &_TasksList.back();
 		TaskDependency->TaskObj = ChildTask;
+		_UnscheduledTasks->Add();
 	}
 	if (ParentTask)
 		TaskDependency->Dependencies.push_back(ParentTask);
-
-	_UnscheduledTasks->Add();
 }
 
 Task* TaskScheduler::PopTask()

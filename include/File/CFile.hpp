@@ -12,6 +12,8 @@ namespace Eternal
 		class CFile : public File
 		{
 		public:
+			static bool Exists(const std::string& FileName);
+
 			CFile(const std::string& FileName);
 			virtual void Open(const OpenMode& OpenModeObj) override;
 			virtual void Close() override;

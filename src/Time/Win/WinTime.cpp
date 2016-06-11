@@ -1,8 +1,9 @@
 #include "Time/Win/WinTime.hpp"
 
-#include <cassert>
+#include "Macros/Macros.hpp"
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
 #include <Windows.h>
 
 using namespace Eternal::Time;
@@ -14,12 +15,12 @@ WinTime::WinTime()
 	{
 		memset(&_freq, 0x0, sizeof(LARGE_INTEGER));
 	}
-	assert(_freq.QuadPart != 0);
+	ETERNAL_ASSERT(_freq.QuadPart != 0);
 }
 
 void WinTime::Begin()
 {
-	assert(!_stack.Full());
+	ETERNAL_ASSERT(!_stack.Full());
 
 	LARGE_INTEGER val;
 	if (QueryPerformanceCounter(&val))
@@ -30,7 +31,7 @@ void WinTime::Begin()
 
 TimeT WinTime::End()
 {
-	assert(!_stack.Empty());
+	ETERNAL_ASSERT(!_stack.Empty());
 
 	LARGE_INTEGER val;
 	if (QueryPerformanceCounter(&val))

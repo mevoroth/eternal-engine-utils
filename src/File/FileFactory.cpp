@@ -18,5 +18,12 @@ namespace Eternal
 #endif
 		}
 
+		bool FileExists(const std::string& FileName)
+		{
+#ifdef ETERNAL_USE_CFILE
+			return CFile::Exists(FileName);
+#else
+#endif
+		}
 	}
 }

@@ -4,6 +4,17 @@
 
 using namespace Eternal::File;
 
+bool CFile::Exists(const std::string& FileName)
+{
+	ETERNAL_ASSERT(FileName.size());
+	std::FILE* File = nullptr;
+	errno_t Err = fopen_s(&File, FileName.c_str(), "rb");
+	bool FileExists = !Err && File;
+	if (File)
+		fclose(File);
+	return FileExists;
+}
+
 CFile::CFile(const std::string& FileName)
 	: _FileName(FileName)
 {
