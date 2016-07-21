@@ -1,9 +1,9 @@
-#ifndef _STD_ATOMIC_INT_
-#define _STD_ATOMIC_INT_
+#ifndef _STD_ATOMIC_S32_HPP_
+#define _STD_ATOMIC_S32_HPP_
 
 #include <atomic>
 
-#include "AtomicInt.hpp"
+#include "AtomicS32.hpp"
 
 using namespace std;
 
@@ -11,10 +11,10 @@ namespace Eternal
 {
 	namespace Parallel
 	{
-		class StdAtomicInt : public AtomicInt
+		class StdAtomicS32 : public AtomicS32
 		{
 		public:
-			StdAtomicInt(int Value)
+			StdAtomicS32(int Value = 0)
 				: _Value(Value)
 			{
 			}
@@ -33,6 +33,10 @@ namespace Eternal
 			inline virtual void Sub(_In_ int Value = 1) override
 			{
 				_Value.fetch_sub(Value);
+			}
+			inline virtual bool CompareAndSwap(_In_ int OldValue, _In_ int NewValue) override
+			{
+				return atomic_compare_exchange_strong(&_Value, &OldValue, NewValue);
 			}
 
 		private:

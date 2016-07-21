@@ -10,14 +10,14 @@
 #include "Parallel/StdMutex.hpp"
 #include "Parallel/MutexAutoLock.hpp"
 #include "Parallel/Task.hpp"
-#include "Parallel/StdAtomicInt.hpp"
+#include "Parallel/StdAtomicS32.hpp"
 
 using namespace Eternal::Parallel;
 
 TaskScheduler::TaskScheduler()
 {
 	_TasksMutex = new StdMutex();
-	_UnscheduledTasks = new StdAtomicInt(0);
+	_UnscheduledTasks = new StdAtomicS32(0);
 }
 
 TaskScheduler::~TaskScheduler()

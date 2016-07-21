@@ -31,6 +31,9 @@
     <Filter Include="File">
       <UniqueIdentifier>{db67e1a5-1a4d-4666-8fe2-e3cee9eba0f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{adf05ec9-c916-43e5-a5b7-20103fc91be4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -76,12 +79,6 @@
     <ClInclude Include="include\Parallel\MutexAutoLock.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
-    <ClInclude Include="include\Parallel\AtomicInt.hpp">
-      <Filter>Parallel</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Parallel\StdAtomicInt.hpp">
-      <Filter>Parallel</Filter>
-    </ClInclude>
     <ClInclude Include="include\Parallel\Sleep.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
@@ -107,6 +104,24 @@
       <Filter>Parallel</Filter>
     </ClInclude>
     <ClInclude Include="include\Parallel\CpuCoreCount.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Resources\Pool.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bit\Bit.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\AtomicU64.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\AtomicS32.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\StdAtomicS32.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\StdAtomicU64.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
   </ItemGroup>
@@ -155,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="src\Parallel\StdCpuCoreCount.cpp">
       <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bit\Bit.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

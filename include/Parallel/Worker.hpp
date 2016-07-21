@@ -9,7 +9,7 @@ namespace Eternal
 	{
 		class Task;
 		class Thread;
-		class AtomicInt;
+		class AtomicS32;
 		class Mutex;
 		class ConditionVariable;
 
@@ -28,14 +28,14 @@ namespace Eternal
 		private:
 			struct WorkerArgs
 			{
-				AtomicInt*& Running;
+				AtomicS32*& Running;
 				ConditionVariable*& WorkerConditionVariable;
 				Mutex*& WorkerConditionVariableMutex;
 				Task*& TaskObj;
 				bool& IsExecutingTask;
 				bool& IsAvailable;
 
-				WorkerArgs(AtomicInt*& Running, ConditionVariable*& WorkerConditionVariable, Mutex*& WorkerConditionVariableMutex, Task*& TaskObj, bool& IsExecutingTask, bool& IsAvailable)
+				WorkerArgs(AtomicS32*& Running, ConditionVariable*& WorkerConditionVariable, Mutex*& WorkerConditionVariableMutex, Task*& TaskObj, bool& IsExecutingTask, bool& IsAvailable)
 					: Running(Running)
 					, WorkerConditionVariable(WorkerConditionVariable)
 					, WorkerConditionVariableMutex(WorkerConditionVariableMutex)
@@ -47,7 +47,7 @@ namespace Eternal
 			};
 
 			WorkerArgs* _WorkerArgs = nullptr;
-			AtomicInt* _Running = nullptr;
+			AtomicS32* _Running = nullptr;
 			Task* _Task = nullptr;
 
 			ConditionVariable* _WorkerConditionVariable = nullptr;

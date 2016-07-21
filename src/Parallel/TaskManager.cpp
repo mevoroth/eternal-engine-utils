@@ -5,7 +5,7 @@
 #include "Parallel/CpuCoreCount.hpp"
 #include "Parallel/StdMutex.hpp"
 #include "Parallel/StdConditionVariable.hpp"
-#include "Parallel/StdAtomicInt.hpp"
+#include "Parallel/StdAtomicS32.hpp"
 #include "Parallel/Sleep.hpp"
 #include "Parallel/Task.hpp"
 
@@ -75,7 +75,7 @@ TaskManager::TaskManager()
 {
 	ETERNAL_ASSERT(!_Inst);
 
-	_Running = new StdAtomicInt(1);
+	_Running = new StdAtomicS32(1);
 
 	_ThreadsWorkersCount = CpuCoreCount();
 	_Threads = new Thread*[_ThreadsWorkersCount];

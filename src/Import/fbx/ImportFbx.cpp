@@ -28,6 +28,7 @@ ImportFbx::ImportFbx()
 	_FbxImporter = FbxImporter::Create(_SdkMgr, "");
 
 	OutputDebugString("WARNING: UV.y has been inversed!\n");
+	OutputDebugString("WARNING: Pos.w = 1.f\n");
 }
 
 ImportFbx* ImportFbx::Get()
@@ -63,13 +64,14 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 			fbxsdk_2015_1::FbxMesh* FbxMeshObj = (fbxsdk_2015_1::FbxMesh*)Attribute;
 			FbxVector4* V = FbxMeshObj->GetControlPoints();
 			D3D11PosUVNormalVertexBuffer::PosUVNormalVertex VertexObj;
-			for (int ControlPointIndex = 0, c = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < c; ++ControlPointIndex)
+			for (int ControlPointIndex = 0, ControlPointCount = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < ControlPointCount; ++ControlPointIndex)
 			{
-				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][2], V[ControlPointIndex][1], V[ControlPointIndex][3]);
+				//VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], V[ControlPointIndex][3]);
+				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], 1.f);
 				
 				Out.PushVertex(VertexObj);
 			}
-			for (int PolygonIndex = 0, c = FbxMeshObj->GetPolygonCount(); PolygonIndex < c; ++PolygonIndex)
+			for (int PolygonIndex = 0, ControlPointCount = FbxMeshObj->GetPolygonCount(); PolygonIndex < ControlPointCount; ++PolygonIndex)
 			{
 				int PolygonSize = FbxMeshObj->GetPolygonSize(PolygonIndex);
 				Out.PushTriangle(
@@ -159,6 +161,7 @@ void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inou
 			ETERNAL_ASSERT(Ret);
 			ETERNAL_ASSERT(!UnMapped);
 		}
+		//ETERNAL_ASSERT(false);
 
 		Out.GetVertex(Vertex).UV = Vector2(UV[0], 1.f - UV[1]);
 	}

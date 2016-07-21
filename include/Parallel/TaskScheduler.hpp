@@ -11,7 +11,7 @@ namespace Eternal
 	{
 		class Task;
 		class Mutex;
-		class AtomicInt;
+		class AtomicS32;
 
 		class TaskScheduler
 		{
@@ -34,7 +34,7 @@ namespace Eternal
 
 			Mutex* _TasksMutex = nullptr;
 			vector<Dependency> _TasksList;
-			AtomicInt* _UnscheduledTasks = nullptr;
+			AtomicS32* _UnscheduledTasks = nullptr;
 
 			bool _IsSchedulable(const vector<Task*>& SubTasks) const;
 		};

@@ -7,7 +7,7 @@
 
 #include "Macros/Macros.hpp"
 #include "Parallel/Thread.hpp"
-#include "Parallel/StdAtomicInt.hpp"
+#include "Parallel/StdAtomicS32.hpp"
 #include "Parallel/StdConditionVariable.hpp"
 #include "Parallel/StdMutex.hpp"
 #include "Parallel/Task.hpp"
@@ -53,7 +53,7 @@ uint32_t Worker::WorkerRun(void* Args)
 
 Worker::Worker(Thread* ThreadObj)
 {
-	_Running = new StdAtomicInt(1);
+	_Running = new StdAtomicS32(1);
 	_WorkerConditionVariableMutex = new StdMutex();
 	_WorkerConditionVariable = new StdConditionVariable();
 

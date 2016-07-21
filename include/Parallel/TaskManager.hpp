@@ -19,7 +19,7 @@ namespace Eternal
 		class Mutex;
 		class Thread;
 		class ConditionVariable;
-		class AtomicInt;
+		class AtomicS32;
 
 		class TaskManager
 		{
@@ -42,7 +42,7 @@ namespace Eternal
 		private:
 			struct TaskManagerArgs
 			{
-				AtomicInt*& Running;
+				AtomicS32*& Running;
 				Worker**& Workers;
 				const uint32_t& WorkersCount;
 				TaskScheduler& Scheduler;
@@ -51,7 +51,7 @@ namespace Eternal
 				bool& SchedulingTask;
 				bool& Done;
 				
-				TaskManagerArgs(AtomicInt*& Running, Worker**& Workers, const uint32_t& WorkersCount, TaskScheduler& Scheduler, ConditionVariable*& SchedulerConditionVariable, Mutex*& SchedulerConditionVariableMutex, bool& SchedulingTask, bool& Done)
+				TaskManagerArgs(AtomicS32*& Running, Worker**& Workers, const uint32_t& WorkersCount, TaskScheduler& Scheduler, ConditionVariable*& SchedulerConditionVariable, Mutex*& SchedulerConditionVariableMutex, bool& SchedulingTask, bool& Done)
 					: Running(Running)
 					, Workers(Workers)
 					, WorkersCount(WorkersCount)
@@ -67,7 +67,7 @@ namespace Eternal
 
 			Thread* _TaskManagerThread = nullptr;
 
-			AtomicInt* _Running = nullptr;
+			AtomicS32* _Running = nullptr;
 			TaskManagerArgs* _TaskManagerArgs = nullptr;
 			Thread** _Threads = nullptr;
 			Worker** _Workers = nullptr;

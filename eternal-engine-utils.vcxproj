@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Bit\Bit.hpp" />
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\File\CFile.hpp" />
     <ClInclude Include="include\File\File.hpp" />
@@ -26,13 +27,15 @@
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
     <ClInclude Include="include\Import\tga\ImportTga.hpp" />
     <ClInclude Include="include\Macros\Macros.hpp" />
-    <ClInclude Include="include\Parallel\AtomicInt.hpp" />
+    <ClInclude Include="include\Parallel\AtomicS32.hpp" />
+    <ClInclude Include="include\Parallel\AtomicU64.hpp" />
     <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\CpuCoreCount.hpp" />
     <ClInclude Include="include\Parallel\Mutex.hpp" />
     <ClInclude Include="include\Parallel\MutexAutoLock.hpp" />
     <ClInclude Include="include\Parallel\Sleep.hpp" />
-    <ClInclude Include="include\Parallel\StdAtomicInt.hpp" />
+    <ClInclude Include="include\Parallel\StdAtomicS32.hpp" />
+    <ClInclude Include="include\Parallel\StdAtomicU64.hpp" />
     <ClInclude Include="include\Parallel\StdConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\StdMutex.hpp" />
     <ClInclude Include="include\Parallel\StdThread.hpp" />
@@ -41,12 +44,14 @@
     <ClInclude Include="include\Parallel\TaskScheduler.hpp" />
     <ClInclude Include="include\Parallel\Thread.hpp" />
     <ClInclude Include="include\Parallel\Worker.hpp" />
+    <ClInclude Include="include\Resources\Pool.hpp" />
     <ClInclude Include="include\Resources\TextureFactory.hpp" />
     <ClInclude Include="include\Time\Time.hpp" />
     <ClInclude Include="include\Time\Win\WinTime.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Bit\Bit.cpp" />
     <ClCompile Include="src\File\CFile.cpp" />
     <ClCompile Include="src\File\FileFactory.cpp" />
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
