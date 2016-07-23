@@ -11,13 +11,15 @@ namespace Eternal
 		class Time
 		{
 		private:
-			static Time* _inst;
+			static Time* _Inst;
 		public:
 			Time();
 			static Time* Get();
 			virtual void Begin() = 0;
 			virtual TimeT End() = 0;
 			virtual TimeT GetTime() const = 0;
+			virtual TimeT GetDeltaTime() const = 0;
+			virtual void Update() = 0;
 		};
 	}
 }

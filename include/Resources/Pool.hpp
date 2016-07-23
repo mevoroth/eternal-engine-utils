@@ -99,6 +99,8 @@ namespace Eternal
 				return &_Resources[Handle];
 			}
 
+			constexpr size_t GetSize() const { return Size; }
+
 		private:
 			typedef AtomicU64* ResourceCluster;
 			static constexpr uint64_t FullCluster = 0xFFFFFFFFFFFFFFFF;

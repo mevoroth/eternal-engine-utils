@@ -100,6 +100,28 @@ TaskManager::TaskManager()
 TaskManager::~TaskManager()
 {
 	_Inst = nullptr;
+
+	delete _TaskManagerThread;
+	_TaskManagerThread = nullptr;
+	delete _TaskManagerArgs;
+	_TaskManagerArgs = nullptr;
+	delete _SchedulerConditionVariable;
+	_SchedulerConditionVariable = nullptr;
+	delete _SchedulerConditionVariableMutex;
+	_SchedulerConditionVariableMutex = nullptr;
+	for (int ThreadWorkerIndex = 0; ThreadWorkerIndex < _ThreadsWorkersCount; ++ThreadWorkerIndex)
+	{
+		delete _Workers[ThreadWorkerIndex];
+		_Workers[ThreadWorkerIndex] = nullptr;
+		delete _Threads[ThreadWorkerIndex];
+		_Threads[ThreadWorkerIndex] = nullptr;
+	}
+	delete[] _Workers;
+	_Workers = nullptr;
+	delete[] _Threads;
+	_Threads = nullptr;
+	delete _Running;
+	_Running = nullptr;
 }
 
 TaskManager* TaskManager::Get()

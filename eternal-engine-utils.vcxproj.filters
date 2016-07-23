@@ -124,6 +124,9 @@
     <ClInclude Include="include\Parallel\StdAtomicU64.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
+    <ClInclude Include="include\Time\TimeFactory.hpp">
+      <Filter>Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -173,6 +176,12 @@
     </ClCompile>
     <ClCompile Include="src\Bit\Bit.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Time\TimeFactory.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Time\Time.cpp">
+      <Filter>Time</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -11,37 +11,37 @@ using namespace Eternal::Time;
 WinTime::WinTime()
 	: Time()
 {
-	if (!QueryPerformanceCounter(&_freq))
+	if (!QueryPerformanceCounter(&_Freq))
 	{
-		memset(&_freq, 0x0, sizeof(LARGE_INTEGER));
+		memset(&_Freq, 0x0, sizeof(LARGE_INTEGER));
 	}
-	ETERNAL_ASSERT(_freq.QuadPart != 0);
+	ETERNAL_ASSERT(_Freq.QuadPart != 0);
 }
 
 void WinTime::Begin()
 {
-	ETERNAL_ASSERT(!_stack.Full());
+	ETERNAL_ASSERT(!_Stack.Full());
 
-	LARGE_INTEGER val;
-	if (QueryPerformanceCounter(&val))
+	LARGE_INTEGER Value;
+	if (QueryPerformanceCounter(&Value))
 	{
-		_stack.Push(val);
+		_Stack.Push(Value);
 	}
 }
 
 TimeT WinTime::End()
 {
-	ETERNAL_ASSERT(!_stack.Empty());
+	ETERNAL_ASSERT(!_Stack.Empty());
 
-	LARGE_INTEGER val;
-	if (QueryPerformanceCounter(&val))
+	LARGE_INTEGER Value;
+	if (QueryPerformanceCounter(&Value))
 	{
-		val.QuadPart = val.QuadPart - _stack.Head().QuadPart;
-		_stack.Pop();
-		return val.QuadPart * 1000l / _freq.QuadPart;
+		Value.QuadPart = Value.QuadPart - _Stack.Head().QuadPart;
+		_Stack.Pop();
+		return Value.QuadPart * 1000ull / _Freq.QuadPart;
 	}
 
-	return -1l;
+	return ~0ull;
 }
 
 TimeT WinTime::GetTime() const
@@ -49,7 +49,19 @@ TimeT WinTime::GetTime() const
 	LARGE_INTEGER val;
 	if (QueryPerformanceCounter(&val))
 	{
-		return val.QuadPart * 1000l / _freq.QuadPart;
+		return val.QuadPart * 1000ull / _Freq.QuadPart;
 	}
-	return -1l;
+	return ~0ull;
+}
+
+TimeT WinTime::GetDeltaTime() const
+{
+	return _DeltaTime;
+}
+
+void WinTime::Update()
+{
+	TimeT PreviousTime = _PreviousTime;
+	_PreviousTime = GetTime();
+	_DeltaTime = PreviousTime - _PreviousTime;
 }

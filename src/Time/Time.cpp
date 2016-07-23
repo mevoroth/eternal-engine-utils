@@ -1,13 +1,13 @@
 #include "Time/Time.hpp"
 
-#include <cassert>
+#include "Macros/Macros.hpp"
 
 using namespace Eternal::Time;
 
-Time* Time::_inst = 0;
+Time* Time::_Inst = nullptr;
 
 Time::Time()
 {
-	assert(!_inst);
-	_inst = this;
+	ETERNAL_ASSERT(!_Inst);
+	_Inst = this;
 }

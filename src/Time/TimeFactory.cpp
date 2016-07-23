@@ -1,0 +1,15 @@
+#include "Time/TimeFactory.hpp"
+
+#include "Time/Win/WinTime.hpp"
+
+namespace Eternal
+{
+	namespace Time
+	{
+		Time* CreateTime(_In_ const TimeType& TimeTypObj)
+		{
+			if (TimeTypObj == WIN)
+				return new WinTime();
+		}
+	}
+}

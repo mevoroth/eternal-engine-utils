@@ -47,6 +47,7 @@
     <ClInclude Include="include\Resources\Pool.hpp" />
     <ClInclude Include="include\Resources\TextureFactory.hpp" />
     <ClInclude Include="include\Time\Time.hpp" />
+    <ClInclude Include="include\Time\TimeFactory.hpp" />
     <ClInclude Include="include\Time\Win\WinTime.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
@@ -66,6 +67,8 @@
     <ClCompile Include="src\Parallel\TaskScheduler.cpp" />
     <ClCompile Include="src\Parallel\Worker.cpp" />
     <ClCompile Include="src\Resources\TextureFactory.cpp" />
+    <ClCompile Include="src\Time\Time.cpp" />
+    <ClCompile Include="src\Time\TimeFactory.cpp" />
     <ClCompile Include="src\Time\Win\WinTime.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
