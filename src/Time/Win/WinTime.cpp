@@ -11,7 +11,7 @@ using namespace Eternal::Time;
 WinTime::WinTime()
 	: Time()
 {
-	if (!QueryPerformanceCounter(&_Freq))
+	if (!QueryPerformanceFrequency(&_Freq))
 	{
 		memset(&_Freq, 0x0, sizeof(LARGE_INTEGER));
 	}
@@ -38,7 +38,7 @@ TimeT WinTime::End()
 	{
 		Value.QuadPart = Value.QuadPart - _Stack.Head().QuadPart;
 		_Stack.Pop();
-		return Value.QuadPart * 1000ull / _Freq.QuadPart;
+		return Value.QuadPart * 1000000ull / _Freq.QuadPart;
 	}
 
 	return ~0ull;
@@ -49,7 +49,7 @@ TimeT WinTime::GetTime() const
 	LARGE_INTEGER val;
 	if (QueryPerformanceCounter(&val))
 	{
-		return val.QuadPart * 1000ull / _Freq.QuadPart;
+		return val.QuadPart * 1000000ull / _Freq.QuadPart;
 	}
 	return ~0ull;
 }

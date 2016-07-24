@@ -17,6 +17,8 @@ namespace Eternal
 		{
 		public:
 			TaskScheduler();
+			TaskScheduler(const TaskScheduler&) = delete;
+			TaskScheduler& operator=(const TaskScheduler&) = delete;
 			virtual ~TaskScheduler();
 			
 			void PushTask(Task* ChildTask, Task* ParentTask = nullptr);
