@@ -15,6 +15,8 @@ namespace Eternal
 		public:
 			Time();
 			static Time* Get();
+			static void ToHumanReadable(_In_ const TimeT& Value, _Out_ char HumanReadable[24]);
+
 			virtual void Begin() = 0;
 			virtual TimeT End() = 0;
 			virtual TimeT GetTime() const = 0;

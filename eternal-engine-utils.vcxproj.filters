@@ -34,6 +34,15 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{adf05ec9-c916-43e5-a5b7-20103fc91be4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Log">
+      <UniqueIdentifier>{e45ce5ca-6a33-445c-9c61-cc10595affb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log\FileLog">
+      <UniqueIdentifier>{b4ba7d59-4f06-45d3-93ee-6fdae7d40f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log\ConsoleLog">
+      <UniqueIdentifier>{68bec873-2f3e-4a39-a90d-58b6c0ab20a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -127,6 +136,18 @@
     <ClInclude Include="include\Time\TimeFactory.hpp">
       <Filter>Time</Filter>
     </ClInclude>
+    <ClInclude Include="include\Log\Log.hpp">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Log\FileLog\FileLog.hpp">
+      <Filter>Log\FileLog</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Log\LogFactory.hpp">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Log\ConsoleLog\ConsoleLog.hpp">
+      <Filter>Log\ConsoleLog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -182,6 +203,18 @@
     </ClCompile>
     <ClCompile Include="src\Time\Time.cpp">
       <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log\FileLog\FileLog.cpp">
+      <Filter>Log\FileLog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log\Log.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log\LogFactory.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log\ConsoleLog\ConsoleLog.cpp">
+      <Filter>Log\ConsoleLog</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
