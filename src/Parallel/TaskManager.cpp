@@ -41,13 +41,13 @@ uint32_t TaskManager::TaskManagerRun(void* Args)
 			}
 
 #ifdef ETERNAL_DEBUG
-			OutputDebugString("[TaskManager::TaskManagerRun]Picking ");
-			OutputDebugString(TaskObj->GetTaskName().c_str());
-			OutputDebugString("\n");
+			//OutputDebugString("[TaskManager::TaskManagerRun]Picking ");
+			//OutputDebugString(TaskObj->GetTaskName().c_str());
+			//OutputDebugString("\n");
 
-			char UnscheduledTasksCount[256];
-			sprintf_s(UnscheduledTasksCount, "[TaskManager::TaskManagerRun]Remaining tasks after picking : %d\n", Arguments->Scheduler.RemainingUnscheduledTasks());
-			OutputDebugString(UnscheduledTasksCount);
+			//char UnscheduledTasksCount[256];
+			//sprintf_s(UnscheduledTasksCount, "[TaskManager::TaskManagerRun]Remaining tasks after picking : %d\n", Arguments->Scheduler.RemainingUnscheduledTasks());
+			//OutputDebugString(UnscheduledTasksCount);
 #endif
 
 			bool TaskToBeScheduled = true;
@@ -132,7 +132,7 @@ TaskManager* TaskManager::Get()
 
 void TaskManager::Schedule()
 {
-	OutputDebugString("TaskManager::Schedule\n");
+	//OutputDebugString("TaskManager::Schedule\n");
 	_Done = false;
 	_SchedulingTask = false;
 
@@ -148,10 +148,10 @@ void TaskManager::Schedule()
 
 void TaskManager::Barrier()
 {
-	OutputDebugString("TaskManager::Barrier [BEGIN]\n");
+	//OutputDebugString("TaskManager::Barrier [BEGIN]\n");
 	while (!(_Done && _Scheduler.Done()))
 		Sleep(1);
-	OutputDebugString("TaskManager::Barrier [END]\n");
+	//OutputDebugString("TaskManager::Barrier [END]\n");
 }
 
 void TaskManager::Shutdown()

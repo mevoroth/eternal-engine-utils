@@ -54,6 +54,7 @@ void FileLog::Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category
 	string Temp = HumanReadableTime;
 	Temp.append("[").append(Category.Category).append("]");
 	Temp.append(Message);
+	Temp.append("\n");
 	_LogFiles[Level.Index]->Write((uint8_t*)Temp.c_str(), Temp.size());
 	_LogAllFile->Write((uint8_t*)Temp.c_str(), Temp.size());
 }

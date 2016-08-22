@@ -1,6 +1,10 @@
 #include "Log/LogFactory.hpp"
 
+#include "Macros/Macros.hpp"
+
 #include "Log/FileLog/FileLog.hpp"
+#include "Log/ConsoleLog/ConsoleLog.hpp"
+#include "Log/MultiChannelLog/MultiChannelLog.hpp"
 
 namespace Eternal
 {
@@ -13,7 +17,27 @@ namespace Eternal
 			case FILE:
 				return new FileLog(Session);
 				break;
+
+			case CONSOLE:
+				return new ConsoleLog();
+				break;
+
+			case MULTI_CHANNEL:
+				ETERNAL_ASSERT(false); // Multi Channel Log must be created with CreateMultiChannelLog()
+				break;
 			}
+		}
+
+		Log* CreateMultiChannelLog(_In_ Log** Logs, _In_ int LogsCount)
+		{
+			MultiChannelLog* MultiChannelLogObj = new MultiChannelLog();
+
+			for (int LogIndex = 0; LogIndex < LogsCount; ++LogIndex)
+			{
+				MultiChannelLogObj->Add(Logs[LogIndex]);
+			}
+
+			return MultiChannelLogObj;
 		}
 	}
 }

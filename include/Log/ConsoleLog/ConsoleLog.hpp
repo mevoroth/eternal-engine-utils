@@ -13,7 +13,7 @@ namespace Eternal
 		class ConsoleLog : public Log
 		{
 		public:
-			ConsoleLog() : Log() {}
+			ConsoleLog();
 			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) override;
 		};
 	}

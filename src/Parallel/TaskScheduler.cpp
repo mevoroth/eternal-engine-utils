@@ -99,11 +99,11 @@ void TaskScheduler::Reset()
 	ETERNAL_ASSERT(!RemainingUnscheduledTasks());
 	ETERNAL_ASSERT(Done());
 
-#ifdef ETERNAL_DEBUG
-	char UnscheduledTasksCount[256];
-	sprintf_s(UnscheduledTasksCount, "[TaskScheduler::Reset]Task Count : %d\n", RemainingUnscheduledTasks());
-	OutputDebugString(UnscheduledTasksCount);
-#endif
+//#ifdef ETERNAL_DEBUG
+//	char UnscheduledTasksCount[256];
+//	sprintf_s(UnscheduledTasksCount, "[TaskScheduler::Reset]Task Count : %d\n", RemainingUnscheduledTasks());
+//	OutputDebugString(UnscheduledTasksCount);
+//#endif
 
 	for (int TaskIndex = 0; TaskIndex < _TasksList.size(); ++TaskIndex)
 	{

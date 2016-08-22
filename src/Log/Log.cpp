@@ -21,6 +21,7 @@ Log::Log()
 void Log::Initialize(Log* LogObj)
 {
 	ETERNAL_ASSERT(!_Inst);
+	ETERNAL_ASSERT(LogObj);
 	_Inst = LogObj;
 }
 

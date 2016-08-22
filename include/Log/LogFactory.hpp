@@ -9,10 +9,13 @@ namespace Eternal
 
 		enum LogType
 		{
-			FILE
+			FILE,
+			CONSOLE,
+			MULTI_CHANNEL
 		};
 
 		Log* CreateLog(_In_ const LogType& LogTypeObj, _In_ const char* Session);
+		Log* CreateMultiChannelLog(_In_ Log** Logs, _In_ int LogsCount);
 	}
 }
 

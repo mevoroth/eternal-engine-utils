@@ -43,6 +43,12 @@
     <Filter Include="Log\ConsoleLog">
       <UniqueIdentifier>{68bec873-2f3e-4a39-a90d-58b6c0ab20a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Log\MultiChannelLog">
+      <UniqueIdentifier>{c5497792-dea3-4bca-9b61-a4e406adade4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SaveSystem">
+      <UniqueIdentifier>{5af31353-8225-4d10-9fb5-9416dd7f100f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -148,6 +154,21 @@
     <ClInclude Include="include\Log\ConsoleLog\ConsoleLog.hpp">
       <Filter>Log\ConsoleLog</Filter>
     </ClInclude>
+    <ClInclude Include="include\Log\MultiChannelLog\MultiChannelLog.hpp">
+      <Filter>Log\MultiChannelLog</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SaveSystem\GameData.hpp">
+      <Filter>SaveSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SaveSystem\SaveData.hpp">
+      <Filter>SaveSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SaveSystem\GameDataCollection.hpp">
+      <Filter>SaveSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SaveSystem\GameDataSaveSystem.hpp">
+      <Filter>SaveSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -215,6 +236,15 @@
     </ClCompile>
     <ClCompile Include="src\Log\ConsoleLog\ConsoleLog.cpp">
       <Filter>Log\ConsoleLog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log\MultiChannelLog\MultiChannelLog.cpp">
+      <Filter>Log\MultiChannelLog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SaveSystem\GameDataCollection.cpp">
+      <Filter>SaveSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SaveSystem\GameDataSaveSystem.cpp">
+      <Filter>SaveSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,11 @@
 
 using namespace Eternal::Log;
 
+ConsoleLog::ConsoleLog()
+	: Log()
+{
+}
+
 void ConsoleLog::Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message)
 {
 	char HumanReadableTime[24];
@@ -15,5 +20,6 @@ void ConsoleLog::Write(_In_ const LogLevel& Level, _In_ const LogCategory& Categ
 	Temp.append("[").append(Category.Category).append("]");
 	Temp.append("[").append(Level.Tag).append("]");
 	Temp.append(Message);
+	Temp.append("\n");
 	OutputDebugString(Temp.c_str());
 }

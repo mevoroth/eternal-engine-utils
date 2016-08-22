@@ -10,11 +10,16 @@
 #include "UtilsSettings.hpp"
 #include "Types/Types.hpp"
 #include "Macros/Macros.hpp"
+#include "File/FileFactory.hpp"
+
+#include "Mesh/Bone.hpp"
 
 using namespace Eternal::Import;
 using namespace Eternal::Graphics;
+using namespace Eternal::File;
 
 ImportFbx* ImportFbx::_Inst = nullptr;
+vector<string> ImportFbx::_IncludePaths;
 
 ImportFbx::ImportFbx()
 {
@@ -37,9 +42,24 @@ ImportFbx* ImportFbx::Get()
 	return _Inst;
 }
 
+void ImportFbx::RegisterPath(const std::string& IncludePath)
+{
+	_IncludePaths.push_back(IncludePath);
+}
+
 void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
 {
-	if (_FbxImporter->Initialize(Path.c_str(), -1, _Settings))
+	std::string FilePath;
+	bool PathFound = false;
+	for (int IncludePathIndex = 0; !PathFound && IncludePathIndex < _IncludePaths.size(); ++IncludePathIndex)
+	{
+		FilePath = _IncludePaths[IncludePathIndex] + Path;
+		PathFound = FileExists(FilePath);
+	}
+
+	ETERNAL_ASSERT(PathFound);
+
+	if (_FbxImporter->Initialize(FilePath.c_str(), -1, _Settings))
 	{
 		FbxStatus& Status = _FbxImporter->GetStatus();
 		OutputDebugString(Status.GetErrorString());
@@ -47,10 +67,23 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosU
 		//assert(false);
 	}
 
-	FbxScene* scene = FbxScene::Create(_SdkMgr, "scene");
-	_FbxImporter->Import(scene);
+	FbxScene* Scene = FbxScene::Create(_SdkMgr, "scene");
+	_FbxImporter->Import(Scene);
 
-	_ImportNode(scene->GetRootNode(), Out);
+	_ImportNode(Scene->GetRootNode(), Out);
+
+	//_ImportPoses();
+}
+
+void ImportFbx::_ImportPoses(_In_ FbxScene* Scene)
+{
+	int PoseCount = Scene->GetPoseCount();
+	for (int PoseIndex = 0; PoseIndex < PoseCount; ++PoseIndex)
+	{
+		FbxPose* Pose = Scene->GetPose(PoseIndex);
+		//Pose->Get
+
+	}
 }
 
 void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
@@ -60,15 +93,15 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 	{
 		switch (Attribute->GetAttributeType())
 		{
-		case FbxNodeAttribute::EType::eMesh:
-			fbxsdk_2015_1::FbxMesh* FbxMeshObj = (fbxsdk_2015_1::FbxMesh*)Attribute;
+		case FbxNodeAttribute::EType::eMesh: {
+			FbxMesh* FbxMeshObj = (FbxMesh*)Attribute;
 			FbxVector4* V = FbxMeshObj->GetControlPoints();
 			D3D11PosUVNormalVertexBuffer::PosUVNormalVertex VertexObj;
 			for (int ControlPointIndex = 0, ControlPointCount = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < ControlPointCount; ++ControlPointIndex)
 			{
 				//VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], V[ControlPointIndex][3]);
 				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], 1.f);
-				
+
 				Out.PushVertex(VertexObj);
 			}
 			for (int PolygonIndex = 0, ControlPointCount = FbxMeshObj->GetPolygonCount(); PolygonIndex < ControlPointCount; ++PolygonIndex)
@@ -78,23 +111,26 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1)
-				);
+					);
 				if (PolygonSize == 4) // Quad
 				{
 					Out.PushTriangle(
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3),
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
-					);
+						);
 				}
 
 				_GetUV(FbxMeshObj, PolygonIndex, Out);
 				_GetNormal(FbxMeshObj, PolygonIndex, Out);
 			}
+
+			_ImportSkeletal(FbxMeshObj);
+
 			{
-				ETERNAL_ASSERT(Node->GetSrcObjectCount<fbxsdk_2015_1::FbxSurfaceMaterial>() > 0);
-				fbxsdk_2015_1::FbxSurfaceMaterial* Material = Node->GetSrcObject<fbxsdk_2015_1::FbxSurfaceMaterial>(0);
-				FbxProperty DiffuseColorChannel = Material->FindProperty(fbxsdk_2015_1::FbxLayerElement::sTextureChannelNames[DIFFUSE_COLOR_CHANNEL]);
+				ETERNAL_ASSERT(Node->GetSrcObjectCount<FbxSurfaceMaterial>() > 0);
+				FbxSurfaceMaterial* Material = Node->GetSrcObject<FbxSurfaceMaterial>(0);
+				FbxProperty DiffuseColorChannel = Material->FindProperty(FbxLayerElement::sTextureChannelNames[DIFFUSE_COLOR_CHANNEL]);
 				ETERNAL_ASSERT(DiffuseColorChannel.IsValid());
 
 				FbxTexture* DiffuseColorTexture = DiffuseColorChannel.GetSrcObject<FbxTexture>(0);
@@ -107,11 +143,15 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
 				char FileName[255];
 				char Extension[8];
-				_splitpath_s(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
+				_splitpath_s(FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
 				sprintf_s(FileName, "%s%s", FileName, Extension);
 				Out.SetTexture(FileName);
 			}
-			break;
+		} break;
+
+		//case FbxNodeAttribute::EType::eSkeleton: {
+
+		//} break;
 		}
 	}
 	Out.GetTransform().Translate(
@@ -178,5 +218,57 @@ void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _
 		ETERNAL_ASSERT(Ret);
 
 		Out.GetVertex(Vertex).Normal = Vector4(Normal[0], Normal[1], Normal[2], Normal[3]);
+	}
+}
+
+void ImportFbx::_ImportSkeletal(_In_ FbxMesh* MeshObj)
+{
+	bool HasVertexCache = MeshObj->GetDeformerCount(FbxDeformer::eVertexCache) && ((FbxVertexCacheDeformer*)MeshObj->GetDeformer(0, FbxDeformer::eVertexCache))->Active.Get();
+	bool HasShape = MeshObj->GetShapeCount();
+	bool HasDeformation = MeshObj->GetDeformerCount(FbxDeformer::eSkin);
+
+
+	if (HasVertexCache)
+	{
+		// Vertex cache?
+	}
+	else
+	{
+		if (HasShape)
+		{
+			_GetBlendShape(MeshObj);
+		}
+		_GetSkinning(MeshObj);
+	}
+}
+
+void ImportFbx::_GetBlendShape(_In_ FbxMesh* MeshObj)
+{
+}
+
+void ImportFbx::_GetSkinning(_In_ FbxMesh* MeshObj)
+{
+	int DeformerCount = MeshObj->GetDeformerCount(FbxDeformer::eSkin);
+	for (int DeformerIndex = 0; DeformerIndex < DeformerCount; ++DeformerIndex)
+	{
+		FbxStatus Status;
+		FbxSkin* Skin = (FbxSkin*)MeshObj->GetDeformer(DeformerIndex, FbxDeformer::eSkin, &Status);
+		Bone* BoneObj = new Bone();
+
+		int ClusterCount = Skin->GetClusterCount();
+		for (int ClusterIndex = 0; ClusterIndex < ClusterCount; ++ClusterIndex)
+		{
+
+			FbxCluster* Cluster = Skin->GetCluster(ClusterIndex);
+			int ControlPointIndicesCount = Cluster->GetControlPointIndicesCount();
+
+			for (int ControlPointIndicesIndex = 0; ControlPointIndicesIndex < ControlPointIndicesCount; ++ControlPointIndicesIndex)
+			{
+				BoneObj->PushInfluence(
+					Cluster->GetControlPointIndices()[ControlPointIndicesIndex],
+					Cluster->GetControlPointWeights()[ControlPointIndicesIndex]
+				);
+			}
+		}
 	}
 }
