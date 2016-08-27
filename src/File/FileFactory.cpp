@@ -23,6 +23,7 @@ namespace Eternal
 #ifdef ETERNAL_USE_CFILE
 			return CFile::Exists(FileName);
 #else
+			return false;
 #endif
 		}
 	}

@@ -248,6 +248,7 @@ void ImportFbx::_GetBlendShape(_In_ FbxMesh* MeshObj)
 
 void ImportFbx::_GetSkinning(_In_ FbxMesh* MeshObj)
 {
+	return;
 	int DeformerCount = MeshObj->GetDeformerCount(FbxDeformer::eSkin);
 	for (int DeformerIndex = 0; DeformerIndex < DeformerCount; ++DeformerIndex)
 	{

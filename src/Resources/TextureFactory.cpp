@@ -3,6 +3,7 @@
 #include "Import/tga/ImportTga.hpp"
 #include "Macros/Macros.hpp"
 #include "d3d11/D3D11Texture.hpp"
+#include "Graphics/Format.hpp"
 
 using namespace Eternal::Resources;
 using namespace Eternal::Import;
@@ -33,7 +34,7 @@ Texture* TextureFactory::GetTexture(_In_ const string& NameSrc)
 	uint8_t* TextureData = ImportTga::Get()->Import(NameSrc, Height, Width);
 
 	TextureCache& TextureCacheLine = _Textures[NameSrc];
-	TextureCacheLine.TextureObj = new Graphics::D3D11Texture(Graphics::Texture::BGRA8888, Graphics::D3D11Resource::DYNAMIC, Graphics::Resource::WRITE, Width, Height, TextureData);
+	TextureCacheLine.TextureObj = new Graphics::D3D11Texture(Graphics::BGRA8888, Graphics::D3D11Resource::DYNAMIC, Graphics::Resource::WRITE, Width, Height, TextureData);
 
 	return TextureCacheLine.TextureObj;
 }
