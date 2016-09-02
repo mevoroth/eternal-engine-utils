@@ -29,11 +29,7 @@ namespace Eternal
 			TaskManager();
 			virtual ~TaskManager();
 
-			inline TaskScheduler& GetTaskScheduler()
-			{
-				ETERNAL_ASSERT(_Done);
-				return _Scheduler;
-			}
+			TaskScheduler& GetTaskScheduler();
 
 			void Schedule();
 			void Barrier();
@@ -48,10 +44,10 @@ namespace Eternal
 				TaskScheduler& Scheduler;
 				ConditionVariable*& SchedulerConditionVariable;
 				Mutex*& SchedulerConditionVariableMutex;
-				bool& SchedulingTask;
-				bool& Done;
+				AtomicS32*& SchedulingTask;
+				AtomicS32*& Done;
 				
-				TaskManagerArgs(AtomicS32*& Running, Worker**& Workers, const uint32_t& WorkersCount, TaskScheduler& Scheduler, ConditionVariable*& SchedulerConditionVariable, Mutex*& SchedulerConditionVariableMutex, bool& SchedulingTask, bool& Done)
+				TaskManagerArgs(AtomicS32*& Running, Worker**& Workers, const uint32_t& WorkersCount, TaskScheduler& Scheduler, ConditionVariable*& SchedulerConditionVariable, Mutex*& SchedulerConditionVariableMutex, AtomicS32*& SchedulingTask, AtomicS32*& Done)
 					: Running(Running)
 					, Workers(Workers)
 					, WorkersCount(WorkersCount)
@@ -75,8 +71,8 @@ namespace Eternal
 			TaskScheduler _Scheduler;
 			ConditionVariable* _SchedulerConditionVariable = nullptr;
 			Mutex* _SchedulerConditionVariableMutex = nullptr;
-			bool _SchedulingTask = false;
-			bool _Done = true;
+			AtomicS32* _SchedulingTask = nullptr;
+			AtomicS32* _Done = nullptr;
 		};
 	}
 }

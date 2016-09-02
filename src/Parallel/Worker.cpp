@@ -27,7 +27,11 @@ uint32_t Worker::WorkerRun(void* Args)
 		Arguments->WorkerConditionVariable->Wait(*Arguments->WorkerConditionVariableMutex);
 		Arguments->WorkerConditionVariableMutex->Unlock();
 
-		Arguments->IsExecutingTask = true;
+		Arguments->IsExecutingTask->Store(1);
+
+		while (Arguments->IsPushing->Load())
+			Sleep(1);
+
 		//ETERNAL_ASSERT(Arguments->TaskObj->GetState() == Task::SETUP);
 
 //#ifdef ETERNAL_DEBUG
@@ -45,7 +49,7 @@ uint32_t Worker::WorkerRun(void* Args)
 //		OutputDebugString("\n");
 //#endif
 
-		Arguments->IsAvailable = true;
+		Arguments->IsAvailable->Store(1);
 	}
 
 	return 0;
@@ -56,6 +60,9 @@ Worker::Worker(Thread* ThreadObj)
 	_Running = new StdAtomicS32(1);
 	_WorkerConditionVariableMutex = new StdMutex();
 	_WorkerConditionVariable = new StdConditionVariable();
+	_IsExecutingTask = new StdAtomicS32(0);
+	_IsAvailable = new StdAtomicS32(1);
+	_Pushing = new StdAtomicS32(0);
 
 	_WorkerArgs = new WorkerArgs(
 		_Running,
@@ -63,7 +70,8 @@ Worker::Worker(Thread* ThreadObj)
 		_WorkerConditionVariableMutex,
 		_Task,
 		_IsExecutingTask,
-		_IsAvailable
+		_IsAvailable,
+		_Pushing
 	);
 
 	ThreadObj->Create(Worker::WorkerRun, _WorkerArgs);
@@ -73,6 +81,24 @@ Worker::~Worker()
 {
 	delete _WorkerArgs;
 	_WorkerArgs = nullptr;
+
+	delete _Pushing;
+	_Pushing = nullptr;
+
+	delete _IsAvailable;
+	_IsAvailable = nullptr;
+
+	delete _IsExecutingTask;
+	_IsExecutingTask = nullptr;
+
+	delete _WorkerConditionVariable;
+	_WorkerConditionVariable = nullptr;
+	
+	delete _WorkerConditionVariableMutex;
+	_WorkerConditionVariableMutex = nullptr;
+
+	delete _Running;
+	_Running = nullptr;
 }
 
 void Worker::Shutdown()
@@ -83,17 +109,21 @@ void Worker::Shutdown()
 
 bool Worker::IsAvailable() const
 {
-	return _IsAvailable;
+	return _IsAvailable->Load() != 0;
 }
 
-void Worker::PushTask(Task* TaskObj)
+bool Worker::PushTask(Task* TaskObj)
 {
-	ETERNAL_ASSERT(_IsAvailable);
-	_IsAvailable = false;
-	_IsExecutingTask = false;
+	ETERNAL_ASSERT(IsAvailable());
+
+	if (_Pushing->CompareAndSwap(0, 1))
+		return false;
+
+	_IsAvailable->Store(0);
+	_IsExecutingTask->Store(0);
 	_Task = TaskObj;
 
-	while (!_IsExecutingTask)
+	while (!_IsExecutingTask->Load())
 	{
 		_WorkerConditionVariableMutex->Lock();
 		_WorkerConditionVariable->NotifyOne();
@@ -101,4 +131,7 @@ void Worker::PushTask(Task* TaskObj)
 
 		Sleep(1);
 	}
+
+	_Pushing->Store(0);
+	return true;
 }

@@ -9,9 +9,9 @@ namespace Eternal
 {
 	namespace Parallel
 	{
-		void Sleep(const TimeT& Milliseconds)
+		void Sleep(const TimeT& NanoSeconds)
 		{
-			this_thread::sleep_for(chrono::milliseconds(Milliseconds));
+			this_thread::sleep_for(chrono::nanoseconds(NanoSeconds));
 		}
 	}
 }

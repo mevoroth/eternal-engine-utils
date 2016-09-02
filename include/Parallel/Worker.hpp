@@ -21,7 +21,7 @@ namespace Eternal
 			Worker(Thread* ThreadObj);
 			~Worker();
 
-			void PushTask(Task* TaskObj);
+			bool PushTask(Task* TaskObj);
 			void Shutdown();
 			bool IsAvailable() const;
 
@@ -32,28 +32,31 @@ namespace Eternal
 				ConditionVariable*& WorkerConditionVariable;
 				Mutex*& WorkerConditionVariableMutex;
 				Task*& TaskObj;
-				bool& IsExecutingTask;
-				bool& IsAvailable;
+				AtomicS32*& IsExecutingTask;
+				AtomicS32*& IsAvailable;
+				AtomicS32*& IsPushing;
 
-				WorkerArgs(AtomicS32*& Running, ConditionVariable*& WorkerConditionVariable, Mutex*& WorkerConditionVariableMutex, Task*& TaskObj, bool& IsExecutingTask, bool& IsAvailable)
+				WorkerArgs(AtomicS32*& Running, ConditionVariable*& WorkerConditionVariable, Mutex*& WorkerConditionVariableMutex, Task*& TaskObj, AtomicS32*& IsExecutingTask, AtomicS32*& IsAvailable, AtomicS32*& IsPushing)
 					: Running(Running)
 					, WorkerConditionVariable(WorkerConditionVariable)
 					, WorkerConditionVariableMutex(WorkerConditionVariableMutex)
 					, TaskObj(TaskObj)
 					, IsExecutingTask(IsExecutingTask)
 					, IsAvailable(IsAvailable)
+					, IsPushing(IsPushing)
 				{
 				}
 			};
 
 			WorkerArgs* _WorkerArgs = nullptr;
 			AtomicS32* _Running = nullptr;
+			AtomicS32* _Pushing = nullptr;
 			Task* _Task = nullptr;
 
 			ConditionVariable* _WorkerConditionVariable = nullptr;
 			Mutex* _WorkerConditionVariableMutex = nullptr;
-			bool _IsExecutingTask = false;
-			bool _IsAvailable = true;
+			AtomicS32* _IsExecutingTask = nullptr;
+			AtomicS32* _IsAvailable = nullptr;
 		};
 	}
 }
