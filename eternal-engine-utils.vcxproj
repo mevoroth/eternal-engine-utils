@@ -54,7 +54,8 @@
     <ClInclude Include="include\SaveSystem\GameData.hpp" />
     <ClInclude Include="include\SaveSystem\GameDataCollection.hpp" />
     <ClInclude Include="include\SaveSystem\GameDataSaveSystem.hpp" />
-    <ClInclude Include="include\SaveSystem\SaveData.hpp" />
+    <ClInclude Include="include\SaveSystem\GameDataLoader.hpp" />
+    <ClInclude Include="include\SaveSystem\SaveSystem.hpp" />
     <ClInclude Include="include\Time\Time.hpp" />
     <ClInclude Include="include\Time\TimeFactory.hpp" />
     <ClInclude Include="include\Time\Win\WinTime.hpp" />
@@ -83,6 +84,7 @@
     <ClCompile Include="src\Resources\TextureFactory.cpp" />
     <ClCompile Include="src\SaveSystem\GameDataCollection.cpp" />
     <ClCompile Include="src\SaveSystem\GameDataSaveSystem.cpp" />
+    <ClCompile Include="src\SaveSystem\SaveSystem.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
     <ClCompile Include="src\Time\TimeFactory.cpp" />
     <ClCompile Include="src\Time\Win\WinTime.cpp" />

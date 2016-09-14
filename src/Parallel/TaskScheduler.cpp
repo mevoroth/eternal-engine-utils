@@ -109,5 +109,5 @@ void TaskScheduler::Reset()
 	{
 		_TasksList[TaskIndex].TaskObj->Reset();
 	}
-	_UnscheduledTasks->Store(_TasksList.size());
+	_UnscheduledTasks->Store((int)_TasksList.size());
 }

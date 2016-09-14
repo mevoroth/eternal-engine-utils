@@ -41,6 +41,7 @@ namespace Eternal
 			};
 
 			static const LogCategory Engine;
+			static const LogCategory Save;
 
 			Log();
 			static void Initialize(Log* LogObj);

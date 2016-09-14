@@ -83,7 +83,7 @@ TaskManager::TaskManager()
 	_ThreadsWorkersCount = CpuCoreCount();
 	_Threads = new Thread*[_ThreadsWorkersCount];
 	_Workers = new Worker*[_ThreadsWorkersCount];
-	for (int ThreadWorkerIndex = 0; ThreadWorkerIndex < _ThreadsWorkersCount; ++ThreadWorkerIndex)
+	for (uint32_t ThreadWorkerIndex = 0; ThreadWorkerIndex < _ThreadsWorkersCount; ++ThreadWorkerIndex)
 	{
 		_Threads[ThreadWorkerIndex] = new StdThread();
 		_Workers[ThreadWorkerIndex] = new Worker(_Threads[ThreadWorkerIndex]);
@@ -112,7 +112,7 @@ TaskManager::~TaskManager()
 	_SchedulerConditionVariable = nullptr;
 	delete _SchedulerConditionVariableMutex;
 	_SchedulerConditionVariableMutex = nullptr;
-	for (int ThreadWorkerIndex = 0; ThreadWorkerIndex < _ThreadsWorkersCount; ++ThreadWorkerIndex)
+	for (uint32_t ThreadWorkerIndex = 0; ThreadWorkerIndex < _ThreadsWorkersCount; ++ThreadWorkerIndex)
 	{
 		delete _Workers[ThreadWorkerIndex];
 		_Workers[ThreadWorkerIndex] = nullptr;

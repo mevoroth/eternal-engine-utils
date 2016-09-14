@@ -26,6 +26,7 @@ namespace Eternal
 				ETERNAL_ASSERT(false); // Multi Channel Log must be created with CreateMultiChannelLog()
 				break;
 			}
+			return nullptr;
 		}
 
 		Log* CreateMultiChannelLog(_In_ Log** Logs, _In_ int LogsCount)

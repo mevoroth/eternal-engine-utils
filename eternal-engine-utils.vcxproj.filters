@@ -160,13 +160,16 @@
     <ClInclude Include="include\SaveSystem\GameData.hpp">
       <Filter>SaveSystem</Filter>
     </ClInclude>
-    <ClInclude Include="include\SaveSystem\SaveData.hpp">
-      <Filter>SaveSystem</Filter>
-    </ClInclude>
     <ClInclude Include="include\SaveSystem\GameDataCollection.hpp">
       <Filter>SaveSystem</Filter>
     </ClInclude>
     <ClInclude Include="include\SaveSystem\GameDataSaveSystem.hpp">
+      <Filter>SaveSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SaveSystem\SaveSystem.hpp">
+      <Filter>SaveSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SaveSystem\GameDataLoader.hpp">
       <Filter>SaveSystem</Filter>
     </ClInclude>
   </ItemGroup>
@@ -244,6 +247,9 @@
       <Filter>SaveSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\SaveSystem\GameDataSaveSystem.cpp">
+      <Filter>SaveSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SaveSystem\SaveSystem.cpp">
       <Filter>SaveSystem</Filter>
     </ClCompile>
   </ItemGroup>

@@ -50,7 +50,7 @@ namespace Eternal
 						
 						{
 							uint32_t ClusterKey = ResourceClusterIndex * ResourceClusterBitCount;
-							uint32_t Key = LeadingZeroCount(~Cluster);
+							uint32_t Key = (uint32_t)LeadingZeroCount(~Cluster);
 							ETERNAL_ASSERT((ClusterKey + Key) < Size);
 							uint64_t NewCluster = Cluster | (1ull << (ResourceClusterBitCount - Key - 1));
 

@@ -109,15 +109,15 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 				int PolygonSize = FbxMeshObj->GetPolygonSize(PolygonIndex);
 				Out.PushTriangle(
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
-					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
-					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1)
+					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1),
+					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
 					);
 				if (PolygonSize == 4) // Quad
 				{
 					Out.PushTriangle(
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
-						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3),
-						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
+						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
+						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3)
 						);
 				}
 
@@ -224,8 +224,8 @@ void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _
 void ImportFbx::_ImportSkeletal(_In_ FbxMesh* MeshObj)
 {
 	bool HasVertexCache = MeshObj->GetDeformerCount(FbxDeformer::eVertexCache) && ((FbxVertexCacheDeformer*)MeshObj->GetDeformer(0, FbxDeformer::eVertexCache))->Active.Get();
-	bool HasShape = MeshObj->GetShapeCount();
-	bool HasDeformation = MeshObj->GetDeformerCount(FbxDeformer::eSkin);
+	bool HasShape = MeshObj->GetShapeCount() > 0;
+	bool HasDeformation = MeshObj->GetDeformerCount(FbxDeformer::eSkin) > 0;
 
 
 	if (HasVertexCache)

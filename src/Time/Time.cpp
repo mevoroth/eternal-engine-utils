@@ -40,7 +40,7 @@ void Time::ToHumanReadable(_In_ const TimeT& Value, _Out_ char HumanReadable[24]
 	TempValue /= 60;
 	Hours = TempValue % 24;
 	TempValue /= 24;
-	Days = TempValue;
+	Days = (uint32_t)TempValue;
 
 	sprintf_s(HumanReadable, 24, "[%02dd%02dh%02dm%02ds%04d.%04d]", Days, Hours, Minutes, Seconds, MilliSeconds, MicroSeconds);
 }

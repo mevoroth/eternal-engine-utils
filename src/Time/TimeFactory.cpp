@@ -1,5 +1,6 @@
 #include "Time/TimeFactory.hpp"
 
+#include "Macros/Macros.hpp"
 #include "Time/Win/WinTime.hpp"
 
 namespace Eternal
@@ -10,6 +11,8 @@ namespace Eternal
 		{
 			if (TimeTypObj == WIN)
 				return new WinTime();
+			ETERNAL_ASSERT(false);
+			return nullptr;
 		}
 	}
 }

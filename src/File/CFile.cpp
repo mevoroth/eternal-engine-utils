@@ -62,7 +62,8 @@ void CFile::Write(uint8_t* Block, uint64_t Size)
 
 void CFile::Seek(uint64_t Offset, const Origin& OriginObj)
 {
-	fseek(_File, Offset, (int)OriginObj);
+	ETERNAL_ASSERT(Offset < 0xFFFFFFFFull);
+	fseek(_File, (int)Offset, (int)OriginObj);
 }
 
 uint64_t CFile::Tell() const

@@ -10,6 +10,7 @@ const Log::LogLevel Log::Error(2, "error");
 const Log::LogLevel Log::Critical(3, "critical");
 
 const Log::LogCategory Log::Engine("Engine");
+const Log::LogCategory Log::Save("Save");
 
 Log* Log::_Inst = nullptr;
 

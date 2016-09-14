@@ -50,3 +50,20 @@ size_t GameDataSaveSystem::GetSize() const
 	return JsonWriter.write(_SaveSystemHierarchy->Value).size();
 	//return _SaveSystemHierarchy->Hierarchy.GetSize();
 }
+
+bool GameDataSaveSystem::CanLoad(_In_ const void* SerializedData) const
+{
+	return true;
+}
+
+void* GameDataSaveSystem::Load(_In_ const void* SerializedData)
+{
+	Json::Reader JsonReader;
+	Json::Value RootNode;
+	if (JsonReader.parse((const char*)SerializedData, RootNode))
+	{
+		return _SaveSystemHierarchy->Hierarchy.Load(&RootNode);
+	}
+	ETERNAL_ASSERT(false);
+	return nullptr;
+}
