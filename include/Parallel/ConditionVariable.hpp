@@ -15,8 +15,8 @@ namespace Eternal
 		public:
 			virtual void NotifyAll() = 0;
 			virtual void NotifyOne() = 0;
-			virtual void WaitFor(Mutex& MutexObj, TimeT Milliseconds) = 0;
-			virtual void Wait(Mutex& MutexObj) = 0;
+			virtual void WaitFor(_In_ Mutex& MutexObj, _In_ TimeNanoSecondsT NanoSeconds) = 0;
+			virtual void Wait(_In_ Mutex& MutexObj) = 0;
 		};
 	}
 }

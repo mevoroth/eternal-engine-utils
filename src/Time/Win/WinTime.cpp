@@ -16,6 +16,8 @@ WinTime::WinTime()
 		memset(&_Freq, 0x0, sizeof(LARGE_INTEGER));
 	}
 	ETERNAL_ASSERT(_Freq.QuadPart != 0);
+
+	_PreviousTimeMicroSeconds = GetTimeMicroSeconds();
 }
 
 void WinTime::Begin()
@@ -29,7 +31,7 @@ void WinTime::Begin()
 	}
 }
 
-TimeT WinTime::End()
+TimeMicroSecondsT WinTime::End()
 {
 	ETERNAL_ASSERT(!_Stack.Empty());
 
@@ -44,24 +46,30 @@ TimeT WinTime::End()
 	return ~0ull;
 }
 
-TimeT WinTime::GetTime() const
+TimeMicroSecondsT WinTime::GetTimeMicroSeconds() const
 {
-	LARGE_INTEGER val;
-	if (QueryPerformanceCounter(&val))
+	LARGE_INTEGER Value;
+	if (QueryPerformanceCounter(&Value))
 	{
-		return val.QuadPart * 1000000ull / _Freq.QuadPart;
+		return Value.QuadPart * 1000000ull / _Freq.QuadPart;
 	}
 	return ~0ull;
 }
 
-TimeT WinTime::GetDeltaTime() const
+TimeMicroSecondsT WinTime::GetDeltaTimeMicroSeconds() const
 {
-	return _DeltaTime;
+	return _DeltaTimeMicroSeconds;
+}
+
+TimeSecondsT WinTime::GetDeltaTimeSeconds() const
+{
+	return _DeltaTimeSeconds;
 }
 
 void WinTime::Update()
 {
-	TimeT PreviousTime = _PreviousTime;
-	_PreviousTime = GetTime();
-	_DeltaTime = PreviousTime - _PreviousTime;
+	TimeMicroSecondsT PreviousTimeMicroSeconds = _PreviousTimeMicroSeconds;
+	_PreviousTimeMicroSeconds = GetTimeMicroSeconds();
+	_DeltaTimeMicroSeconds = _PreviousTimeMicroSeconds - PreviousTimeMicroSeconds;
+	_DeltaTimeSeconds = (double)_DeltaTimeMicroSeconds / 1000000.0;
 }

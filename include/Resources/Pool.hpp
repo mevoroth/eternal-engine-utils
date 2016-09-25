@@ -5,6 +5,7 @@
 #include "Macros/Macros.hpp"
 #include "Bit/Bit.hpp"
 #include "Parallel/StdAtomicU64.hpp"
+#include "Parallel/Sleep.hpp"
 
 namespace Eternal
 {

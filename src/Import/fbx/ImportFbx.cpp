@@ -13,6 +13,10 @@
 #include "File/FileFactory.hpp"
 
 #include "Mesh/Bone.hpp"
+#include "Mesh/BoundingBox.hpp"
+#include "Log/Log.hpp"
+
+#include "d3d11/D3D11PosColorVertexBuffer.hpp"
 
 using namespace Eternal::Import;
 using namespace Eternal::Graphics;
@@ -32,8 +36,8 @@ ImportFbx::ImportFbx()
 	_SdkMgr->SetIOSettings(_Settings);
 	_FbxImporter = FbxImporter::Create(_SdkMgr, "");
 
-	OutputDebugString("WARNING: UV.y has been inversed!\n");
-	OutputDebugString("WARNING: Pos.w = 1.f\n");
+	Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::ImportFbx]UV.y has been inversed!");
+	Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::ImportFbx]Pos.w = 1.f!");
 }
 
 ImportFbx* ImportFbx::Get()
@@ -62,7 +66,10 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosU
 	if (_FbxImporter->Initialize(FilePath.c_str(), -1, _Settings))
 	{
 		FbxStatus& Status = _FbxImporter->GetStatus();
-		OutputDebugString(Status.GetErrorString());
+		std::string ErrorMessage = "[ImportFbx::Import]";
+		ErrorMessage.append(Status.GetErrorString());
+		Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, ErrorMessage.c_str());
+
 		// LOG
 		//assert(false);
 	}
@@ -70,8 +77,61 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosU
 	FbxScene* Scene = FbxScene::Create(_SdkMgr, "scene");
 	_FbxImporter->Import(Scene);
 
-	_ImportNode(Scene->GetRootNode(), Out);
+	BoundingBox* Box = new BoundingBox();
+	Box->SetMin(Vector3(
+		std::numeric_limits<float>::infinity(),
+		std::numeric_limits<float>::infinity(),
+		std::numeric_limits<float>::infinity()
+	));
+	Box->SetMax(Vector3(
+		-std::numeric_limits<float>::infinity(),
+		-std::numeric_limits<float>::infinity(),
+		-std::numeric_limits<float>::infinity()
+	));
+	Out.SetBoundingBox(Box);
 
+	_ImportNode(Scene->GetRootNode(), Out);
+	Box->SetMin(Vector3(-1.0f, -1.0f, -1.0f));
+	Box->SetMax(Vector3(1.0f, 1.0f, 1.0f));
+	GenericMesh<D3D11PosColorVertexBuffer::PosColorVertex, D3D11PosColorVertexBuffer, D3D11UInt32IndexBuffer>& BoundingBoxMesh = *new GenericMesh<D3D11PosColorVertexBuffer::PosColorVertex, D3D11PosColorVertexBuffer, D3D11UInt32IndexBuffer>();
+	D3D11PosColorVertexBuffer::PosColorVertex BoundingBoxVertex[] = {
+		{ Vector4(Box->GetMin().x, Box->GetMin().y, Box->GetMin().z, 1.0f), 0x000000FF },
+		{ Vector4(Box->GetMin().x, Box->GetMin().y, Box->GetMax().z, 1.0f), 0x0000FFFF },
+		{ Vector4(Box->GetMin().x, Box->GetMax().y, Box->GetMin().z, 1.0f), 0x00FF00FF },
+		{ Vector4(Box->GetMin().x, Box->GetMax().y, Box->GetMax().z, 1.0f), 0x00FFFFFF },
+		{ Vector4(Box->GetMax().x, Box->GetMin().y, Box->GetMin().z, 1.0f), 0xFF0000FF },
+		{ Vector4(Box->GetMax().x, Box->GetMin().y, Box->GetMax().z, 1.0f), 0xFF00FFFF },
+		{ Vector4(Box->GetMax().x, Box->GetMax().y, Box->GetMin().z, 1.0f), 0xFFFF00FF },
+		{ Vector4(Box->GetMax().x, Box->GetMax().y, Box->GetMax().z, 1.0f), 0xFFFFFFFF },
+	};
+	for (int BoundingBoxVertexIndex = 0; BoundingBoxVertexIndex < ETERNAL_ARRAYSIZE(BoundingBoxVertex); ++BoundingBoxVertexIndex)
+		BoundingBoxMesh.PushVertex(BoundingBoxVertex[BoundingBoxVertexIndex]);
+
+	// -X
+	BoundingBoxMesh.PushTriangle(2, 0, 3);
+	BoundingBoxMesh.PushTriangle(0, 1, 3);
+
+	// +X
+	BoundingBoxMesh.PushTriangle(4, 6, 5);
+	BoundingBoxMesh.PushTriangle(6, 7, 5);
+	
+	// -Y
+	BoundingBoxMesh.PushTriangle(0, 4, 1);
+	BoundingBoxMesh.PushTriangle(4, 5, 1);
+
+	// +Y
+	BoundingBoxMesh.PushTriangle(6, 2, 7);
+	BoundingBoxMesh.PushTriangle(2, 3, 7);
+
+	// -Z
+	BoundingBoxMesh.PushTriangle(2, 6, 0);
+	BoundingBoxMesh.PushTriangle(6, 4, 0);
+
+	// +Z
+	BoundingBoxMesh.PushTriangle(1, 5, 3);
+	BoundingBoxMesh.PushTriangle(5, 7, 3);
+
+	Out.SetBBMesh(&BoundingBoxMesh);
 	//_ImportPoses();
 }
 
@@ -102,6 +162,10 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 				//VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], V[ControlPointIndex][3]);
 				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], 1.f);
 
+				Vector3 Vertex3(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2]);
+				Out.GetBoundingBox()->SetMin(Min(Vertex3, Out.GetBoundingBox()->GetMin()));
+				Out.GetBoundingBox()->SetMax(Max(Vertex3, Out.GetBoundingBox()->GetMax()));
+
 				Out.PushVertex(VertexObj);
 			}
 			for (int PolygonIndex = 0, ControlPointCount = FbxMeshObj->GetPolygonCount(); PolygonIndex < ControlPointCount; ++PolygonIndex)
@@ -111,14 +175,14 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1),
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
-					);
+				);
 				if (PolygonSize == 4) // Quad
 				{
 					Out.PushTriangle(
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3)
-						);
+					);
 				}
 
 				_GetUV(FbxMeshObj, PolygonIndex, Out);
@@ -181,6 +245,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
 		GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
+		SubMehObj.SetBoundingBox(Out.GetBoundingBox());
 		_ImportNode(Node->GetChild(NodeChildIndex), SubMehObj);
 		Out.PushMesh(SubMehObj);
 	}

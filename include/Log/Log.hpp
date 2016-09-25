@@ -42,17 +42,18 @@ namespace Eternal
 
 			static const LogCategory Engine;
 			static const LogCategory Save;
+			static const LogCategory Import;
 
 			Log();
 			static void Initialize(Log* LogObj);
 			static Log* Get();
 			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) = 0;
-			TimeT GetElaspedTime() const;
+			TimeMicroSecondsT GetElaspedTime() const;
 
 		private:
 			static Log* _Inst;
 
-			TimeT _InitialTime = 0ull;
+			TimeMicroSecondsT _InitialTime = 0ull;
 		};
 	}
 }

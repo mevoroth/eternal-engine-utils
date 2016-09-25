@@ -18,18 +18,20 @@ namespace Eternal
 		class WinTime : public Time
 		{
 		public:
-			static const int STACKSIZE = 64;
+			static const int STACKSIZE = 1024;
 		private:
 			LARGE_INTEGER _Freq;
 			Stack<LARGE_INTEGER, STACKSIZE> _Stack;
-			TimeT _PreviousTime = 0ull;
-			TimeT _DeltaTime = 0ull;
+			TimeMicroSecondsT _PreviousTimeMicroSeconds = 0ull;
+			TimeMicroSecondsT _DeltaTimeMicroSeconds = 0ull;
+			TimeSecondsT _DeltaTimeSeconds = 0.0;
 		public:
 			WinTime();
 			virtual void Begin() override;
-			virtual TimeT End() override;
-			virtual TimeT GetTime() const override;
-			virtual TimeT GetDeltaTime() const override;
+			virtual TimeMicroSecondsT End() override;
+			virtual TimeMicroSecondsT GetTimeMicroSeconds() const override;
+			virtual TimeMicroSecondsT GetDeltaTimeMicroSeconds() const override;
+			virtual TimeSecondsT GetDeltaTimeSeconds() const override;
 			virtual void Update() override;
 		};
 	}

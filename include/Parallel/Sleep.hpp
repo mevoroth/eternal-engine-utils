@@ -9,7 +9,7 @@ namespace Eternal
 	{
 		using namespace Eternal::Time;
 
-		extern void Sleep(const TimeT& NanoSeconds);
+		extern void Sleep(const TimeNanoSecondsT& NanoSeconds);
 	}
 }
 

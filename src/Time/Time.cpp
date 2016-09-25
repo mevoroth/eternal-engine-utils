@@ -20,7 +20,7 @@ Time* Time::Get()
 	return _Inst;
 }
 
-void Time::ToHumanReadable(_In_ const TimeT& Value, _Out_ char HumanReadable[24])
+void Time::ToHumanReadable(_In_ const TimeMicroSecondsT& Value, _Out_ char HumanReadable[24])
 {
 	uint32_t MicroSeconds = 0;
 	uint32_t MilliSeconds = 0;
@@ -29,7 +29,7 @@ void Time::ToHumanReadable(_In_ const TimeT& Value, _Out_ char HumanReadable[24]
 	uint32_t Hours = 0;
 	uint32_t Days = 0;
 
-	TimeT TempValue = Value;
+	TimeMicroSecondsT TempValue = Value;
 	MicroSeconds = TempValue % 1000;
 	TempValue /= 1000;
 	MilliSeconds = TempValue % 1000;

@@ -17,9 +17,9 @@ void StdConditionVariable::NotifyOne()
 	_ConditionVariable.notify_one();
 }
 
-void StdConditionVariable::WaitFor(Mutex& MutexObj, TimeT Milliseconds)
+void StdConditionVariable::WaitFor(Mutex& MutexObj, TimeNanoSecondsT NanoSeconds)
 {
-	_ConditionVariable.wait_for(static_cast<StdMutex&>(MutexObj)._Mutex, chrono::milliseconds(Milliseconds));
+	_ConditionVariable.wait_for(static_cast<StdMutex&>(MutexObj)._Mutex, chrono::nanoseconds(NanoSeconds));
 }
 
 void StdConditionVariable::Wait(Mutex& MutexObj)

@@ -11,12 +11,13 @@ const Log::LogLevel Log::Critical(3, "critical");
 
 const Log::LogCategory Log::Engine("Engine");
 const Log::LogCategory Log::Save("Save");
+const Log::LogCategory Log::Import("Import");
 
 Log* Log::_Inst = nullptr;
 
 Log::Log()
 {
-	_InitialTime = Eternal::Time::Time::Get()->GetTime();
+	_InitialTime = Eternal::Time::Time::Get()->GetTimeMicroSeconds();
 }
 
 void Log::Initialize(Log* LogObj)
@@ -32,7 +33,7 @@ Log* Log::Get()
 	return _Inst;
 }
 
-TimeT Log::GetElaspedTime() const
+TimeMicroSecondsT Log::GetElaspedTime() const
 {
-	return Eternal::Time::Time::Get()->GetTime() - _InitialTime;
+	return Eternal::Time::Time::Get()->GetTimeMicroSeconds() - _InitialTime;
 }
