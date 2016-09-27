@@ -33,6 +33,7 @@
     <ClInclude Include="include\Log\MultiChannelLog\MultiChannelLog.hpp" />
     <ClInclude Include="include\Macros\Macros.hpp" />
     <ClInclude Include="include\Parallel\AtomicS32.hpp" />
+    <ClInclude Include="include\Parallel\AtomicS32Factory.hpp" />
     <ClInclude Include="include\Parallel\AtomicU64.hpp" />
     <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
     <ClInclude Include="include\Parallel\CpuCoreCount.hpp" />
@@ -72,6 +73,7 @@
     <ClCompile Include="src\Log\Log.cpp" />
     <ClCompile Include="src\Log\LogFactory.cpp" />
     <ClCompile Include="src\Log\MultiChannelLog\MultiChannelLog.cpp" />
+    <ClCompile Include="src\Parallel\AtomicS32Factory.cpp" />
     <ClCompile Include="src\Parallel\StdCpuCoreCount.cpp" />
     <ClCompile Include="src\Parallel\StdSleep.cpp" />
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />

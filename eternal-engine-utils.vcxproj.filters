@@ -172,6 +172,9 @@
     <ClInclude Include="include\SaveSystem\GameDataLoader.hpp">
       <Filter>SaveSystem</Filter>
     </ClInclude>
+    <ClInclude Include="include\Parallel\AtomicS32Factory.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -251,6 +254,9 @@
     </ClCompile>
     <ClCompile Include="src\SaveSystem\SaveSystem.cpp">
       <Filter>SaveSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\AtomicS32Factory.cpp">
+      <Filter>Parallel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
