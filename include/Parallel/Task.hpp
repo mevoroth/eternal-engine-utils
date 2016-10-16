@@ -30,6 +30,8 @@ namespace Eternal
 			virtual void Reset() = 0;
 			virtual void Execute() = 0;
 			void Schedule();
+			void SetFrameConstraint(_In_ bool FrameConstraint);
+			bool GetFrameConstraint() const;
 
 			const TaskState& GetState() const
 			{
@@ -54,7 +56,7 @@ namespace Eternal
 
 		private:
 			TaskState _TaskState = IDLE;
-			
+			bool _FrameConstraint = true;
 #ifdef ETERNAL_DEBUG
 			string _TaskName;
 #endif

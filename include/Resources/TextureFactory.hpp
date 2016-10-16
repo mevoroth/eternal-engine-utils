@@ -1,9 +1,10 @@
-#ifndef _TEXTURE_FACTORY_HPP_
-#define _TEXTURE_FACTORY_HPP_
+#ifndef _RESOURCES_TEXTURE_FACTORY_HPP_
+#define _RESOURCES_TEXTURE_FACTORY_HPP_
 
 #include <map>
 #include <string>
 #include <cstdint>
+#include <vector>
 
 using namespace std;
 
@@ -24,6 +25,7 @@ namespace Eternal
 
 			TextureFactory();
 			Texture* GetTexture(_In_ const string& NameSrc);
+			static void RegisterTexturePath(_In_ const string& Path);
 
 		private:
 			static TextureFactory* _Inst;
@@ -33,6 +35,10 @@ namespace Eternal
 				Texture* TextureObj = nullptr;
 			};
 			map<string, TextureCache> _Textures;
+
+			void _InsertNewTexture(_In_ const string& NameSrc, _In_ Texture* TextureObj);
+
+			static vector<string> _IncludePaths;
 		};
 	}
 }

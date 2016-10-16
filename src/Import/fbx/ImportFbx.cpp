@@ -15,12 +15,13 @@
 #include "Mesh/Bone.hpp"
 #include "Mesh/BoundingBox.hpp"
 #include "Log/Log.hpp"
-
-#include "d3d11/D3D11PosColorVertexBuffer.hpp"
+#include "Resources/TextureFactory.hpp"
+#include "GraphicData/VertexFormat.hpp"
 
 using namespace Eternal::Import;
 using namespace Eternal::Graphics;
 using namespace Eternal::File;
+using namespace Eternal::GraphicData;
 
 ImportFbx* ImportFbx::_Inst = nullptr;
 vector<string> ImportFbx::_IncludePaths;
@@ -51,7 +52,7 @@ void ImportFbx::RegisterPath(const std::string& IncludePath)
 	_IncludePaths.push_back(IncludePath);
 }
 
-void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& Out)
 {
 	std::string FilePath;
 	bool PathFound = false;
@@ -74,6 +75,8 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosU
 		//assert(false);
 	}
 
+	Out = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
+
 	FbxScene* Scene = FbxScene::Create(_SdkMgr, "scene");
 	_FbxImporter->Import(Scene);
 
@@ -88,13 +91,12 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosU
 		-std::numeric_limits<float>::infinity(),
 		-std::numeric_limits<float>::infinity()
 	));
-	Out.SetBoundingBox(Box);
+	Out->SetBoundingBox(Box);
 
-	_ImportNode(Scene->GetRootNode(), Out);
-	Box->SetMin(Vector3(-1.0f, -1.0f, -1.0f));
-	Box->SetMax(Vector3(1.0f, 1.0f, 1.0f));
-	GenericMesh<D3D11PosColorVertexBuffer::PosColorVertex, D3D11PosColorVertexBuffer, D3D11UInt32IndexBuffer>& BoundingBoxMesh = *new GenericMesh<D3D11PosColorVertexBuffer::PosColorVertex, D3D11PosColorVertexBuffer, D3D11UInt32IndexBuffer>();
-	D3D11PosColorVertexBuffer::PosColorVertex BoundingBoxVertex[] = {
+	_ImportNode(Scene->GetRootNode(), *Out);
+
+	GenericMesh<PosColorVertex, uint32_t>& BoundingBoxMesh = *new GenericMesh<PosColorVertex, uint32_t>();
+	PosColorVertex BoundingBoxVertex[] = {
 		{ Vector4(Box->GetMin().x, Box->GetMin().y, Box->GetMin().z, 1.0f), 0x000000FF },
 		{ Vector4(Box->GetMin().x, Box->GetMin().y, Box->GetMax().z, 1.0f), 0x0000FFFF },
 		{ Vector4(Box->GetMin().x, Box->GetMax().y, Box->GetMin().z, 1.0f), 0x00FF00FF },
@@ -131,7 +133,7 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ GenericMesh<D3D11PosU
 	BoundingBoxMesh.PushTriangle(1, 5, 3);
 	BoundingBoxMesh.PushTriangle(5, 7, 3);
 
-	Out.SetBBMesh(&BoundingBoxMesh);
+	Out->SetBBMesh(&BoundingBoxMesh);
 	//_ImportPoses();
 }
 
@@ -146,8 +148,27 @@ void ImportFbx::_ImportPoses(_In_ FbxScene* Scene)
 	}
 }
 
-void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::_ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture)
 {
+	FbxProperty ColorChannel = SurfaceMaterial->FindProperty(FbxLayerElement::sTextureChannelNames[ChannelIndex]);
+	if (ColorChannel.IsValid())
+	{
+		FbxTexture* TextureObj = ColorChannel.GetSrcObject<FbxTexture>(0);
+		if (TextureObj)
+		{
+			char FileName[255];
+			char Extension[8];
+			_splitpath_s(FbxCast<FbxFileTexture>(TextureObj)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
+			sprintf_s(FileName, "%s%s%s", FileName, Extension, TextureSuffix);
+			OutTexture = Eternal::Resources::TextureFactory::Get()->GetTexture(FileName);
+		}
+	}
+}
+
+void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
+{
+	GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>& OutMesh = (GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>&)Out;
+
 	const FbxNodeAttribute* Attribute = Node->GetNodeAttribute();
 	if (Attribute)
 	{
@@ -156,60 +177,129 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 		case FbxNodeAttribute::EType::eMesh: {
 			FbxMesh* FbxMeshObj = (FbxMesh*)Attribute;
 			FbxVector4* V = FbxMeshObj->GetControlPoints();
-			D3D11PosUVNormalVertexBuffer::PosUVNormalVertex VertexObj;
-			for (int ControlPointIndex = 0, ControlPointCount = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < ControlPointCount; ++ControlPointIndex)
+			PosUVNormalTangentBinormalVertex VertexObj;
+			for (int ControlPointIndex = 0, ControlPointsCount = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < ControlPointsCount; ++ControlPointIndex)
 			{
 				//VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], V[ControlPointIndex][3]);
 				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], 1.f);
+				VertexObj.Normal = Vector4(0.f, 0.f, 0.f, 0.f);
 
 				Vector3 Vertex3(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2]);
-				Out.GetBoundingBox()->SetMin(Min(Vertex3, Out.GetBoundingBox()->GetMin()));
-				Out.GetBoundingBox()->SetMax(Max(Vertex3, Out.GetBoundingBox()->GetMax()));
 
-				Out.PushVertex(VertexObj);
+				Vector3 NewMin = Out.GetBoundingBox()->GetMin();
+				Vector3 NewMax = Out.GetBoundingBox()->GetMax();
+
+				NewMin.x = min(NewMin.x, Vertex3.x);
+				NewMin.y = min(NewMin.y, Vertex3.y);
+				NewMin.z = min(NewMin.z, Vertex3.z);
+
+				NewMax.x = max(NewMax.x, Vertex3.x);
+				NewMax.y = max(NewMax.y, Vertex3.y);
+				NewMax.z = max(NewMax.z, Vertex3.z);
+
+				OutMesh.GetBoundingBox()->SetMin(NewMin);
+				OutMesh.GetBoundingBox()->SetMax(NewMax);
+
+				OutMesh.PushVertex(VertexObj);
 			}
-			for (int PolygonIndex = 0, ControlPointCount = FbxMeshObj->GetPolygonCount(); PolygonIndex < ControlPointCount; ++PolygonIndex)
+
+			int VertexId = 0;
+
+			for (int PolygonIndex = 0, PolygonCount = FbxMeshObj->GetPolygonCount(); PolygonIndex < PolygonCount; ++PolygonIndex)
 			{
 				int PolygonSize = FbxMeshObj->GetPolygonSize(PolygonIndex);
-				Out.PushTriangle(
+				OutMesh.PushTriangle(
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 1),
 					FbxMeshObj->GetPolygonVertex(PolygonIndex, 2)
 				);
 				if (PolygonSize == 4) // Quad
 				{
-					Out.PushTriangle(
+					OutMesh.PushTriangle(
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 0),
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 2),
 						FbxMeshObj->GetPolygonVertex(PolygonIndex, 3)
 					);
 				}
+				ETERNAL_ASSERT(PolygonSize <= 4);
 
-				_GetUV(FbxMeshObj, PolygonIndex, Out);
-				_GetNormal(FbxMeshObj, PolygonIndex, Out);
+				for (int PolygonPos = 0; PolygonPos < PolygonSize; ++PolygonPos)
+				{
+					int ControlPointIndex = FbxMeshObj->GetPolygonVertex(PolygonIndex, PolygonPos);
+
+					_GetNormal(FbxMeshObj, ControlPointIndex, VertexId, OutMesh);
+					_GetTangent(FbxMeshObj, ControlPointIndex, VertexId, OutMesh);
+					_GetBinormal(FbxMeshObj, ControlPointIndex, VertexId, OutMesh);
+
+					++VertexId;
+				}
+				_GetUV(FbxMeshObj, PolygonIndex, OutMesh);
+				//_GetNormal(FbxMeshObj, PolygonIndex, Out);
 			}
 
 			_ImportSkeletal(FbxMeshObj);
 
 			{
-				ETERNAL_ASSERT(Node->GetSrcObjectCount<FbxSurfaceMaterial>() > 0);
-				FbxSurfaceMaterial* Material = Node->GetSrcObject<FbxSurfaceMaterial>(0);
-				FbxProperty DiffuseColorChannel = Material->FindProperty(FbxLayerElement::sTextureChannelNames[DIFFUSE_COLOR_CHANNEL]);
-				ETERNAL_ASSERT(DiffuseColorChannel.IsValid());
+				Texture* Diffuse = Eternal::Resources::TextureFactory::Get()->GetTexture("_RED");
+				Texture* Specular = Eternal::Resources::TextureFactory::Get()->GetTexture("_RED");
+				Texture* Normal = Eternal::Resources::TextureFactory::Get()->GetTexture("_DEFAULT_NORMAL");
+				if (Node->GetSrcObjectCount<FbxSurfaceMaterial>() > 0)
+				{
+					FbxSurfaceMaterial* Material = Node->GetSrcObject<FbxSurfaceMaterial>(0);
+					if (Material)
+					{
+						FbxProperty ColorChannel = Material->FindProperty(FbxLayerElement::sTextureChannelNames[0]);
+						if (ColorChannel.IsValid())
+						{
+							FbxTexture* TextureObject = ColorChannel.GetSrcObject<FbxTexture>();
+							if (TextureObject)
+							{
+								char TextureKey[1024];
+								char FileName[255];
+								char Extension[8];
+								_splitpath_s(FbxCast<FbxFileTexture>(TextureObject)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
+								char* PrefixEnd = strstr(FileName, "_diff");
 
-				FbxTexture* DiffuseColorTexture = DiffuseColorChannel.GetSrcObject<FbxTexture>(0);
-				if (!DiffuseColorTexture)
-					break;
+								if (PrefixEnd)
+								{
+									*PrefixEnd = 0;
+
+									sprintf_s(TextureKey, "%s_diff%s", FileName, Extension);
+									Diffuse = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
+
+									sprintf_s(TextureKey, "%s_spec%s", FileName, Extension);
+									Texture* CustomSpecularMap = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
+									Specular = CustomSpecularMap ? CustomSpecularMap : Specular;
+
+									sprintf_s(TextureKey, "%s_ddn%s", FileName, Extension);
+									Texture* CustomNormalMap = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
+									Normal = CustomNormalMap ? CustomNormalMap : Normal;
+								}
+							}
+						}
+					}
+
+					//if (Material)
+					//{
+					//	_ImportTextureFromFBX(Material, DIFFUSE_COLOR_CHANNEL, "", Diffuse);
+					//	_ImportTextureFromFBX(Material, SPECULAR_COLOR_CHANNEL, "_spec", Specular);
+					//	_ImportTextureFromFBX(Material, DIFFUSE_COLOR_CHANNEL, "_ddn", Normal);
+					//	_ImportTextureFromFBX(Material, (Channel)3, "_ddn", Normal);
+					//	_ImportTextureFromFBX(Material, (Channel)4, "_ddn", Normal);
+					//	_ImportTextureFromFBX(Material, (Channel)5, "_ddn", Normal);
+					//	_ImportTextureFromFBX(Material, (Channel)6, "_ddn", Normal);
+					//	_ImportTextureFromFBX(Material, (Channel)7, "_ddn", Normal);
+					//	_ImportTextureFromFBX(Material, (Channel)8, "_ddn", Normal);
+					//	_ImportTextureFromFBX(Material, (Channel)9, "_ddn", Normal);
+					//}
+				}
+
 				//FbxTexture* DiffuseColorTexture = DiffuseColorChannel.GetSrcObject<FbxLayeredTexture>(0)->GetSrcObject<FbxTexture>(0);
 				//OutputDebugString("\n");
 				//OutputDebugString(DiffuseColorChannel.GetName());
 				//OutputDebugString(DiffuseColorTexture->GetName());
 				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
-				char FileName[255];
-				char Extension[8];
-				_splitpath_s(FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
-				sprintf_s(FileName, "%s%s", FileName, Extension);
-				Out.SetTexture(FileName);
+				OutMesh.SetTexture(Diffuse, Specular, Normal);
 			}
 		} break;
 
@@ -218,7 +308,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 		//} break;
 		}
 	}
-	Out.GetTransform().Translate(
+	OutMesh.GetTransform().Translate(
 		Vector3(
 			Node->LclTranslation.Get()[0],
 			Node->LclTranslation.Get()[1],
@@ -226,7 +316,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 		)
 	);
 
-	Out.GetTransform().Rotate(
+	OutMesh.GetTransform().Rotate(
 		Vector3(
 			Node->LclRotation.Get()[0],
 			Node->LclRotation.Get()[1],
@@ -234,7 +324,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 		)
 	);
 
-	Out.GetTransform().Scale(
+	OutMesh.GetTransform().Scale(
 		Vector3(
 			Node->LclScaling.Get()[0],
 			Node->LclScaling.Get()[1],
@@ -244,15 +334,16 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ GenericMesh<D3D11Pos
 
 	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
-		GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer> SubMehObj;
-		SubMehObj.SetBoundingBox(Out.GetBoundingBox());
-		_ImportNode(Node->GetChild(NodeChildIndex), SubMehObj);
+		Mesh* SubMehObj = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
+		SubMehObj->SetBoundingBox(Out.GetBoundingBox());
+		_ImportNode(Node->GetChild(NodeChildIndex), *SubMehObj);
 		Out.PushMesh(SubMehObj);
 	}
 }
 
-void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inout_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inout_ Mesh& Out)
 {
+	GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>& OutMesh = (GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>&)Out;
 	for (uint32_t VertexIndex = 0, VerticesCount = MeshObj->GetPolygonSize(PolygonIndex); VertexIndex < VerticesCount; ++VertexIndex)
 	{
 		uint32_t Vertex = MeshObj->GetPolygonVertex(PolygonIndex, VertexIndex);
@@ -268,21 +359,101 @@ void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inou
 		}
 		//ETERNAL_ASSERT(false);
 
-		Out.GetVertex(Vertex).UV = Vector2(UV[0], 1.f - UV[1]);
+		OutMesh.GetVertex(Vertex).UV = Vector2(UV[0], 1.f - UV[1]);
 	}
 }
 
-void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inout_ GenericMesh<D3D11PosUVNormalVertexBuffer::PosUVNormalVertex, D3D11PosUVNormalVertexBuffer, D3D11UInt32IndexBuffer>& Out)
+void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ int ControlPointIndex, _In_ int VertexIndex, _Inout_ Mesh& Out)
 {
-	for (uint32_t VertexIndex = 0, VerticesCount = MeshObj->GetPolygonSize(PolygonIndex); VertexIndex < VerticesCount; ++VertexIndex)
+	GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>& OutMesh = (GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>&)Out;
+	for (int NormalIndex = 0, NormalCount = MeshObj->GetElementNormalCount(); NormalIndex < NormalCount; ++NormalIndex)
 	{
-		uint32_t Vertex = MeshObj->GetPolygonVertex(PolygonIndex, VertexIndex);
-
+		FbxGeometryElementNormal* NormalElement = MeshObj->GetElementNormal(NormalIndex);
 		FbxVector4 Normal;
-		bool Ret = MeshObj->GetPolygonVertexNormal(PolygonIndex, VertexIndex, Normal);
-		ETERNAL_ASSERT(Ret);
+		if (NormalElement->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			int Index;
+			switch (NormalElement->GetReferenceMode())
+			{
+			case FbxGeometryElement::eDirect:
+				Normal = NormalElement->GetDirectArray().GetAt(VertexIndex);
+				break;
+			case FbxGeometryElement::eIndexToDirect:
+				Index = NormalElement->GetIndexArray().GetAt(VertexIndex);
+				Normal = NormalElement->GetDirectArray().GetAt(Index);
+				break;
+			default:
+				ETERNAL_ASSERT(false);
+			}
+		}
+		else if (NormalElement->GetMappingMode() == FbxLayerElement::eByControlPoint)
+		{
+			switch (NormalElement->GetReferenceMode())
+			{
+			case FbxGeometryElement::eDirect:
+				Normal = NormalElement->GetDirectArray().GetAt(ControlPointIndex);
+				break;
+			default:
+				ETERNAL_ASSERT(false);
+			}
+		}
+		OutMesh.GetVertex(ControlPointIndex).Normal += Vector4(Normal[0], Normal[1], Normal[2], Normal[3]);
+	}
+}
 
-		Out.GetVertex(Vertex).Normal = Vector4(Normal[0], Normal[1], Normal[2], Normal[3]);
+void ImportFbx::_GetTangent(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, _In_ int VertexIndex, _Inout_ Mesh& Out)
+{
+	GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>& OutMesh = (GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>&)Out;
+	for (int TangentIndex = 0, TangentCount = MeshObj->GetElementTangentCount(); TangentIndex < TangentCount; ++TangentIndex)
+	{
+		FbxGeometryElementTangent* TangentElement = MeshObj->GetElementTangent(TangentIndex);
+		ETERNAL_ASSERT(TangentElement->GetMappingMode() == FbxGeometryElement::eByPolygonVertex);
+		if (TangentElement->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			FbxVector4 Tangent;
+			int Index;
+			switch (TangentElement->GetReferenceMode())
+			{
+			case FbxGeometryElement::eDirect:
+				Tangent = TangentElement->GetDirectArray().GetAt(ControlPointIndex);
+				break;
+			case FbxGeometryElement::eIndexToDirect:
+				Index = TangentElement->GetIndexArray().GetAt(ControlPointIndex);
+				Tangent = TangentElement->GetDirectArray().GetAt(Index);
+				break;
+			default:
+				ETERNAL_ASSERT(false);
+			}
+			OutMesh.GetVertex(ControlPointIndex).Tangent = Vector4(Tangent[0], Tangent[1], Tangent[2], Tangent[3]);
+		}
+	}
+}
+
+void ImportFbx::_GetBinormal(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, _In_ int VertexIndex, _Inout_ Mesh& Out)
+{
+	GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>& OutMesh = (GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>&)Out;
+	for (int BinormalIndex = 0, BinormalCount = MeshObj->GetElementBinormalCount(); BinormalIndex < BinormalCount; ++BinormalIndex)
+	{
+		FbxGeometryElementBinormal* BinormalElement = MeshObj->GetElementBinormal(BinormalIndex);
+		ETERNAL_ASSERT(BinormalElement->GetMappingMode() == FbxGeometryElement::eByPolygonVertex);
+		if (BinormalElement->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			FbxVector4 Binormal;
+			int Index;
+			switch (BinormalElement->GetReferenceMode())
+			{
+			case FbxGeometryElement::eDirect:
+				Binormal = BinormalElement->GetDirectArray().GetAt(ControlPointIndex);
+				break;
+			case FbxGeometryElement::eIndexToDirect:
+				Index = BinormalElement->GetIndexArray().GetAt(ControlPointIndex);
+				Binormal = BinormalElement->GetDirectArray().GetAt(Index);
+				break;
+			default:
+				ETERNAL_ASSERT(false);
+			}
+			OutMesh.GetVertex(ControlPointIndex).Binormal = Vector4(Binormal[0], Binormal[1], Binormal[2], Binormal[3]);
+		}
 	}
 }
 

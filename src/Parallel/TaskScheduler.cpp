@@ -89,7 +89,8 @@ bool TaskScheduler::Done() const
 	bool DoneTasks = true;
 	for (int TaskIndex = 0; DoneTasks && TaskIndex < _TasksList.size(); ++TaskIndex)
 	{
-		DoneTasks &= _TasksList[TaskIndex].TaskObj->GetState() == Task::DONE;
+		Task* CurrentTask = _TasksList[TaskIndex].TaskObj;
+		DoneTasks &= CurrentTask->GetState() == Task::DONE || !CurrentTask->GetFrameConstraint();
 	}
 	return DoneTasks;
 }
@@ -105,9 +106,17 @@ void TaskScheduler::Reset()
 //	OutputDebugString(UnscheduledTasksCount);
 //#endif
 
+	int UnscheduledTasksCount = 0;
 	for (int TaskIndex = 0; TaskIndex < _TasksList.size(); ++TaskIndex)
 	{
-		_TasksList[TaskIndex].TaskObj->Reset();
+		Task* CurrentTask = _TasksList[TaskIndex].TaskObj;
+		bool IsFrameConstrained = CurrentTask->GetFrameConstraint();
+		bool IsFrameFreeDone = !CurrentTask->GetFrameConstraint() && CurrentTask->GetState() == Task::DONE;
+		if (IsFrameFreeDone || IsFrameConstrained)
+		{
+			_TasksList[TaskIndex].TaskObj->Reset();
+			++UnscheduledTasksCount;
+		}
 	}
-	_UnscheduledTasks->Store((int)_TasksList.size());
+	_UnscheduledTasks->Store(UnscheduledTasksCount);
 }

@@ -16,3 +16,13 @@ void Task::SetTaskName(const string& TaskName)
 	_TaskName = TaskName;
 #endif
 }
+
+void Task::SetFrameConstraint(_In_ bool FrameConstraint)
+{
+	_FrameConstraint = FrameConstraint;
+}
+
+bool Task::GetFrameConstraint() const
+{
+	return _FrameConstraint;
+}
