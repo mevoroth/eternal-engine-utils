@@ -172,7 +172,8 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 	const FbxNodeAttribute* Attribute = Node->GetNodeAttribute();
 	if (Attribute)
 	{
-		switch (Attribute->GetAttributeType())
+		FbxNodeAttribute::EType AttributeType = Attribute->GetAttributeType();
+		switch (AttributeType)
 		{
 		case FbxNodeAttribute::EType::eMesh: {
 			FbxMesh* FbxMeshObj = (FbxMesh*)Attribute;
@@ -337,6 +338,11 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 		Mesh* SubMehObj = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
 		SubMehObj->SetBoundingBox(Out.GetBoundingBox());
 		_ImportNode(Node->GetChild(NodeChildIndex), *SubMehObj);
+		
+		// REMOVE THIS
+		if (SubMehObj->IsValidNode())
+			SubMehObj->InitializeBuffers();
+		
 		Out.PushMesh(SubMehObj);
 	}
 }
