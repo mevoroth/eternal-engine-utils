@@ -115,7 +115,7 @@ void TaskScheduler::Reset()
 		if (IsFrameFreeDone || IsFrameConstrained)
 		{
 			_TasksList[TaskIndex].TaskObj->Reset();
-			++UnscheduledTasksCount;
+			UnscheduledTasksCount += CurrentTask->GetInstanceCount();
 		}
 	}
 	_UnscheduledTasks->Store(UnscheduledTasksCount);
