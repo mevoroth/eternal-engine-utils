@@ -1,13 +1,15 @@
 #ifndef _BIT_HPP_
 #define _BIT_HPP_
 
-#include <cstdint>
+#include "Types/Types.hpp"
 
 namespace Eternal
 {
 	namespace Bit
 	{
-		uint64_t LeadingZeroCount(_In_ uint64_t Value);
+		using namespace Eternal::Types;
+
+		u64 LeadingZeroCount(_In_ u64 Value);
 	}
 }
 
