@@ -72,7 +72,7 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& Out)
 		Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, ErrorMessage.c_str());
 
 		// LOG
-		//assert(false);
+		//ETERNAL_ASSERT(false);
 	}
 
 	Out = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
