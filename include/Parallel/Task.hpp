@@ -38,6 +38,7 @@ namespace Eternal
 			bool GetFrameConstraint() const;
 			void SetInstanceCount(_In_ int InstanceCount);
 			int GetInstanceCount() const;
+			int GetInstanceID() const;
 
 			const TaskState& GetState() const
 			{
@@ -64,7 +65,7 @@ namespace Eternal
 			TaskState _TaskState = IDLE;
 			bool _FrameConstraint = true;
 			int _InstanceCount = 1;
-			int _RemainingInstanceCount = 1;
+			int _InstanceID = 0;
 #ifdef ETERNAL_DEBUG
 			string _TaskName;
 #endif

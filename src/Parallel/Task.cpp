@@ -31,7 +31,7 @@ void Task::SetInstanceCount(_In_ int InstanceCount)
 {
 	ETERNAL_ASSERT(GetState() == IDLE);
 	_InstanceCount = InstanceCount;
-	_RemainingInstanceCount = InstanceCount;
+	_InstanceID = 0;
 }
 
 int Task::GetInstanceCount() const
@@ -42,8 +42,8 @@ int Task::GetInstanceCount() const
 void Task::Setup()
 {
 	ETERNAL_ASSERT(GetState() == SCHEDULED);
+	ETERNAL_ASSERT(_InstanceID < _InstanceCount);
 	SetState(SETTINGUP);
-	--_RemainingInstanceCount;
 	DoSetup();
 	SetState(SETUP);
 }
@@ -52,7 +52,7 @@ void Task::Reset()
 {
 	ETERNAL_ASSERT(GetState() == DONE);
 	DoReset();
-	_RemainingInstanceCount = _InstanceCount;
+	_InstanceID = 0;
 	SetState(IDLE);
 }
 
@@ -62,8 +62,15 @@ void Task::Execute()
 	SetState(EXECUTING);
 	DoExecute();
 
-	if (_RemainingInstanceCount)
-		SetState(SCHEDULED);
+	++_InstanceID;
+	if (_InstanceID < _InstanceCount)
+		SetState(IDLE);
 	else
 		SetState(DONE);
+}
+
+int Task::GetInstanceID() const
+{
+	ETERNAL_ASSERT(GetState() != IDLE);
+	return _InstanceID;
 }
