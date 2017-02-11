@@ -22,10 +22,10 @@ TextureFactory::TextureFactory()
 	uint32_t Color = 0xFFFFFFFF;
 	_InsertNewTexture("_WHITE", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
-	Color = 0x0000FFFF;
+	Color = 0xFFFF0000;
 	_InsertNewTexture("_RED", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
-	Color = 0x000000FF;
+	Color = 0xFF000000;
 	_InsertNewTexture("_BLACK", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
 	Color = 0xFF7F7FFF;
