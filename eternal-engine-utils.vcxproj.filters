@@ -175,6 +175,15 @@
     <ClInclude Include="include\Parallel\AtomicS32Factory.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
+    <ClInclude Include="include\Container\QuadTree.hpp">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Container\BreadthFirstQuadTree.hpp">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="include\File\FilePath.hpp">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -257,6 +266,9 @@
     </ClCompile>
     <ClCompile Include="src\Parallel\AtomicS32Factory.cpp">
       <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\FilePath.cpp">
+      <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
