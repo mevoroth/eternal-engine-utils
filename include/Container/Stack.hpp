@@ -12,7 +12,7 @@ namespace Eternal
 		{
 		private:
 			TypeT _Elements[SIZE];
-			int _Count;
+			int _Count = 0;
 		public:
 			Stack();
 			~Stack();

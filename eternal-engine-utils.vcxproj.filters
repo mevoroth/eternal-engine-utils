@@ -184,6 +184,9 @@
     <ClInclude Include="include\File\FilePath.hpp">
       <Filter>File</Filter>
     </ClInclude>
+    <ClInclude Include="include\Container\RingBuffer.hpp">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">

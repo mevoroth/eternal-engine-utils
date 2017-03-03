@@ -22,6 +22,7 @@
     <ClInclude Include="include\Bit\Bit.hpp" />
     <ClInclude Include="include\Container\QuadTree.hpp" />
     <ClInclude Include="include\Container\BreadthFirstQuadTree.hpp" />
+    <ClInclude Include="include\Container\RingBuffer.hpp" />
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\File\CFile.hpp" />
     <ClInclude Include="include\File\File.hpp" />
