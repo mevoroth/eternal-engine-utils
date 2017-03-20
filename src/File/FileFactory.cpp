@@ -18,6 +18,12 @@ namespace Eternal
 #endif
 		}
 
+		void DestroyFile(File*& FileObj)
+		{
+			delete FileObj;
+			FileObj = nullptr;
+		}
+
 		bool FileExists(const std::string& FileName)
 		{
 #ifdef ETERNAL_USE_CFILE

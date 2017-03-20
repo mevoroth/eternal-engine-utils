@@ -10,6 +10,7 @@ namespace Eternal
 		class File;
 
 		File* CreateFile(const std::string& FileName);
+		void DestroyFile(File*& FileObj);
 		bool FileExists(const std::string& FileName);
 	}
 }
