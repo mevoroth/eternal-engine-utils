@@ -35,7 +35,7 @@ namespace Eternal
 			FbxIOSettings* _Settings;
 			FbxImporter* _FbxImporter;
 
-			void _ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture);
+			//void _ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture);
 			void _ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out);
 			void _GetUV(_In_ FbxMesh* MeshObj, _In_ uint32_t PolygonIndex, _Inout_ Mesh& Out);
 			void _GetNormal(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, _In_ int VertexIndex, _Inout_ Mesh& Out);

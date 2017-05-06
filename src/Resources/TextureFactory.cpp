@@ -19,17 +19,17 @@ TextureFactory::TextureFactory()
 {
 	ETERNAL_ASSERT(!_Inst);
 
-	uint32_t Color = 0xFFFFFFFF;
-	_InsertNewTexture("_WHITE", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
+	//uint32_t Color = 0xFFFFFFFF;
+	//_InsertNewTexture("_WHITE", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
-	Color = 0xFFFF0000;
-	_InsertNewTexture("_RED", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
+	//Color = 0xFFFF0000;
+	//_InsertNewTexture("_RED", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
-	Color = 0xFF000000;
-	_InsertNewTexture("_BLACK", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
+	//Color = 0xFF000000;
+	//_InsertNewTexture("_BLACK", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
-	Color = 0xFF7F7FFF;
-	_InsertNewTexture("_DEFAULT_NORMAL", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
+	//Color = 0xFF7F7FFF;
+	//_InsertNewTexture("_DEFAULT_NORMAL", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
 	_Inst = this;
 }
@@ -69,7 +69,8 @@ Texture* TextureFactory::GetTexture(_In_ const string& NameSrc)
 	uint8_t* TextureData = ImportTga::Get()->Import(FilePath, Height, Width);
 
 	TextureCache& TextureCacheLine = _Textures[NameSrc];
-	TextureCacheLine.TextureObj = CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, Width, Height, TextureData);
+	ETERNAL_ASSERT(false);
+	//TextureCacheLine.TextureObj = CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, Width, Height, TextureData);
 
 	return TextureCacheLine.TextureObj;
 }

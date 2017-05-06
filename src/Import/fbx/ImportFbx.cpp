@@ -91,7 +91,8 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& Out)
 		-std::numeric_limits<float>::infinity(),
 		-std::numeric_limits<float>::infinity()
 	));
-	Out->SetBoundingBox(Box);
+	ETERNAL_ASSERT(false);
+	//Out->SetBoundingBox(Box);
 
 	_ImportNode(Scene->GetRootNode(), *Out);
 
@@ -133,7 +134,8 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& Out)
 	BoundingBoxMesh.PushTriangle(1, 5, 3);
 	BoundingBoxMesh.PushTriangle(5, 7, 3);
 
-	Out->SetBBMesh(&BoundingBoxMesh);
+	ETERNAL_ASSERT(false);
+	//Out->SetBBMesh(&BoundingBoxMesh);
 	//_ImportPoses();
 }
 
@@ -148,22 +150,22 @@ void ImportFbx::_ImportPoses(_In_ FbxScene* Scene)
 	}
 }
 
-void ImportFbx::_ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture)
-{
-	FbxProperty ColorChannel = SurfaceMaterial->FindProperty(FbxLayerElement::sTextureChannelNames[ChannelIndex]);
-	if (ColorChannel.IsValid())
-	{
-		FbxTexture* TextureObj = ColorChannel.GetSrcObject<FbxTexture>(0);
-		if (TextureObj)
-		{
-			char FileName[255];
-			char Extension[8];
-			_splitpath_s(FbxCast<FbxFileTexture>(TextureObj)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
-			sprintf_s(FileName, "%s%s%s", FileName, Extension, TextureSuffix);
-			OutTexture = Eternal::Resources::TextureFactory::Get()->GetTexture(FileName);
-		}
-	}
-}
+//void ImportFbx::_ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture)
+//{
+//	FbxProperty ColorChannel = SurfaceMaterial->FindProperty(FbxLayerElement::sTextureChannelNames[ChannelIndex]);
+//	if (ColorChannel.IsValid())
+//	{
+//		FbxTexture* TextureObj = ColorChannel.GetSrcObject<FbxTexture>(0);
+//		if (TextureObj)
+//		{
+//			char FileName[255];
+//			char Extension[8];
+//			_splitpath_s(FbxCast<FbxFileTexture>(TextureObj)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
+//			sprintf_s(FileName, "%s%s%s", FileName, Extension, TextureSuffix);
+//			OutTexture = Eternal::Resources::TextureFactory::Get()->GetTexture(FileName);
+//		}
+//	}
+//}
 
 void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 {
@@ -186,20 +188,20 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 				VertexObj.Normal = Vector4(0.f, 0.f, 0.f, 0.f);
 
 				Vector3 Vertex3(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2]);
+				ETERNAL_ASSERT(false);
+				//Vector3 NewMin = Out.GetBoundingBox()->GetMin();
+				//Vector3 NewMax = Out.GetBoundingBox()->GetMax();
 
-				Vector3 NewMin = Out.GetBoundingBox()->GetMin();
-				Vector3 NewMax = Out.GetBoundingBox()->GetMax();
+				//NewMin.x = min(NewMin.x, Vertex3.x);
+				//NewMin.y = min(NewMin.y, Vertex3.y);
+				//NewMin.z = min(NewMin.z, Vertex3.z);
 
-				NewMin.x = min(NewMin.x, Vertex3.x);
-				NewMin.y = min(NewMin.y, Vertex3.y);
-				NewMin.z = min(NewMin.z, Vertex3.z);
+				//NewMax.x = max(NewMax.x, Vertex3.x);
+				//NewMax.y = max(NewMax.y, Vertex3.y);
+				//NewMax.z = max(NewMax.z, Vertex3.z);
 
-				NewMax.x = max(NewMax.x, Vertex3.x);
-				NewMax.y = max(NewMax.y, Vertex3.y);
-				NewMax.z = max(NewMax.z, Vertex3.z);
-
-				OutMesh.GetBoundingBox()->SetMin(NewMin);
-				OutMesh.GetBoundingBox()->SetMax(NewMax);
+				//OutMesh.GetBoundingBox()->SetMin(NewMin);
+				//OutMesh.GetBoundingBox()->SetMax(NewMax);
 
 				OutMesh.PushVertex(VertexObj);
 			}
@@ -300,7 +302,9 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 				//OutputDebugString(DiffuseColorChannel.GetName());
 				//OutputDebugString(DiffuseColorTexture->GetName());
 				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
-				OutMesh.SetTexture(Diffuse, Specular, Normal);
+
+				ETERNAL_ASSERT(false);
+				//OutMesh.SetTexture(Diffuse, Specular, Normal);
 			}
 		} break;
 
@@ -336,12 +340,14 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
 		Mesh* SubMehObj = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
-		SubMehObj->SetBoundingBox(Out.GetBoundingBox());
+		ETERNAL_ASSERT(false);
+		//SubMehObj->SetBoundingBox(Out.GetBoundingBox());
 		_ImportNode(Node->GetChild(NodeChildIndex), *SubMehObj);
 		
+		ETERNAL_ASSERT(false);
 		// REMOVE THIS
-		if (SubMehObj->IsValidNode())
-			SubMehObj->InitializeBuffers();
+		//if (SubMehObj->IsValidNode())
+		//	SubMehObj->InitializeBuffers();
 		
 		Out.PushMesh(SubMehObj);
 	}
