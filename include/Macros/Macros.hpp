@@ -13,6 +13,7 @@
 #define ETERNAL_STATIC_ASSERT(Condition, ErrorString)
 #endif
 
-#define ETERNAL_ARRAYSIZE(Array)	(sizeof(Array)/sizeof(Array[0]))
+#define ETERNAL_ARRAYSIZE(Array)				(sizeof(Array)/sizeof(Array[0]))
+#define ETERNAL_OFFSETOF(Structure, Member)		((unsigned long long)&(((Structure*)nullptr)->Member))
 
 #endif
