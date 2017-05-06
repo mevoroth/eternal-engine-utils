@@ -29,6 +29,7 @@ namespace Eternal
 			TaskManager();
 			virtual ~TaskManager();
 
+			TaskScheduler& operator()();
 			TaskScheduler& GetTaskScheduler();
 
 			void Schedule();

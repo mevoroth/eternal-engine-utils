@@ -143,6 +143,11 @@ TaskScheduler& TaskManager::GetTaskScheduler()
 	return _Scheduler;
 }
 
+TaskScheduler& TaskManager::operator()()
+{
+	return GetTaskScheduler();
+}
+
 void TaskManager::Schedule()
 {
 	//OutputDebugString("TaskManager::Schedule\n");
