@@ -1,6 +1,7 @@
 #ifndef _RING_BUFFER_HPP_
 #define _RING_BUFFER_HPP_
 
+#include <vector>
 #include "Macros/Macros.hpp"
 #include "Types/Types.hpp"
 
@@ -8,7 +9,8 @@ namespace Eternal
 {
 	namespace Container
 	{
-		using namespace Eternal;
+		using namespace std;
+		using namespace Eternal::Types;
 
 		template<typename TypeT>
 		class RingBuffer
@@ -18,12 +20,13 @@ namespace Eternal
 				: _Size(Size)
 			{
 				ETERNAL_ASSERT(Size > 0);
+				_Elements.resize(Size);
 			}
 
 			void Push(_In_ const TypeT& Element)
 			{
-				ETERNAL_ASSERT(_Count < Size);
-				_Elements[(_First + _Count) % Size] = Element;
+				ETERNAL_ASSERT(_Count < _Size);
+				_Elements[(_First + _Count) % _Size] = Element;
 				++_Count;
 			}
 
@@ -39,7 +42,7 @@ namespace Eternal
 				return _Elements[(_First + Index) % _Size];
 			}
 
-			inline Type& Tail()
+			inline TypeT& Tail()
 			{
 				ETERNAL_ASSERT(!Empty());
 				return _Elements[(_First - 1u + _Count) % _Size];
@@ -79,7 +82,7 @@ namespace Eternal
 			}
 
 		private:
-			TypeT _Elements[SIZE];
+			vector<TypeT> _Elements;
 			u32 _Size = 0u;
 			u32 _Count = 0u;
 			u32 _First = 0u;
