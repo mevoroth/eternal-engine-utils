@@ -44,9 +44,12 @@ namespace Eternal
 			static const LogCategory Save;
 			static const LogCategory Import;
 
-			Log();
 			static void Initialize(Log* LogObj);
 			static Log* Get();
+
+			Log();
+			virtual ~Log() {}
+
 			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) = 0;
 			TimeMicroSecondsT GetElaspedTime() const;
 
