@@ -52,7 +52,7 @@ void ImportFbx::RegisterPath(const std::string& IncludePath)
 	_IncludePaths.push_back(IncludePath);
 }
 
-void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& Out)
+void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& OutMesh, _Out_ Mesh*& OutBoundingBox)
 {
 	std::string FilePath;
 	bool PathFound = false;
@@ -75,68 +75,64 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& Out)
 		//ETERNAL_ASSERT(false);
 	}
 
-	Out = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
+	OutMesh = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
 
 	FbxScene* Scene = FbxScene::Create(_SdkMgr, "scene");
 	_FbxImporter->Import(Scene);
 
-	BoundingBox* Box = new BoundingBox();
-	Box->SetMin(Vector3(
+	BoundingBox Box;
+	Box.SetMin(Vector3(
 		std::numeric_limits<float>::infinity(),
 		std::numeric_limits<float>::infinity(),
 		std::numeric_limits<float>::infinity()
 	));
-	Box->SetMax(Vector3(
+	Box.SetMax(Vector3(
 		-std::numeric_limits<float>::infinity(),
 		-std::numeric_limits<float>::infinity(),
 		-std::numeric_limits<float>::infinity()
 	));
-	ETERNAL_ASSERT(false);
-	//Out->SetBoundingBox(Box);
 
-	_ImportNode(Scene->GetRootNode(), *Out);
+	_ImportNode(Scene->GetRootNode(), *OutMesh, Box);
 
-	GenericMesh<PosColorVertex, uint32_t>& BoundingBoxMesh = *new GenericMesh<PosColorVertex, uint32_t>();
+	GenericMesh<PosColorVertex, uint32_t>* BoundingBoxMesh = new GenericMesh<PosColorVertex, uint32_t>();
 	PosColorVertex BoundingBoxVertex[] = {
-		{ Vector4(Box->GetMin().x, Box->GetMin().y, Box->GetMin().z, 1.0f), 0x000000FF },
-		{ Vector4(Box->GetMin().x, Box->GetMin().y, Box->GetMax().z, 1.0f), 0x0000FFFF },
-		{ Vector4(Box->GetMin().x, Box->GetMax().y, Box->GetMin().z, 1.0f), 0x00FF00FF },
-		{ Vector4(Box->GetMin().x, Box->GetMax().y, Box->GetMax().z, 1.0f), 0x00FFFFFF },
-		{ Vector4(Box->GetMax().x, Box->GetMin().y, Box->GetMin().z, 1.0f), 0xFF0000FF },
-		{ Vector4(Box->GetMax().x, Box->GetMin().y, Box->GetMax().z, 1.0f), 0xFF00FFFF },
-		{ Vector4(Box->GetMax().x, Box->GetMax().y, Box->GetMin().z, 1.0f), 0xFFFF00FF },
-		{ Vector4(Box->GetMax().x, Box->GetMax().y, Box->GetMax().z, 1.0f), 0xFFFFFFFF },
+		{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0x000000FF },
+		{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0x0000FFFF },
+		{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0x00FF00FF },
+		{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0x00FFFFFF },
+		{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0xFF0000FF },
+		{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0xFF00FFFF },
+		{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0xFFFF00FF },
+		{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0xFFFFFFFF },
 	};
 	for (int BoundingBoxVertexIndex = 0; BoundingBoxVertexIndex < ETERNAL_ARRAYSIZE(BoundingBoxVertex); ++BoundingBoxVertexIndex)
-		BoundingBoxMesh.PushVertex(BoundingBoxVertex[BoundingBoxVertexIndex]);
+		BoundingBoxMesh->PushVertex(BoundingBoxVertex[BoundingBoxVertexIndex]);
 
 	// -X
-	BoundingBoxMesh.PushTriangle(2, 0, 3);
-	BoundingBoxMesh.PushTriangle(0, 1, 3);
+	BoundingBoxMesh->PushTriangle(2, 0, 3);
+	BoundingBoxMesh->PushTriangle(0, 1, 3);
 
 	// +X
-	BoundingBoxMesh.PushTriangle(4, 6, 5);
-	BoundingBoxMesh.PushTriangle(6, 7, 5);
+	BoundingBoxMesh->PushTriangle(4, 6, 5);
+	BoundingBoxMesh->PushTriangle(6, 7, 5);
 	
 	// -Y
-	BoundingBoxMesh.PushTriangle(0, 4, 1);
-	BoundingBoxMesh.PushTriangle(4, 5, 1);
+	BoundingBoxMesh->PushTriangle(0, 4, 1);
+	BoundingBoxMesh->PushTriangle(4, 5, 1);
 
 	// +Y
-	BoundingBoxMesh.PushTriangle(6, 2, 7);
-	BoundingBoxMesh.PushTriangle(2, 3, 7);
+	BoundingBoxMesh->PushTriangle(6, 2, 7);
+	BoundingBoxMesh->PushTriangle(2, 3, 7);
 
 	// -Z
-	BoundingBoxMesh.PushTriangle(2, 6, 0);
-	BoundingBoxMesh.PushTriangle(6, 4, 0);
+	BoundingBoxMesh->PushTriangle(2, 6, 0);
+	BoundingBoxMesh->PushTriangle(6, 4, 0);
 
 	// +Z
-	BoundingBoxMesh.PushTriangle(1, 5, 3);
-	BoundingBoxMesh.PushTriangle(5, 7, 3);
+	BoundingBoxMesh->PushTriangle(1, 5, 3);
+	BoundingBoxMesh->PushTriangle(5, 7, 3);
 
-	ETERNAL_ASSERT(false);
-	//Out->SetBBMesh(&BoundingBoxMesh);
-	//_ImportPoses();
+	OutBoundingBox = BoundingBoxMesh;
 }
 
 void ImportFbx::_ImportPoses(_In_ FbxScene* Scene)
@@ -167,9 +163,9 @@ void ImportFbx::_ImportPoses(_In_ FbxScene* Scene)
 //	}
 //}
 
-void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
+void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _Out_ BoundingBox& OutBoundingBox)
 {
-	GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>& OutMesh = (GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>&)Out;
+	GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>& OutMesh = (GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>&)OutMeshObj;
 
 	const FbxNodeAttribute* Attribute = Node->GetNodeAttribute();
 	if (Attribute)
@@ -188,20 +184,20 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 				VertexObj.Normal = Vector4(0.f, 0.f, 0.f, 0.f);
 
 				Vector3 Vertex3(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2]);
-				ETERNAL_ASSERT(false);
-				//Vector3 NewMin = Out.GetBoundingBox()->GetMin();
-				//Vector3 NewMax = Out.GetBoundingBox()->GetMax();
 
-				//NewMin.x = min(NewMin.x, Vertex3.x);
-				//NewMin.y = min(NewMin.y, Vertex3.y);
-				//NewMin.z = min(NewMin.z, Vertex3.z);
+				Vector3 NewMin = OutBoundingBox.GetMin();
+				Vector3 NewMax = OutBoundingBox.GetMax();
 
-				//NewMax.x = max(NewMax.x, Vertex3.x);
-				//NewMax.y = max(NewMax.y, Vertex3.y);
-				//NewMax.z = max(NewMax.z, Vertex3.z);
+				NewMin.x = min(NewMin.x, Vertex3.x);
+				NewMin.y = min(NewMin.y, Vertex3.y);
+				NewMin.z = min(NewMin.z, Vertex3.z);
 
-				//OutMesh.GetBoundingBox()->SetMin(NewMin);
-				//OutMesh.GetBoundingBox()->SetMax(NewMax);
+				NewMax.x = max(NewMax.x, Vertex3.x);
+				NewMax.y = max(NewMax.y, Vertex3.y);
+				NewMax.z = max(NewMax.z, Vertex3.z);
+
+				OutBoundingBox.SetMin(NewMin);
+				OutBoundingBox.SetMax(NewMax);
 
 				OutMesh.PushVertex(VertexObj);
 			}
@@ -339,17 +335,17 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out)
 
 	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
-		Mesh* SubMehObj = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
+		Mesh* SubMeshObj = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
 		ETERNAL_ASSERT(false);
 		//SubMehObj->SetBoundingBox(Out.GetBoundingBox());
-		_ImportNode(Node->GetChild(NodeChildIndex), *SubMehObj);
+		_ImportNode(Node->GetChild(NodeChildIndex), *SubMeshObj, OutBoundingBox);
 		
 		ETERNAL_ASSERT(false);
 		// REMOVE THIS
 		//if (SubMehObj->IsValidNode())
 		//	SubMehObj->InitializeBuffers();
 		
-		Out.PushMesh(SubMehObj);
+		OutMesh.PushMesh(SubMeshObj);
 	}
 }
 

@@ -6,8 +6,7 @@
 #include "fbxsdk.h"
 
 #include "Mesh/GenericMesh.hpp"
-//#include "d3d11/D3D11PosUVNormalTangentBinormalVertexBuffer.hpp"
-//#include "d3d11/D3D11UInt32IndexBuffer.hpp"
+#include "Mesh/BoundingBox.hpp"
 
 namespace Eternal
 {
@@ -24,7 +23,7 @@ namespace Eternal
 			ImportFbx();
 			static ImportFbx* Get();
 			static void RegisterPath(const std::string& IncludePath);
-			void Import(_In_ const std::string& Path, _Out_ Mesh*& Out);
+			void Import(_In_ const std::string& Path, _Out_ Mesh*& OutMesh, _Out_ Mesh*& OutBoundingBox);
 
 		private:
 			enum Channel;
@@ -36,7 +35,7 @@ namespace Eternal
 			FbxImporter* _FbxImporter;
 
 			//void _ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture);
-			void _ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& Out);
+			void _ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _Out_ BoundingBox& OutBoundingBox);
 			void _GetUV(_In_ FbxMesh* MeshObj, _In_ uint32_t PolygonIndex, _Inout_ Mesh& Out);
 			void _GetNormal(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, _In_ int VertexIndex, _Inout_ Mesh& Out);
 			void _GetTangent(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, _In_ int VertexIndex, _Inout_ Mesh& Out);
