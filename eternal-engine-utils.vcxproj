@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Bit\Bit.hpp" />
+    <ClInclude Include="include\Container\FreeList.hpp" />
     <ClInclude Include="include\Container\QuadTree.hpp" />
     <ClInclude Include="include\Container\BreadthFirstQuadTree.hpp" />
     <ClInclude Include="include\Container\RingBuffer.hpp" />

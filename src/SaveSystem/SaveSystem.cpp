@@ -3,13 +3,14 @@
 #include "Macros/Macros.hpp"
 #include "File/File.hpp"
 #include "File/FileFactory.hpp"
+#include "File/FilePath.hpp"
 #include "SaveSystem/GameDataSaveSystem.hpp"
 
 using namespace Eternal::SaveSystem;
 using namespace Eternal::File;
 
 SaveSystem* SaveSystem::_Inst = nullptr;
-vector<string> SaveSystem::_IncludePaths;
+//vector<string> SaveSystem::_IncludePaths;
 
 SaveSystem::SaveSystem()
 {
@@ -26,24 +27,14 @@ SaveSystem* SaveSystem::Get()
 	return _Inst;
 }
 
-void SaveSystem::RegisterSavePath(_In_ const string& SavePath)
-{
-	_IncludePaths.push_back(SavePath);
-}
+//void SaveSystem::RegisterSavePath(_In_ const string& SavePath)
+//{
+//	_IncludePaths.push_back(SavePath);
+//}
 
 void* SaveSystem::Load(_In_ const string& SaveFile)
 {
-	bool FileExists = false;
-	string FilePath;
-	for (int SavePathIndex = 0; !FileExists && SavePathIndex < _IncludePaths.size(); ++SavePathIndex)
-	{
-		FileExists = File::FileExists(_IncludePaths[SavePathIndex] + SaveFile);
-		if (FileExists)
-			FilePath = _IncludePaths[SavePathIndex] + SaveFile;
-	}
-
-	ETERNAL_ASSERT(FileExists);
-	ETERNAL_ASSERT(FilePath.size());
+	string FilePath = FilePath::Find(SaveFile, FilePath::SAVES);
 
 	Eternal::File::File* Save = CreateFile(FilePath);
 	Save->Open(Eternal::File::File::READ);

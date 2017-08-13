@@ -15,7 +15,9 @@ namespace Eternal
 		public:
 			enum FileType
 			{
-				SHADERS = 0,
+				SHADERS		= 0,
+				SAVES		= 1,
+				TEXTURES	= 2,
 				FILE_TYPE_COUNT
 			};
 			static void Register(_In_ const string& FolderPath, _In_ const FileType& Type);

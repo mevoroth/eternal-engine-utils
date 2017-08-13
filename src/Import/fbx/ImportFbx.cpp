@@ -299,7 +299,8 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 				//OutputDebugString(DiffuseColorTexture->GetName());
 				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
 
-				ETERNAL_ASSERT(false);
+				//ETERNAL_ASSERT(false);
+				Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::_ImportNode]Texture import not implemented!");
 				//OutMesh.SetTexture(Diffuse, Specular, Normal);
 			}
 		} break;
@@ -336,14 +337,8 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 	for (int NodeChildIndex = 0; NodeChildIndex < Node->GetChildCount(); ++NodeChildIndex)
 	{
 		Mesh* SubMeshObj = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
-		ETERNAL_ASSERT(false);
-		//SubMehObj->SetBoundingBox(Out.GetBoundingBox());
-		_ImportNode(Node->GetChild(NodeChildIndex), *SubMeshObj, OutBoundingBox);
 		
-		ETERNAL_ASSERT(false);
-		// REMOVE THIS
-		//if (SubMehObj->IsValidNode())
-		//	SubMehObj->InitializeBuffers();
+		_ImportNode(Node->GetChild(NodeChildIndex), *SubMeshObj, OutBoundingBox);
 		
 		OutMesh.PushMesh(SubMeshObj);
 	}

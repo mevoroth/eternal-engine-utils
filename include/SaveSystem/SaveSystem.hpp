@@ -19,14 +19,14 @@ namespace Eternal
 			static SaveSystem* Get();
 
 			SaveSystem();
-			static void RegisterSavePath(_In_ const string& SavePath);
+			//static void RegisterSavePath(_In_ const string& SavePath);
 			void* Load(_In_ const string& SaveFile);
 			void SetGameDataLoader(_In_ GameDataLoader* Loader);
 			GameDataLoader* GetGameDataLoader();
 
 		private:
 			static SaveSystem* _Inst;
-			static vector<string> _IncludePaths;
+			//static vector<string> _IncludePaths;
 
 			GameDataSaveSystem* _SaveSystem = nullptr;
 			GameDataLoader* _Loader = nullptr;

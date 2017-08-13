@@ -187,6 +187,9 @@
     <ClInclude Include="include\Container\RingBuffer.hpp">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="include\Container\FreeList.hpp">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
