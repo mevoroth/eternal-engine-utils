@@ -40,5 +40,11 @@ namespace Eternal
 
 			return MultiChannelLogObj;
 		}
+
+		void DeleteLog(Log*& LogObj)
+		{
+			delete LogObj;
+			LogObj = nullptr;
+		}
 	}
 }

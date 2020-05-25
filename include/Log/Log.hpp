@@ -40,6 +40,7 @@ namespace Eternal
 				const char* Category = nullptr;
 			};
 
+			static const LogCategory Graphics;
 			static const LogCategory Engine;
 			static const LogCategory Save;
 			static const LogCategory Import;
@@ -59,6 +60,19 @@ namespace Eternal
 			TimeMicroSecondsT _InitialTime = 0ull;
 		};
 	}
+
+	// Alias
+	extern const Log::Log::LogLevel& LogInfo;
+	extern const Log::Log::LogLevel& LogWarning;
+	extern const Log::Log::LogLevel& LogError;
+	extern const Log::Log::LogLevel& LogCritical;
+
+	extern const Log::Log::LogCategory& LogGraphics;
+	extern const Log::Log::LogCategory& LogEngine;
+	extern const Log::Log::LogCategory& LogSave;
+	extern const Log::Log::LogCategory& LogImport;
+
+	void LogWrite(_In_ const Log::Log::LogLevel& Level, _In_ const Log::Log::LogCategory& Category, _In_ const string& Message);
 }
 
 #endif

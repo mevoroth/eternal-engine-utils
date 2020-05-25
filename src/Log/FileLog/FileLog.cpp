@@ -23,11 +23,11 @@ FileLog::FileLog(_In_ const char* FileName)
 
 	for (int LogLevelIndex = 0; LogLevelIndex < Log::LogLevelCount; ++LogLevelIndex)
 	{
-		_LogFiles[LogLevelIndex] = CreateFile(Prefix + string(".") + string(LogLevels[LogLevelIndex]->Tag) + Suffix);
+		_LogFiles[LogLevelIndex] = CreateFileHandle(Prefix + string(".") + string(LogLevels[LogLevelIndex]->Tag) + Suffix);
 		_LogFiles[LogLevelIndex]->Open(Eternal::File::File::WRITE);
 	}
 
-	_LogAllFile = CreateFile(Prefix + Suffix);
+	_LogAllFile = CreateFileHandle(Prefix + Suffix);
 	_LogAllFile->Open(Eternal::File::File::WRITE);
 
 	Write(Info, Engine, "Start logging");

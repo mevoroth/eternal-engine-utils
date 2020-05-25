@@ -9,8 +9,8 @@ namespace Eternal
 	{
 		class File;
 
-		File* CreateFile(const std::string& FileName);
-		void DestroyFile(File*& FileObj);
+		File* CreateFileHandle(const std::string& FileName);
+		void DestroyFileHandle(File*& FileObj);
 		bool FileExists(const std::string& FileName);
 	}
 }

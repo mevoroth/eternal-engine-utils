@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -44,6 +44,7 @@
     <ClInclude Include="include\Parallel\CpuCoreCount.hpp" />
     <ClInclude Include="include\Parallel\Mutex.hpp" />
     <ClInclude Include="include\Parallel\MutexAutoLock.hpp" />
+    <ClInclude Include="include\Parallel\MutexFactory.hpp" />
     <ClInclude Include="include\Parallel\Sleep.hpp" />
     <ClInclude Include="include\Parallel\StdAtomicS32.hpp" />
     <ClInclude Include="include\Parallel\StdAtomicU64.hpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="include\Parallel\TaskScheduler.hpp" />
     <ClInclude Include="include\Parallel\Thread.hpp" />
     <ClInclude Include="include\Parallel\Worker.hpp" />
+    <ClInclude Include="include\Resources\ImmediateTextureFactory.hpp" />
     <ClInclude Include="include\Resources\Pool.hpp" />
     <ClInclude Include="include\Resources\TextureFactory.hpp" />
     <ClInclude Include="include\SaveSystem\GameData.hpp" />
@@ -80,6 +82,7 @@
     <ClCompile Include="src\Log\LogFactory.cpp" />
     <ClCompile Include="src\Log\MultiChannelLog\MultiChannelLog.cpp" />
     <ClCompile Include="src\Parallel\AtomicS32Factory.cpp" />
+    <ClCompile Include="src\Parallel\MutexFactory.cpp" />
     <ClCompile Include="src\Parallel\StdCpuCoreCount.cpp" />
     <ClCompile Include="src\Parallel\StdSleep.cpp" />
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />
@@ -89,6 +92,7 @@
     <ClCompile Include="src\Parallel\TaskManager.cpp" />
     <ClCompile Include="src\Parallel\TaskScheduler.cpp" />
     <ClCompile Include="src\Parallel\Worker.cpp" />
+    <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp" />
     <ClCompile Include="src\Resources\TextureFactory.cpp" />
     <ClCompile Include="src\SaveSystem\GameDataCollection.cpp" />
     <ClCompile Include="src\SaveSystem\GameDataSaveSystem.cpp" />
@@ -100,32 +104,32 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23D5DF8E-B7C8-40C2-B797-8C06280D1F24}</ProjectGuid>
     <RootNamespace>eternalengineutils</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -180,7 +184,7 @@
       <ForcedIncludeFiles>sal.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

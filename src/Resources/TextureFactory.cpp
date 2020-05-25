@@ -6,6 +6,9 @@
 #include "Graphics/TextureFactory.hpp"
 #include "Graphics/Format.hpp"
 #include "File/FileFactory.hpp"
+#include "File/FilePath.hpp"
+#include "Parallel/MutexFactory.hpp"
+#include "Parallel/Mutex.hpp"
 
 using namespace Eternal::Resources;
 using namespace Eternal::Import;
@@ -15,7 +18,17 @@ using namespace Eternal::File;
 TextureFactory* TextureFactory::_Inst = nullptr;
 vector<string> TextureFactory::_IncludePaths;
 
-TextureFactory::TextureFactory()
+RawTextureData::~RawTextureData()
+{
+	delete[] TextureData;
+	TextureData = nullptr;
+}
+
+
+
+TextureFactory::TextureFactory(_In_ const TextureFactoryCreateInformation& CreateInformation)
+	: Callbacks(CreateInformation)
+	, _NewRequestsMutex(CreateMutex())
 {
 	ETERNAL_ASSERT(!_Inst);
 
@@ -40,6 +53,52 @@ TextureFactory* TextureFactory::Get()
 	return _Inst;
 }
 
+void TextureFactory::CreateRequest(const TextureFactoryRequest& Request)
+{
+	_NewRequestsMutex->Lock();
+	_NewRequests.push_back(Request);
+	_NewRequestsMutex->Unlock();
+}
+
+void TextureFactory::ProcessRequests()
+{
+	if (_NewRequestsMutex->TryLock())
+	{
+		_PendingLoadTextureRequests.insert(_PendingLoadTextureRequests.end(), _NewRequests.begin(), _NewRequests.end());
+		_NewRequests.clear();
+		_NewRequestsMutex->Unlock();
+	}
+
+	for (auto PendingRequestIterator = _PendingLoadTextureRequests.begin(); PendingRequestIterator != _PendingLoadTextureRequests.end(); )
+	{
+		TextureFactoryLoadedTexture LoadedTexture = *PendingRequestIterator;
+
+		if (Callbacks.LoadTextureCallback.LoadTexture(LoadedTexture.Path, LoadedTexture.TextureData))
+		{
+			PendingRequestIterator = _PendingLoadTextureRequests.erase(PendingRequestIterator);
+			_PendingCreateGpuResourceRequests.push_back(LoadedTexture);
+		}
+		else
+		{
+			++PendingRequestIterator;
+		}
+	}
+
+	for (auto PendingRequestIterator = _PendingCreateGpuResourceRequests.begin(); PendingRequestIterator != _PendingCreateGpuResourceRequests.end(); )
+	{
+		Texture* OutTexture;
+		if (Callbacks.CreateGpuResourceCallback.CreateTexture(PendingRequestIterator->TextureData, OutTexture))
+		{
+			_InsertNewTexture(PendingRequestIterator->Name, OutTexture);
+			PendingRequestIterator = _PendingCreateGpuResourceRequests.erase(PendingRequestIterator);
+		}
+		else
+		{
+			++PendingRequestIterator;
+		}
+	}
+}
+
 void TextureFactory::RegisterTexturePath(_In_ const string& Path)
 {
 	_IncludePaths.push_back(Path);
@@ -53,26 +112,28 @@ Texture* TextureFactory::GetTexture(_In_ const string& NameSrc)
 		return FoundTexture->second.TextureObj;
 	}
 
-	std::string FilePath;
-	bool PathFound = false;
-	for (int IncludePathIndex = 0; !PathFound && IncludePathIndex < _IncludePaths.size(); ++IncludePathIndex)
-	{
-		FilePath = _IncludePaths[IncludePathIndex] + NameSrc;
-		PathFound = FileExists(FilePath);
-	}
+	return nullptr;
 
-	//ETERNAL_ASSERT(PathFound);
-	if (!PathFound)
-		return nullptr;
+	//std::string FilePath;
+	//bool PathFound = false;
+	//for (int IncludePathIndex = 0; !PathFound && IncludePathIndex < _IncludePaths.size(); ++IncludePathIndex)
+	//{
+	//	FilePath = _IncludePaths[IncludePathIndex] + NameSrc;
+	//	PathFound = FileExists(FilePath);
+	//}
 
-	uint32_t Height, Width;
-	uint8_t* TextureData = ImportTga::Get()->Import(FilePath, Height, Width);
+	////ETERNAL_ASSERT(PathFound);
+	//if (!PathFound)
+	//	return nullptr;
 
-	TextureCache& TextureCacheLine = _Textures[NameSrc];
-	ETERNAL_ASSERT(false);
+	//uint32_t Height, Width;
+	//uint8_t* TextureData = ImportTga::Get()->Import(FilePath, Height, Width);
+
+	//TextureCache& TextureCacheLine = _Textures[NameSrc];
+	//ETERNAL_ASSERT(false);
 	//TextureCacheLine.TextureObj = CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, Width, Height, TextureData);
 
-	return TextureCacheLine.TextureObj;
+	//return TextureCacheLine.TextureObj;
 }
 
 void TextureFactory::_InsertNewTexture(_In_ const string& NameSrc, _In_ Texture* TextureObj)
@@ -82,4 +143,10 @@ void TextureFactory::_InsertNewTexture(_In_ const string& NameSrc, _In_ Texture*
 
 	TextureCache& TextureCacheLine = _Textures[NameSrc];
 	TextureCacheLine.TextureObj = TextureObj;
+}
+
+TextureFactoryRequest::TextureFactoryRequest(const string& InName, const string& InPath)
+	: Name(InName)
+	, Path(FilePath::Find(InPath, FileType::TEXTURES))
+{
 }

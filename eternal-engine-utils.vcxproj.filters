@@ -190,6 +190,12 @@
     <ClInclude Include="include\Container\FreeList.hpp">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="include\Parallel\MutexFactory.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Resources\ImmediateTextureFactory.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -275,6 +281,12 @@
     </ClCompile>
     <ClCompile Include="src\File\FilePath.cpp">
       <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\MutexFactory.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp">
+      <Filter>Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

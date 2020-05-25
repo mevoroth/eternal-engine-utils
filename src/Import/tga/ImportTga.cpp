@@ -44,7 +44,7 @@ uint8_t* ImportTga::Import(_In_ const string& Path, _Out_ uint32_t& Height, _Out
 
 	uint8_t* ImageBuffer;
 
-	File::File* TgaFile = File::CreateFile(Path);
+	File::File* TgaFile = CreateFileHandle(Path);
 	TgaFile->Open(File::File::READ);
 	uint64_t TgaFileSize = TgaFile->GetFileSize();
 	uint8_t* TgaContent = new uint8_t[TgaFileSize];

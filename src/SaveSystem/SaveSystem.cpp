@@ -34,9 +34,9 @@ SaveSystem* SaveSystem::Get()
 
 void* SaveSystem::Load(_In_ const string& SaveFile)
 {
-	string FilePath = FilePath::Find(SaveFile, FilePath::SAVES);
+	string FilePath = FilePath::Find(SaveFile, FileType::SAVES);
 
-	Eternal::File::File* Save = CreateFile(FilePath);
+	Eternal::File::File* Save = CreateFileHandle(FilePath);
 	Save->Open(Eternal::File::File::READ);
 
 	uint64_t SaveFileSize = Save->GetFileSize();
@@ -45,6 +45,7 @@ void* SaveSystem::Load(_In_ const string& SaveFile)
 
 	Save->Read(SaveContent, SaveFileSize);
 	Save->Close();
+	DestroyFileHandle(Save);
 
 	return _SaveSystem->Load(SaveContent);
 }
