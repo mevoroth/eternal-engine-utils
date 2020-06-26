@@ -18,13 +18,16 @@ using namespace Eternal::File;
 TextureFactory* TextureFactory::_Inst = nullptr;
 vector<string> TextureFactory::_IncludePaths;
 
-RawTextureData::~RawTextureData()
+void RawTextureData::Initialize(void* InTextureData)
+{
+	TextureData = InTextureData;
+}
+
+void RawTextureData::Release()
 {
 	delete[] TextureData;
 	TextureData = nullptr;
 }
-
-
 
 TextureFactory::TextureFactory(_In_ const TextureFactoryCreateInformation& CreateInformation)
 	: Callbacks(CreateInformation)
@@ -97,6 +100,11 @@ void TextureFactory::ProcessRequests()
 			++PendingRequestIterator;
 		}
 	}
+}
+
+bool TextureFactory::HasRequests() const
+{
+	return (_NewRequests.size() + _PendingLoadTextureRequests.size() + _PendingCreateGpuResourceRequests.size()) > 0;
 }
 
 void TextureFactory::RegisterTexturePath(_In_ const string& Path)
