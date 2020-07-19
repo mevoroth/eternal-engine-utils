@@ -26,7 +26,8 @@ namespace Eternal
 
 		struct RawTextureData
 		{
-			~RawTextureData();
+			void Initialize(void* InTextureData);
+			void Release();
 
 			void* TextureData = nullptr;
 			uint32_t Width = 0;
@@ -43,7 +44,7 @@ namespace Eternal
 		class TextureFactoryCreateGpuResourceCallback
 		{
 		public:
-			virtual bool CreateTexture(_In_ const RawTextureData& TextureData, _Out_ Texture*& OutTexture) = 0;
+			virtual bool CreateTexture(_Inout_ RawTextureData& TextureData, _Out_ Texture*& OutTexture) = 0;
 		};
 
 		struct TextureFactoryCreateInformation
@@ -85,7 +86,7 @@ namespace Eternal
 
 			void CreateRequest(const TextureFactoryRequest& Request);
 			void ProcessRequests();
-
+			bool HasRequests() const;
 
 			Texture* GetTexture(_In_ const string& NameSrc);
 			static void RegisterTexturePath(_In_ const string& Path);

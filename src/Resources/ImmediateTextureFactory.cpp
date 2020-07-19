@@ -15,13 +15,14 @@ namespace Eternal
 			if (FileExists(Path))
 			{
 				OutTextureData.TextureData = ImportTga::Get()->Import(Path, OutTextureData.Height, OutTextureData.Width);
+				OutTextureData.Depth = 1;
 				return true;
 			}
 
 			return false;
 		}
 
-		bool ImmediateTextureFactoryCreateGpuResourceCallback::CreateTexture(_In_ const RawTextureData& TextureData, _Out_ Texture*& OutTexture)
+		bool ImmediateTextureFactoryCreateGpuResourceCallback::CreateTexture(_Inout_ RawTextureData& TextureData, _Out_ Texture*& OutTexture)
 		{
 			__debugbreak();
 			return false;

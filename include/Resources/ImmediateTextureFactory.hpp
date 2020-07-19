@@ -15,7 +15,7 @@ namespace Eternal
 		class ImmediateTextureFactoryCreateGpuResourceCallback : public TextureFactoryCreateGpuResourceCallback
 		{
 		public:
-			virtual bool CreateTexture(_In_ const RawTextureData& TextureData, _Out_ Texture*& OutTexture) override;
+			virtual bool CreateTexture(_Inout_ RawTextureData& TextureData, _Out_ Texture*& OutTexture) override;
 		};
 	}
 }
