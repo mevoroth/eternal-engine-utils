@@ -137,7 +137,7 @@ Texture* TextureFactory::GetTexture(_In_ const string& NameSrc)
 	//uint8_t* TextureData = ImportTga::Get()->Import(FilePath, Height, Width);
 
 	//TextureCache& TextureCacheLine = _Textures[NameSrc];
-	//ETERNAL_ASSERT(false);
+	//ETERNAL_BREAK();
 	//TextureCacheLine.TextureObj = CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, Width, Height, TextureData);
 
 	//return TextureCacheLine.TextureObj;

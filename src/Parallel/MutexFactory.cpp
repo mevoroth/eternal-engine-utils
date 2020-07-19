@@ -11,7 +11,7 @@ namespace Eternal
 #if ETERNAL_USE_STD_MUTEX
 			return new StdMutex();
 #endif
-			ETERNAL_ASSERT(false);
+			ETERNAL_BREAK();
 			return nullptr;
 		}
 

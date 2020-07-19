@@ -10,7 +10,7 @@ namespace Eternal
 		{
 			if (TimeTypObj == WIN)
 				return new WinTime();
-			ETERNAL_ASSERT(false);
+			ETERNAL_BREAK();
 			return nullptr;
 		}
 	}

@@ -70,7 +70,7 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& OutMesh, _Out_
 		Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, ErrorMessage.c_str());
 
 		// LOG
-		//ETERNAL_ASSERT(false);
+		//ETERNAL_BREAK();
 	}
 
 	OutMesh = new GenericMesh<PosUVNormalTangentBinormalVertex, uint32_t>();
@@ -297,7 +297,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 				//OutputDebugString(DiffuseColorTexture->GetName());
 				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
 
-				//ETERNAL_ASSERT(false);
+				//ETERNAL_BREAK();
 				Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::_ImportNode]Texture import not implemented!");
 				//OutMesh.SetTexture(Diffuse, Specular, Normal);
 			}
@@ -358,7 +358,7 @@ void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inou
 			ETERNAL_ASSERT(Ret);
 			ETERNAL_ASSERT(!UnMapped);
 		}
-		//ETERNAL_ASSERT(false);
+		//ETERNAL_BREAK();
 
 		OutMesh.GetVertex(Vertex).UV = Vector2(UV[0], 1.f - UV[1]);
 	}
@@ -384,7 +384,7 @@ void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ int ControlPointIndex, _
 				Normal = NormalElement->GetDirectArray().GetAt(Index);
 				break;
 			default:
-				ETERNAL_ASSERT(false);
+				ETERNAL_BREAK();
 			}
 		}
 		else if (NormalElement->GetMappingMode() == FbxLayerElement::eByControlPoint)
@@ -395,7 +395,7 @@ void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ int ControlPointIndex, _
 				Normal = NormalElement->GetDirectArray().GetAt(ControlPointIndex);
 				break;
 			default:
-				ETERNAL_ASSERT(false);
+				ETERNAL_BREAK();
 			}
 		}
 		OutMesh.GetVertex(ControlPointIndex).Normal += Vector4(Normal[0], Normal[1], Normal[2], Normal[3]);
@@ -423,7 +423,7 @@ void ImportFbx::_GetTangent(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, _
 				Tangent = TangentElement->GetDirectArray().GetAt(Index);
 				break;
 			default:
-				ETERNAL_ASSERT(false);
+				ETERNAL_BREAK();
 			}
 			OutMesh.GetVertex(ControlPointIndex).Tangent = Vector4(Tangent[0], Tangent[1], Tangent[2], Tangent[3]);
 		}
@@ -451,7 +451,7 @@ void ImportFbx::_GetBinormal(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, 
 				Binormal = BinormalElement->GetDirectArray().GetAt(Index);
 				break;
 			default:
-				ETERNAL_ASSERT(false);
+				ETERNAL_BREAK();
 			}
 			OutMesh.GetVertex(ControlPointIndex).Binormal = Vector4(Binormal[0], Binormal[1], Binormal[2], Binormal[3]);
 		}

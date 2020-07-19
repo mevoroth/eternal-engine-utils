@@ -35,7 +35,7 @@ void CFile::Open(const OpenMode& OpenModeObj)
 		break;
 
 	default:
-		ETERNAL_ASSERT(false);
+		ETERNAL_BREAK();
 		return;
 	}
 	errno_t Err = fopen_s(&_File, _FileName.c_str(), Flags);

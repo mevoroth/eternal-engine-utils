@@ -21,7 +21,7 @@ namespace Eternal
 				break;
 
 			case MULTI_CHANNEL:
-				ETERNAL_ASSERT(false); // Multi Channel Log must be created with CreateMultiChannelLog()
+				ETERNAL_BREAK(); // Multi Channel Log must be created with CreateMultiChannelLog()
 				break;
 			}
 			return nullptr;

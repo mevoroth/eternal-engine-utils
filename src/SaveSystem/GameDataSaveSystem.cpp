@@ -63,6 +63,6 @@ void* GameDataSaveSystem::Load(_In_ const void* SerializedData)
 	{
 		return _SaveSystemHierarchy->Hierarchy.Load(&RootNode);
 	}
-	ETERNAL_ASSERT(false);
+	ETERNAL_BREAK();
 	return nullptr;
 }

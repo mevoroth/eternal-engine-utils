@@ -26,7 +26,7 @@ string FilePath::Find(_In_ const string& FileName, _In_ const FileType& Type)
 	if (FileFound)
 		return FullPath;
 	
-	ETERNAL_ASSERT(false);
+	ETERNAL_BREAK();
 	return string();
 }
 

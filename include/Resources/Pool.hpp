@@ -63,7 +63,7 @@ namespace Eternal
 				}
 
 				Handle = InvalidHandle;
-				ETERNAL_ASSERT(false);
+				ETERNAL_BREAK();
 
 				return nullptr;
 			}
