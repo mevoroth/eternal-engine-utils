@@ -25,6 +25,7 @@
     <ClInclude Include="include\Container\BreadthFirstQuadTree.hpp" />
     <ClInclude Include="include\Container\RingBuffer.hpp" />
     <ClInclude Include="include\Container\Stack.hpp" />
+    <ClInclude Include="include\DebugTools\Debug.hpp" />
     <ClInclude Include="include\File\CFile.hpp" />
     <ClInclude Include="include\File\File.hpp" />
     <ClInclude Include="include\File\FileFactory.hpp" />
@@ -71,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Bit\Bit.cpp" />
+    <ClCompile Include="src\DebugTools\Debug.cpp" />
     <ClCompile Include="src\File\CFile.cpp" />
     <ClCompile Include="src\File\FileFactory.cpp" />
     <ClCompile Include="src\File\FilePath.cpp" />
