@@ -1,7 +1,5 @@
 #include "File/CFile.hpp"
 
-#include "Macros/Macros.hpp"
-
 using namespace Eternal::File;
 
 bool CFile::Exists(const std::string& FileName)

@@ -1,8 +1,6 @@
 #ifndef _TASK_SCHEDULER_HPP_
 #define _TASK_SCHEDULER_HPP_
 
-#include <vector>
-
 using namespace std;
 
 namespace Eternal

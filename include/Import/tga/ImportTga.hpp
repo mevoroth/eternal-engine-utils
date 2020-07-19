@@ -2,7 +2,6 @@
 #define _IMPORT_TGA_HPP_
 
 #include <string>
-#include <cstdint>
 
 using namespace std;
 

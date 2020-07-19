@@ -1,6 +1,5 @@
 #include "Log/FileLog/FileLog.hpp"
 
-#include "Macros/Macros.hpp"
 #include <string>
 #include "File/FileFactory.hpp"
 #include "File/File.hpp"

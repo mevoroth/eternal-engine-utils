@@ -1,7 +1,6 @@
 #ifndef _IMPORT_FBX_HPP_
 #define _IMPORT_FBX_HPP_
 
-#include <vector>
 #include <string>
 #include "fbxsdk.h"
 

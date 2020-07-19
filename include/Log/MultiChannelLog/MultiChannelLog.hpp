@@ -1,7 +1,6 @@
 #ifndef _MULTI_CHANNEL_LOG_HPP_
 #define _MULTI_CHANNEL_LOG_HPP_
 
-#include <vector>
 #include "Log/Log.hpp"
 
 namespace Eternal

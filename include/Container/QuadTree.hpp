@@ -1,7 +1,6 @@
 #ifndef _QUAD_TREE_HPP_
 #define _QUAD_TREE_HPP_
 
-#include "Macros/Macros.hpp"
 #include "Types/Types.hpp"
 
 namespace Eternal

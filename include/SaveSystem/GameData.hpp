@@ -1,8 +1,6 @@
 #ifndef _GAME_DATA_HPP_
 #define _GAME_DATA_HPP_
 
-#include <cstdint>
-
 namespace Eternal
 {
 	namespace SaveSystem

@@ -1,9 +1,6 @@
 #include "Parallel/MutexFactory.hpp"
 
-#include "Macros/Macros.hpp"
 #include "Parallel/StdMutex.hpp"
-
-#define ETERNAL_USE_STD_MUTEX (1)
 
 namespace Eternal
 {

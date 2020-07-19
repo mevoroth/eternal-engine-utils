@@ -1,7 +1,5 @@
 #include "Log/Log.hpp"
 
-#include "Macros/Macros.hpp"
-
 using namespace Eternal::Log;
 
 const Log::LogLevel Log::Info(0, "info");

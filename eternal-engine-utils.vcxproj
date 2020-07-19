@@ -156,7 +156,7 @@
     <LibraryPath>$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Code\FBX\FBX SDK\2020.0.1\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -183,7 +183,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FBXSDK_SHARED;ETERNAL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForcedIncludeFiles>sal.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>sal.h;UtilsSettings.hpp</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>

@@ -1,7 +1,6 @@
 #ifndef _SAVE_SYSTEM_HPP_
 #define _SAVE_SYSTEM_HPP_
 
-#include <vector>
 #include <string>
 
 namespace Eternal

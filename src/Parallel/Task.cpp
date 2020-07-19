@@ -1,7 +1,5 @@
 #include "Parallel/Task.hpp"
 
-#include "Macros/Macros.hpp"
-
 using namespace Eternal::Parallel;
 
 void Task::Schedule()

@@ -1,6 +1,5 @@
 #include "Time/TimeFactory.hpp"
 
-#include "Macros/Macros.hpp"
 #include "Time/Win/WinTime.hpp"
 
 namespace Eternal

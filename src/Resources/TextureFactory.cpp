@@ -1,7 +1,6 @@
 #include "Resources/TextureFactory.hpp"
 
 #include "Import/tga/ImportTga.hpp"
-#include "Macros/Macros.hpp"
 #include "Graphics/Texture.hpp"
 #include "Graphics/TextureFactory.hpp"
 #include "Graphics/Format.hpp"

@@ -1,8 +1,6 @@
 #ifndef _RING_BUFFER_HPP_
 #define _RING_BUFFER_HPP_
 
-#include <vector>
-#include "Macros/Macros.hpp"
 #include "Types/Types.hpp"
 
 namespace Eternal

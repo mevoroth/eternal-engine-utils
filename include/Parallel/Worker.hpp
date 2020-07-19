@@ -1,8 +1,6 @@
 #ifndef _WORKER_HPP_
 #define _WORKER_HPP_
 
-#include <cstdint>
-
 namespace Eternal
 {
 	namespace Parallel

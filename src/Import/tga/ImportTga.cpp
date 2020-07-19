@@ -1,13 +1,5 @@
 #include "Import/tga/ImportTga.hpp"
 
-//#define WIN32_LEAN_AND_MEAN
-//#define VC_EXTRALEAN
-//#define WIN32_EXTRA_LEAN
-//#include <Windows.h>
-//#undef CreateFile
-//#include <Shlwapi.h>
-
-#include "Macros/Macros.hpp"
 #include "File/FileFactory.hpp"
 #include "File/File.hpp"
 #include "include/Tga.h"

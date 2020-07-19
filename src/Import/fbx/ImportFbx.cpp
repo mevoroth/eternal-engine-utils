@@ -8,8 +8,6 @@
 #include <cstdlib>
 
 #include "UtilsSettings.hpp"
-#include "Types/Types.hpp"
-#include "Macros/Macros.hpp"
 #include "File/FileFactory.hpp"
 
 #include "Mesh/Bone.hpp"

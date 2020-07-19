@@ -1,7 +1,6 @@
 #ifndef _GAME_DATA_COLLECTION_HPP_
 #define _GAME_DATA_COLLECTION_HPP_
 
-#include <vector>
 #include "SaveSystem/GameData.hpp"
 
 namespace Eternal

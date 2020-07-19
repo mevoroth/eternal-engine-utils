@@ -1,8 +1,6 @@
 #ifndef _TIME_HPP_
 #define _TIME_HPP_
 
-#include <cstdint>
-
 namespace Eternal
 {
 	namespace Time

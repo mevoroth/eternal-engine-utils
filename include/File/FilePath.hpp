@@ -2,7 +2,6 @@
 #define _FILE_PATH_HPP_
 
 #include <string>
-#include <vector>
 
 namespace Eternal
 {

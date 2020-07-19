@@ -1,8 +1,6 @@
 #ifndef _POOL_HPP_
 #define _POOL_HPP_
 
-#include <cstdint>
-#include "Macros/Macros.hpp"
 #include "Bit/Bit.hpp"
 #include "Parallel/StdAtomicU64.hpp"
 #include "Parallel/Sleep.hpp"

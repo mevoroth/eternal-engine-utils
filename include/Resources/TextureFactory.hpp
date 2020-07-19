@@ -3,8 +3,6 @@
 
 #include <map>
 #include <string>
-#include <cstdint>
-#include <vector>
 #include <list>
 
 using namespace std;

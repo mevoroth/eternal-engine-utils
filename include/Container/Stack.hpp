@@ -1,8 +1,6 @@
 #ifndef _STACK_HPP_
 #define _STACK_HPP_
 
-#include "Macros/Macros.hpp"
-
 namespace Eternal
 {
 	namespace Container

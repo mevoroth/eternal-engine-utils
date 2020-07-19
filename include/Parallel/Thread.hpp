@@ -1,8 +1,6 @@
 #ifndef _THREAD_HPP_
 #define _THREAD_HPP_
 
-#include <cstdint>
-
 namespace Eternal
 {
 	namespace Parallel

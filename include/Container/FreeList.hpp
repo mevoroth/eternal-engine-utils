@@ -1,10 +1,6 @@
 #ifndef _FREE_LIST_HPP_
 #define _FREE_LIST_HPP_
 
-#include "Macros/Macros.hpp"
-#include <cstdint>
-#include <vector>
-
 namespace Eternal
 {
 	namespace Container

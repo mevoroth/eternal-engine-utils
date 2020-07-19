@@ -5,8 +5,6 @@
 #define WIN32_EXTRA_LEAN
 #include <windows.h>
 
-#include "Macros/Macros.hpp"
-
 #include "Parallel/StdMutex.hpp"
 #include "Parallel/MutexAutoLock.hpp"
 #include "Parallel/Task.hpp"

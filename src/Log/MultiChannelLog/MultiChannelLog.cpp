@@ -1,7 +1,5 @@
 #include "Log/MultiChannelLog/MultiChannelLog.hpp"
 
-#include "Macros/Macros.hpp"
-
 using namespace Eternal::Log;
 
 MultiChannelLog::MultiChannelLog()

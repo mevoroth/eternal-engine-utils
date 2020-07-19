@@ -3,9 +3,8 @@
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN
-#include <windows.h>
+#include <Windows.h>
 
-#include "Macros/Macros.hpp"
 #include "Parallel/Thread.hpp"
 #include "Parallel/StdAtomicS32.hpp"
 #include "Parallel/StdConditionVariable.hpp"

@@ -1,7 +1,5 @@
 #include "Time/Time.hpp"
 
-#include "Macros/Macros.hpp"
-
 #include <cstdio>
 
 using namespace Eternal::Time;

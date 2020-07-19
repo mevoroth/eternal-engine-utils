@@ -1,6 +1,5 @@
 #include "File/FilePath.hpp"
 
-#include "Macros/Macros.hpp"
 #include "Types/Types.hpp"
 #include "File/FileFactory.hpp"
 

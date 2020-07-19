@@ -1,6 +1,5 @@
 #include "Time/Win/WinTime.hpp"
 
-#include "Macros/Macros.hpp"
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN

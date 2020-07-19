@@ -1,8 +1,6 @@
 #ifndef _ATOMIC_U64_HPP_
 #define _ATOMIC_U64_HPP_
 
-#include <cstdint>
-
 namespace Eternal
 {
 	namespace Parallel

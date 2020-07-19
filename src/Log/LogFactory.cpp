@@ -1,7 +1,5 @@
 #include "Log/LogFactory.hpp"
 
-#include "Macros/Macros.hpp"
-
 #include "Log/FileLog/FileLog.hpp"
 #include "Log/ConsoleLog/ConsoleLog.hpp"
 #include "Log/MultiChannelLog/MultiChannelLog.hpp"

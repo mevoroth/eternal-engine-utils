@@ -1,7 +1,6 @@
 #ifndef _MUTEX_AUTO_LOCK_HPP_
 #define _MUTEX_AUTO_LOCK_HPP_
 
-#include "Macros/Macros.hpp"
 #include "Mutex.hpp"
 
 namespace Eternal

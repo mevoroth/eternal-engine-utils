@@ -1,8 +1,6 @@
 #ifndef _FILE_HPP_
 #define _FILE_HPP_
 
-#include <cstdint>
-
 namespace Eternal
 {
 	namespace File

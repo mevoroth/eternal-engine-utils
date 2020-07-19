@@ -2,7 +2,11 @@
 #define _MACROS_HPP_
 
 #ifdef ETERNAL_DEBUG
-#define ETERNAL_ASSERT(Condition)	if (!(Condition)) { __debugbreak(); }
+#define ETERNAL_BREAK()	__debugbreak()
+#endif
+
+#ifdef ETERNAL_DEBUG
+#define ETERNAL_ASSERT(Condition)	if (!(Condition)) { ETERNAL_BREAK(); }
 #else
 #define ETERNAL_ASSERT(Condition)
 #endif

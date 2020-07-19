@@ -1,12 +1,7 @@
 #ifndef _TASK_MANAGER_HPP_
 #define _TASK_MANAGER_HPP_
 
-#include <cstdint>
-
-#include "Macros/Macros.hpp"
 #include "TaskScheduler.hpp"
-
-#include <cstdint>
 
 using namespace std;
 
