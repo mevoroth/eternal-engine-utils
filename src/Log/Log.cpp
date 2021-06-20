@@ -28,7 +28,7 @@ void Log::Initialize(Log* LogObj)
 
 Log* Log::Get()
 {
-	//ETERNAL_ASSERT(_Inst); //REENABLE THIS
+	ETERNAL_ASSERT(_Inst);
 	return _Inst;
 }
 
