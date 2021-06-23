@@ -49,6 +49,9 @@
     <Filter Include="SaveSystem">
       <UniqueIdentifier>{5af31353-8225-4d10-9fb5-9416dd7f100f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{79e54434-d41a-4972-90f2-aa0712a54628}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -199,6 +202,12 @@
     <ClInclude Include="include\DebugTools\Debug.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\Bit\BitField.hpp">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Math\Math.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTime.cpp">
@@ -293,6 +302,9 @@
     </ClCompile>
     <ClCompile Include="src\DebugTools\Debug.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bit\BitField.cpp">
+      <Filter>Container</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

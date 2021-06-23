@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Bit\Bit.hpp" />
+    <ClInclude Include="include\Bit\BitField.hpp" />
     <ClInclude Include="include\Container\FreeList.hpp" />
     <ClInclude Include="include\Container\QuadTree.hpp" />
     <ClInclude Include="include\Container\BreadthFirstQuadTree.hpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="include\Log\LogFactory.hpp" />
     <ClInclude Include="include\Log\MultiChannelLog\MultiChannelLog.hpp" />
     <ClInclude Include="include\Macros\Macros.hpp" />
+    <ClInclude Include="include\Math\Math.hpp" />
     <ClInclude Include="include\Parallel\AtomicS32.hpp" />
     <ClInclude Include="include\Parallel\AtomicS32Factory.hpp" />
     <ClInclude Include="include\Parallel\AtomicU64.hpp" />
@@ -72,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Bit\Bit.cpp" />
+    <ClCompile Include="src\Bit\BitField.cpp" />
     <ClCompile Include="src\DebugTools\Debug.cpp" />
     <ClCompile Include="src\File\CFile.cpp" />
     <ClCompile Include="src\File\FileFactory.cpp" />
