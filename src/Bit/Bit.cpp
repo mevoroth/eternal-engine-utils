@@ -6,9 +6,19 @@ namespace Eternal
 {
 	namespace Bit
 	{
-		u64 LeadingZeroCount(_In_ u64 Value)
+		uint64_t LeadingZeroCount(_In_ uint64_t Value)
 		{
 			return __lzcnt64(Value);
+		}
+
+		uint32_t LeadingZeroCount(_In_ uint32_t Value)
+		{
+			return __lzcnt(Value);
+		}
+
+		uint16_t LeadingZeroCount(_In_ uint16_t Value)
+		{
+			return __lzcnt16(Value);
 		}
 	}
 }

@@ -1,16 +1,12 @@
-#ifndef _BIT_HPP_
-#define _BIT_HPP_
-
-#include "Types/Types.hpp"
+#pragma once
 
 namespace Eternal
 {
 	namespace Bit
 	{
-		using namespace Eternal::Types;
+		uint64_t LeadingZeroCount(_In_ uint64_t Value);
+		uint32_t LeadingZeroCount(_In_ uint32_t Value);
+		uint16_t LeadingZeroCount(_In_ uint16_t Value);
 
-		u64 LeadingZeroCount(_In_ u64 Value);
 	}
 }
-
-#endif
