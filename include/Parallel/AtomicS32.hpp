@@ -8,6 +8,7 @@ namespace Eternal
 		class AtomicS32
 		{
 		public:
+			virtual ~AtomicS32() {}
 			inline virtual int Load() = 0;
 			inline virtual void Store(_In_ int Value) = 0;
 			inline virtual void Add(_In_ int Value = 1) = 0;

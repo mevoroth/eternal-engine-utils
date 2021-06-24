@@ -1,8 +1,8 @@
 #include "Resources/TextureFactory.hpp"
 
 #include "Import/tga/ImportTga.hpp"
-#include "Graphics/Texture.hpp"
-#include "Graphics/TextureFactory.hpp"
+#include "Graphics_deprecated/Texture.hpp"
+//#include "Graphics_deprecated/TextureFactory.hpp"
 #include "Graphics/Format.hpp"
 #include "File/FileFactory.hpp"
 #include "File/FilePath.hpp"

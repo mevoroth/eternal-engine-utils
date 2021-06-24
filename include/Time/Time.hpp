@@ -14,6 +14,7 @@ namespace Eternal
 			static Time* _Inst;
 		public:
 			Time();
+			virtual ~Time() {}
 			static Time* Get();
 			static void ToHumanReadable(_In_ const TimeMicroSecondsT& Value, _Out_ char HumanReadable[24]);
 

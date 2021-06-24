@@ -178,10 +178,19 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 			for (int ControlPointIndex = 0, ControlPointsCount = FbxMeshObj->GetControlPointsCount(); ControlPointIndex < ControlPointsCount; ++ControlPointIndex)
 			{
 				//VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], V[ControlPointIndex][3]);
-				VertexObj.Pos = Vector4(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2], 1.f);
+				VertexObj.Pos = Vector4(
+					static_cast<float>(V[ControlPointIndex][0]),
+					static_cast<float>(V[ControlPointIndex][1]), 
+					static_cast<float>(V[ControlPointIndex][2]),
+					1.0f
+				);
 				VertexObj.Normal = Vector4(0.f, 0.f, 0.f, 0.f);
 
-				Vector3 Vertex3(V[ControlPointIndex][0], V[ControlPointIndex][1], V[ControlPointIndex][2]);
+				Vector3 Vertex3(
+					static_cast<float>(V[ControlPointIndex][0]),
+					static_cast<float>(V[ControlPointIndex][1]),
+					static_cast<float>(V[ControlPointIndex][2])
+				);
 
 				Vector3 NewMin = OutBoundingBox.GetMin();
 				Vector3 NewMax = OutBoundingBox.GetMax();
@@ -310,25 +319,25 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 	}
 	OutMesh.GetTransform().Translate(
 		Vector3(
-			Node->LclTranslation.Get()[0],
-			Node->LclTranslation.Get()[1],
-			Node->LclTranslation.Get()[2]
+			static_cast<float>(Node->LclTranslation.Get()[0]),
+			static_cast<float>(Node->LclTranslation.Get()[1]),
+			static_cast<float>(Node->LclTranslation.Get()[2])
 		)
 	);
 
 	OutMesh.GetTransform().Rotate(
 		Vector3(
-			Node->LclRotation.Get()[0],
-			Node->LclRotation.Get()[1],
-			Node->LclRotation.Get()[2]
+			static_cast<float>(Node->LclRotation.Get()[0]),
+			static_cast<float>(Node->LclRotation.Get()[1]),
+			static_cast<float>(Node->LclRotation.Get()[2])
 		)
 	);
 
 	OutMesh.GetTransform().Scale(
 		Vector3(
-			Node->LclScaling.Get()[0],
-			Node->LclScaling.Get()[1],
-			Node->LclScaling.Get()[2]
+			static_cast<float>(Node->LclScaling.Get()[0]),
+			static_cast<float>(Node->LclScaling.Get()[1]),
+			static_cast<float>(Node->LclScaling.Get()[2])
 		)
 	);
 
@@ -360,7 +369,10 @@ void ImportFbx::_GetUV(_In_ FbxMesh * MeshObj, _In_ uint32_t PolygonIndex, _Inou
 		}
 		//ETERNAL_BREAK();
 
-		OutMesh.GetVertex(Vertex).UV = Vector2(UV[0], 1.f - UV[1]);
+		OutMesh.GetVertex(Vertex).UV = Vector2(
+			static_cast<float>(UV[0]),
+			static_cast<float>(1.0f - UV[1])
+		);
 	}
 }
 
@@ -398,7 +410,12 @@ void ImportFbx::_GetNormal(_In_ FbxMesh * MeshObj, _In_ int ControlPointIndex, _
 				ETERNAL_BREAK();
 			}
 		}
-		OutMesh.GetVertex(ControlPointIndex).Normal += Vector4(Normal[0], Normal[1], Normal[2], Normal[3]);
+		OutMesh.GetVertex(ControlPointIndex).Normal += Vector4(
+			static_cast<float>(Normal[0]),
+			static_cast<float>(Normal[1]),
+			static_cast<float>(Normal[2]),
+			static_cast<float>(Normal[3])
+		);
 	}
 }
 
@@ -425,7 +442,12 @@ void ImportFbx::_GetTangent(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, _
 			default:
 				ETERNAL_BREAK();
 			}
-			OutMesh.GetVertex(ControlPointIndex).Tangent = Vector4(Tangent[0], Tangent[1], Tangent[2], Tangent[3]);
+			OutMesh.GetVertex(ControlPointIndex).Tangent = Vector4(
+				static_cast<float>(Tangent[0]),
+				static_cast<float>(Tangent[1]),
+				static_cast<float>(Tangent[2]),
+				static_cast<float>(Tangent[3])
+			);
 		}
 	}
 }
@@ -453,7 +475,12 @@ void ImportFbx::_GetBinormal(_In_ FbxMesh* MeshObj, _In_ int ControlPointIndex, 
 			default:
 				ETERNAL_BREAK();
 			}
-			OutMesh.GetVertex(ControlPointIndex).Binormal = Vector4(Binormal[0], Binormal[1], Binormal[2], Binormal[3]);
+			OutMesh.GetVertex(ControlPointIndex).Binormal = Vector4(
+				static_cast<float>(Binormal[0]),
+				static_cast<float>(Binormal[1]),
+				static_cast<float>(Binormal[2]),
+				static_cast<float>(Binormal[3])
+			);
 		}
 	}
 }
@@ -504,7 +531,7 @@ void ImportFbx::_GetSkinning(_In_ FbxMesh* MeshObj)
 			{
 				BoneObj->PushInfluence(
 					Cluster->GetControlPointIndices()[ControlPointIndicesIndex],
-					Cluster->GetControlPointWeights()[ControlPointIndicesIndex]
+					static_cast<float>(Cluster->GetControlPointWeights()[ControlPointIndicesIndex])
 				);
 			}
 		}
