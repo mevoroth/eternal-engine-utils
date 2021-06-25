@@ -9,5 +9,11 @@ namespace Eternal
 		{
 			return (Dividend + Divisor - 1) / Divisor;
 		}
+
+		template<typename T>
+		bool IsPowerOfTwo(T Number)
+		{
+			return Number && ((Number & (Number - 1)) == 0);
+		}
 	}
 }
