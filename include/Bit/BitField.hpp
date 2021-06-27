@@ -2,6 +2,9 @@
 
 #include "Math/Math.hpp"
 #include "Bit/Bit.hpp"
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
 
 namespace Eternal
 {
@@ -16,12 +19,16 @@ namespace Eternal
 			static constexpr BitFieldToken InvalidToken = BitFieldToken(~0ull);
 			static const BitFieldPrivateHandle InvalidHandle;
 
-			BitFieldPrivateHandle(const BitFieldToken& InToken)
+			BitFieldPrivateHandle(const BitFieldToken& InToken = InvalidToken)
 				: Token(InToken)
 			{}
 
 			bool IsValid() const { return Token != InvalidToken; }
 			void Invalidate() { Token = InvalidToken; }
+			bool IsContigous(const BitFieldPrivateHandle& InHandle) const
+			{
+				return abs(static_cast<int64_t>(*this) - static_cast<int64_t>(InHandle)) == 1;
+			}
 			operator uint64_t() const
 			{
 				ETERNAL_ASSERT(IsValid());
@@ -33,34 +40,27 @@ namespace Eternal
 
 		using Handle = BitFieldPrivateHandle;
 
-		template<uint32_t Size = 1024, typename Storage = uint64_t>
-		class BitField
+		template<typename FieldType, typename StorageType = uint64_t>
+		class BitFieldRoutine
 		{
 		public:
-			
-			static constexpr Storage FullChunk = Storage(0ull);
-			static constexpr Storage EmptyChunk = Storage(~0ull);
-			static constexpr size_t ChunkBitCount = sizeof(Storage) * 8;
-			static constexpr size_t ChunkCount = DivideRoundUp<size_t>(size_t(Size), ChunkBitCount);
 
-			BitField()
+			void Init(FieldType& InOutField)
 			{
-				ETERNAL_STATIC_ASSERT(Size > 0, "Size must be above 0");
-				ETERNAL_STATIC_ASSERT(sizeof(Storage) >= 2, "Storage must be at least 16bits");
-				memset(_Field, EmptyChunk, sizeof(Storage) * ChunkCount);
+				InOutField.Reset();
 			}
 
-			Handle Pop()
+			Handle Pop(FieldType& InOutField)
 			{
-				for (uint32_t ChunkIndex = 0; ChunkIndex < ETERNAL_ARRAYSIZE(_Field); ++ChunkIndex)
+				for (uint32_t ChunkIndex = 0; ChunkIndex < InOutField.Size(); ++ChunkIndex)
 				{
-					if (_Field[ChunkIndex] != FullChunk)
+					if (InOutField[ChunkIndex] != InOutField.GetFullChunk())
 					{
-						uint64_t FreeHandle = LeadingZeroCount(_Field[ChunkIndex]);
-						uint64_t Offset = ChunkBitCount - FreeHandle - 1ull;
-						Storage Key = ~(Storage(1) << Offset);
-						_Field[ChunkIndex] &= Key;
-						return Handle(ChunkIndex * ChunkBitCount + FreeHandle);
+						uint64_t FreeHandle = LeadingZeroCount(InOutField[ChunkIndex]);
+						uint64_t Offset = InOutField.GetChunkBitCount() - FreeHandle - 1ull;
+						StorageType Key = ~(StorageType(1) << Offset);
+						InOutField[ChunkIndex] &= Key;
+						return Handle(ChunkIndex * InOutField.GetChunkBitCount() + FreeHandle);
 					}
 				}
 
@@ -68,20 +68,168 @@ namespace Eternal
 				return Handle::InvalidHandle;
 			}
 
-			void Push(Handle& InOutHandle)
+			void Push(Handle& InOutHandle, FieldType& InOutField)
 			{
 				ETERNAL_ASSERT(InOutHandle.IsValid());
 
-				uint64_t ChunkIndex = InOutHandle.Token / ChunkBitCount;
-				uint64_t Offset = ChunkBitCount - InOutHandle.Token % ChunkBitCount - 1ull;
-				Storage CurrentHandleState = (_Field[ChunkIndex] & (Storage(1) << Offset));
-				ETERNAL_ASSERT(CurrentHandleState == FullChunk); // Ensure handle is already allocated
-				_Field[ChunkIndex] |= Storage(1) << Offset;
+				uint64_t ChunkIndex = InOutHandle.Token / InOutField.GetChunkBitCount();
+				uint64_t Offset = InOutField.GetChunkBitCount() - InOutHandle.Token % InOutField.GetChunkBitCount() - 1ull;
+				StorageType CurrentHandleState = (InOutField[ChunkIndex] & (StorageType(1) << Offset));
+				ETERNAL_ASSERT(CurrentHandleState == InOutField.GetFullChunk()); // Ensure handle is already allocated
+				InOutField[ChunkIndex] |= StorageType(1) << Offset;
 				InOutHandle.Invalidate(); // Invalidate handle
+			}
+		};
+
+		template<uint32_t Size = 1024, typename StorageType = uint64_t>
+		class BitFieldArray
+		{
+		public:
+
+			static constexpr StorageType FullChunk = StorageType(0ull);
+			static constexpr StorageType EmptyChunk = StorageType(~0ull);
+			static constexpr size_t ChunkBitCount = sizeof(StorageType) * 8;
+			static constexpr size_t ChunkCount = DivideRoundUp<size_t>(size_t(Size), ChunkBitCount);
+
+			BitFieldArray()
+			{
+				ETERNAL_STATIC_ASSERT(ChunkCount > 0, "Size must be above 0");
+				ETERNAL_STATIC_ASSERT(sizeof(StorageType) >= 2, "Storage must be at least 16bits");
+			}
+
+			constexpr StorageType GetFullChunk()
+			{
+				return FullChunk;
+			}
+
+			constexpr size_t GetChunkBitCount()
+			{
+				return ChunkBitCount;
+			}
+
+			constexpr uint32_t Size()
+			{
+				return ETERNAL_ARRAYSIZE(_Field);
+			}
+
+			void Reset()
+			{
+				std::fill(_Field, _Field + ChunkCount - 1, EmptyChunk);
+				//memset(_Field, EmptyChunk, sizeof(StorageType) * ChunkCount);
+			}
+
+			StorageType& operator[](std::size_t Index)
+			{
+				ETERNAL_ASSERT(Index < ChunkCount);
+				return _Field[Index];
 			}
 
 		private:
-			Storage _Field[ChunkCount];
+			StorageType _Field[ChunkCount];
+		};
+
+		template<typename StorageType = uint64_t>
+		class BitFieldVector
+		{
+		public:
+
+			static constexpr StorageType FullChunk = StorageType(0ull);
+			static constexpr StorageType EmptyChunk = StorageType(~0ull);
+
+			static constexpr size_t ChunkBitCount = sizeof(StorageType) * 8;
+
+			BitFieldVector(uint32_t Size)
+			{
+				ETERNAL_ASSERT(Size > 0);
+				ETERNAL_STATIC_ASSERT(sizeof(StorageType) >= 2, "Storage must be at least 16bits");
+
+				_Field.resize(DivideRoundUp<size_t>(size_t(Size), ChunkBitCount));
+			}
+
+			constexpr StorageType GetFullChunk()
+			{
+				return FullChunk;
+			}
+
+			constexpr size_t GetChunkBitCount()
+			{
+				return ChunkBitCount;
+			}
+
+			uint32_t Size() const
+			{
+				return static_cast<uint32_t>(_Field.size());
+			}
+
+			void Reset()
+			{
+				std::fill(_Field.begin(), _Field.end(), EmptyChunk);
+			}
+
+			StorageType& operator[](std::size_t Index)
+			{
+				ETERNAL_ASSERT(Index < _Field.size());
+				return _Field[Index];
+			}
+
+		private:
+			std::vector<StorageType> _Field;
+		};
+
+		template<const uint32_t Size = 1024, typename StorageType = uint64_t>
+		class StaticBitField
+			: public BitFieldRoutine<BitFieldArray<Size, StorageType>, StorageType>
+		{
+		public:
+
+			using Routine = BitFieldRoutine<BitFieldArray<Size, StorageType>, StorageType>;
+
+			StaticBitField()
+				: Routine()
+			{
+				ETERNAL_STATIC_ASSERT(Size > 0, "Size must be above 0");
+				Init(_Storage);
+			}
+
+			Handle Pop()
+			{
+				return Routine::Pop(_Storage);
+			}
+
+			void Push(Handle& InOutHandle)
+			{
+				Routine::Push(InOutHandle, _Storage);
+			}
+
+		private:
+			BitFieldArray<Size, StorageType> _Storage;
+		};
+
+		template<typename StorageType = uint64_t>
+		class DynamicBitField
+			: public BitFieldRoutine<BitFieldVector<StorageType>, StorageType>
+			, public BitFieldVector<StorageType>
+		{
+		public:
+
+			using Routine = BitFieldRoutine<BitFieldVector<StorageType>, StorageType>;
+
+			DynamicBitField(uint32_t Size)
+				: BitFieldRoutine<BitFieldVector<StorageType>, StorageType>()
+				, BitFieldVector<StorageType>(Size)
+			{
+				Init(*this);
+			}
+
+			Handle Pop()
+			{
+				return Routine::Pop(*this);
+			}
+
+			void Push(Handle& InOutHandle)
+			{
+				Routine::Push(InOutHandle, *this);
+			}
 		};
 	}
 }
