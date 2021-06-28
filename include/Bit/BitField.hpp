@@ -114,8 +114,7 @@ namespace Eternal
 
 			void Reset()
 			{
-				std::fill(_Field, _Field + ChunkCount - 1, EmptyChunk);
-				//memset(_Field, EmptyChunk, sizeof(StorageType) * ChunkCount);
+				std::fill(_Field, _Field + ChunkCount, EmptyChunk);
 			}
 
 			StorageType& operator[](std::size_t Index)
