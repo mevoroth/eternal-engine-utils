@@ -1,5 +1,4 @@
-#ifndef _RESOURCES_TEXTURE_FACTORY_HPP_
-#define _RESOURCES_TEXTURE_FACTORY_HPP_
+#pragma once
 
 #include <map>
 #include <string>
@@ -11,7 +10,7 @@ namespace Eternal
 {
 	namespace Graphics
 	{
-		class Texture;
+		class Resource;
 	}
 	namespace Parallel
 	{
@@ -24,25 +23,34 @@ namespace Eternal
 
 		struct RawTextureData
 		{
-			void Initialize(void* InTextureData);
+			void Initialize(
+				_In_ void* InTextureData,
+				_In_ uint32_t InWidth,
+				_In_ uint32_t InHeight,
+				_In_ uint32_t InDepthOrArraySize,
+				_In_ uint32_t InStride
+			);
 			void Release();
 
-			void* TextureData = nullptr;
-			uint32_t Width = 0;
-			uint32_t Height = 0;
-			uint32_t Depth = 0;
+			void* TextureData			= nullptr;
+			uint32_t Width				= 0;
+			uint32_t Height				= 0;
+			uint32_t DepthOrArraySize	= 0;
+			uint32_t Stride				= 0;
 		};
 
 		class TextureFactoryLoadTextureCallback
 		{
 		public:
-			virtual bool LoadTexture(_In_ const string& Path, _Out_ RawTextureData& OutTextureData) = 0;
+			virtual bool LoadTexture(_In_ const string& InPath, _Out_ RawTextureData& OutTextureData) = 0;
 		};
 
 		class TextureFactoryCreateGpuResourceCallback
 		{
 		public:
-			virtual bool CreateTexture(_Inout_ RawTextureData& TextureData, _Out_ Texture*& OutTexture) = 0;
+			virtual void BeginBatch() = 0;
+			virtual void EndBatch() = 0;
+			virtual bool CreateTextureResource(_In_ const string& InName, _Inout_ RawTextureData& TextureData, _Out_ Resource*& OutTexture) = 0;
 		};
 
 		struct TextureFactoryCreateInformation
@@ -55,9 +63,9 @@ namespace Eternal
 		{
 			TextureFactoryRequest(const string& InName, const string& InPath);
 
-			TextureFactoryRequest(const TextureFactoryRequest& Request)
-				: Name(Request.Name)
-				, Path(Request.Path)
+			TextureFactoryRequest(const TextureFactoryRequest& InRequest)
+				: Name(InRequest.Name)
+				, Path(InRequest.Path)
 			{
 			}
 
@@ -67,8 +75,8 @@ namespace Eternal
 
 		struct TextureFactoryLoadedTexture : TextureFactoryRequest
 		{
-			TextureFactoryLoadedTexture(const TextureFactoryRequest& Request)
-				: TextureFactoryRequest(Request)
+			TextureFactoryLoadedTexture(const TextureFactoryRequest& InRequest)
+				: TextureFactoryRequest(InRequest)
 			{
 			}
 
@@ -80,22 +88,22 @@ namespace Eternal
 		public:
 			static TextureFactory* Get();
 
-			TextureFactory(_In_ const TextureFactoryCreateInformation& CreateInformation);
+			TextureFactory(_In_ const TextureFactoryCreateInformation& InTextureFactoryCreateInformation);
 
-			void CreateRequest(const TextureFactoryRequest& Request);
+			void CreateRequest(const TextureFactoryRequest& InRequest);
 			void ProcessRequests();
 			bool HasRequests() const;
 
-			Texture* GetTexture(_In_ const string& NameSrc);
-			static void RegisterTexturePath(_In_ const string& Path);
+			Resource* GetTexture(_In_ const string& InName);
+			static void RegisterTexturePath(_In_ const string& InPath);
 
 		private:
-			static TextureFactory* _Inst;
+			static TextureFactory* _Instance;
 
 			TextureFactoryCreateInformation Callbacks;
 			struct TextureCache
 			{
-				Texture* TextureObj = nullptr;
+				Resource* CachedTexture = nullptr;
 			};
 			map<string, TextureCache> _Textures;
 			Mutex* _NewRequestsMutex = nullptr;
@@ -103,12 +111,9 @@ namespace Eternal
 			list<TextureFactoryRequest> _PendingLoadTextureRequests;
 			list<TextureFactoryLoadedTexture> _PendingCreateGpuResourceRequests;
 
-
-			void _InsertNewTexture(_In_ const string& NameSrc, _In_ Texture* TextureObj);
+			void _InsertNewTexture(_In_ const string& InName, _In_ Resource* Intexture);
 
 			static vector<string> _IncludePaths;
 		};
 	}
 }
-
-#endif

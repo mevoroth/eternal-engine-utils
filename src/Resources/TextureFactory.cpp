@@ -1,9 +1,6 @@
 #include "Resources/TextureFactory.hpp"
 
 #include "Import/tga/ImportTga.hpp"
-#include "Graphics_deprecated/Texture.hpp"
-//#include "Graphics_deprecated/TextureFactory.hpp"
-#include "Graphics/Format.hpp"
 #include "File/FileFactory.hpp"
 #include "File/FilePath.hpp"
 #include "Parallel/MutexFactory.hpp"
@@ -14,12 +11,22 @@ using namespace Eternal::Import;
 using namespace Eternal::Graphics;
 using namespace Eternal::File;
 
-TextureFactory* TextureFactory::_Inst = nullptr;
+TextureFactory* TextureFactory::_Instance = nullptr;
 vector<string> TextureFactory::_IncludePaths;
 
-void RawTextureData::Initialize(void* InTextureData)
+void RawTextureData::Initialize(
+	_In_ void* InTextureData,
+	_In_ uint32_t InWidth,
+	_In_ uint32_t InHeight,
+	_In_ uint32_t InDepthOrArraySize,
+	_In_ uint32_t InStride
+)
 {
-	TextureData = InTextureData;
+	TextureData			= InTextureData;
+	Width				= InWidth;
+	Height				= InHeight;
+	DepthOrArraySize	= InDepthOrArraySize;
+	Stride				= InStride;
 }
 
 void RawTextureData::Release()
@@ -28,11 +35,11 @@ void RawTextureData::Release()
 	TextureData = nullptr;
 }
 
-TextureFactory::TextureFactory(_In_ const TextureFactoryCreateInformation& CreateInformation)
-	: Callbacks(CreateInformation)
+TextureFactory::TextureFactory(_In_ const TextureFactoryCreateInformation& InTextureFactoryCreateInformation)
+	: Callbacks(InTextureFactoryCreateInformation)
 	, _NewRequestsMutex(CreateMutex())
 {
-	ETERNAL_ASSERT(!_Inst);
+	ETERNAL_ASSERT(!_Instance);
 
 	//uint32_t Color = 0xFFFFFFFF;
 	//_InsertNewTexture("_WHITE", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
@@ -46,19 +53,19 @@ TextureFactory::TextureFactory(_In_ const TextureFactoryCreateInformation& Creat
 	//Color = 0xFF7F7FFF;
 	//_InsertNewTexture("_DEFAULT_NORMAL", CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, 1, 1, &Color));
 
-	_Inst = this;
+	_Instance = this;
 }
 
 TextureFactory* TextureFactory::Get()
 {
-	ETERNAL_ASSERT(_Inst);
-	return _Inst;
+	ETERNAL_ASSERT(_Instance);
+	return _Instance;
 }
 
-void TextureFactory::CreateRequest(const TextureFactoryRequest& Request)
+void TextureFactory::CreateRequest(const TextureFactoryRequest& InRequest)
 {
 	_NewRequestsMutex->Lock();
-	_NewRequests.push_back(Request);
+	_NewRequests.push_back(InRequest);
 	_NewRequestsMutex->Unlock();
 }
 
@@ -71,9 +78,9 @@ void TextureFactory::ProcessRequests()
 		_NewRequestsMutex->Unlock();
 	}
 
-	for (auto PendingRequestIterator = _PendingLoadTextureRequests.begin(); PendingRequestIterator != _PendingLoadTextureRequests.end(); )
+	for (auto& PendingRequestIterator = _PendingLoadTextureRequests.begin(); PendingRequestIterator != _PendingLoadTextureRequests.end(); )
 	{
-		TextureFactoryLoadedTexture LoadedTexture = *PendingRequestIterator;
+		TextureFactoryLoadedTexture LoadedTexture(*PendingRequestIterator);
 
 		if (Callbacks.LoadTextureCallback.LoadTexture(LoadedTexture.Path, LoadedTexture.TextureData))
 		{
@@ -86,18 +93,24 @@ void TextureFactory::ProcessRequests()
 		}
 	}
 
-	for (auto PendingRequestIterator = _PendingCreateGpuResourceRequests.begin(); PendingRequestIterator != _PendingCreateGpuResourceRequests.end(); )
+	if (_PendingCreateGpuResourceRequests.size())
 	{
-		Texture* OutTexture;
-		if (Callbacks.CreateGpuResourceCallback.CreateTexture(PendingRequestIterator->TextureData, OutTexture))
+		Callbacks.CreateGpuResourceCallback.BeginBatch();
+		for (auto& PendingRequestIterator = _PendingCreateGpuResourceRequests.begin(); PendingRequestIterator != _PendingCreateGpuResourceRequests.end(); )
 		{
-			_InsertNewTexture(PendingRequestIterator->Name, OutTexture);
-			PendingRequestIterator = _PendingCreateGpuResourceRequests.erase(PendingRequestIterator);
+			Resource* OutTexture = nullptr;
+			if (Callbacks.CreateGpuResourceCallback.CreateTextureResource(PendingRequestIterator->Name, PendingRequestIterator->TextureData, OutTexture))
+			{
+				_InsertNewTexture(PendingRequestIterator->Name, OutTexture);
+				PendingRequestIterator->TextureData.Release();
+				PendingRequestIterator = _PendingCreateGpuResourceRequests.erase(PendingRequestIterator);
+			}
+			else
+			{
+				++PendingRequestIterator;
+			}
 		}
-		else
-		{
-			++PendingRequestIterator;
-		}
+		Callbacks.CreateGpuResourceCallback.EndBatch();
 	}
 }
 
@@ -106,50 +119,29 @@ bool TextureFactory::HasRequests() const
 	return (_NewRequests.size() + _PendingLoadTextureRequests.size() + _PendingCreateGpuResourceRequests.size()) > 0;
 }
 
-void TextureFactory::RegisterTexturePath(_In_ const string& Path)
+void TextureFactory::RegisterTexturePath(_In_ const string& InPath)
 {
-	_IncludePaths.push_back(Path);
+	_IncludePaths.push_back(InPath);
 }
 
-Texture* TextureFactory::GetTexture(_In_ const string& NameSrc)
+Resource* TextureFactory::GetTexture(_In_ const string& InName)
 {
-	map<string, TextureCache>::iterator FoundTexture = _Textures.find(NameSrc);
+	map<string, TextureCache>::iterator FoundTexture = _Textures.find(InName);
 	if (FoundTexture != _Textures.cend())
 	{
-		return FoundTexture->second.TextureObj;
+		return FoundTexture->second.CachedTexture;
 	}
 
 	return nullptr;
-
-	//std::string FilePath;
-	//bool PathFound = false;
-	//for (int IncludePathIndex = 0; !PathFound && IncludePathIndex < _IncludePaths.size(); ++IncludePathIndex)
-	//{
-	//	FilePath = _IncludePaths[IncludePathIndex] + NameSrc;
-	//	PathFound = FileExists(FilePath);
-	//}
-
-	////ETERNAL_ASSERT(PathFound);
-	//if (!PathFound)
-	//	return nullptr;
-
-	//uint32_t Height, Width;
-	//uint8_t* TextureData = ImportTga::Get()->Import(FilePath, Height, Width);
-
-	//TextureCache& TextureCacheLine = _Textures[NameSrc];
-	//ETERNAL_BREAK();
-	//TextureCacheLine.TextureObj = CreateTexture(Graphics::BGRA8888, Resource::DYNAMIC, Resource::WRITE, Width, Height, TextureData);
-
-	//return TextureCacheLine.TextureObj;
 }
 
-void TextureFactory::_InsertNewTexture(_In_ const string& NameSrc, _In_ Texture* TextureObj)
+void TextureFactory::_InsertNewTexture(_In_ const string& InName, _In_ Resource* InTexture)
 {
-	map<string, TextureCache>::iterator FoundTexture = _Textures.find(NameSrc);
+	map<string, TextureCache>::iterator FoundTexture = _Textures.find(InName);
 	ETERNAL_ASSERT(FoundTexture == _Textures.cend());
 
-	TextureCache& TextureCacheLine = _Textures[NameSrc];
-	TextureCacheLine.TextureObj = TextureObj;
+	TextureCache& TextureCacheLine = _Textures[InName];
+	TextureCacheLine.CachedTexture = InTexture;
 }
 
 TextureFactoryRequest::TextureFactoryRequest(const string& InName, const string& InPath)

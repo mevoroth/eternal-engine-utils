@@ -1,5 +1,4 @@
-#ifndef _IMPORT_TGA_HPP_
-#define _IMPORT_TGA_HPP_
+#pragma once
 
 #include <string>
 
@@ -17,9 +16,7 @@ namespace Eternal
 			uint8_t* Import(_In_ const string& Path, _Out_ uint32_t& Height, _Out_ uint32_t& Width);
 
 		private:
-			static ImportTga* _Inst;
+			static ImportTga* _Instance;
 		};
 	}
 }
-
-#endif

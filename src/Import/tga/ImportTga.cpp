@@ -7,18 +7,18 @@
 using namespace Eternal::Import;
 using namespace Eternal::File;
 
-ImportTga* ImportTga::_Inst = nullptr;
+ImportTga* ImportTga::_Instance = nullptr;
 
 ImportTga::ImportTga()
 {
-	ETERNAL_ASSERT(!_Inst);
-	_Inst = this;
+	ETERNAL_ASSERT(!_Instance);
+	_Instance = this;
 }
 
 ImportTga* ImportTga::Get()
 {
-	ETERNAL_ASSERT(_Inst);
-	return _Inst;
+	ETERNAL_ASSERT(_Instance);
+	return _Instance;
 }
 
 uint8_t* ImportTga::Import(_In_ const string& Path, _Out_ uint32_t& Height, _Out_ uint32_t& Width)

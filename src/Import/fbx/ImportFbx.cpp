@@ -246,9 +246,9 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 			_ImportSkeletal(FbxMeshObj);
 
 			{
-				Texture* Diffuse = Eternal::Resources::TextureFactory::Get()->GetTexture("_RED");
-				Texture* Specular = Eternal::Resources::TextureFactory::Get()->GetTexture("_RED");
-				Texture* Normal = Eternal::Resources::TextureFactory::Get()->GetTexture("_DEFAULT_NORMAL");
+				//Texture* Diffuse = Eternal::Resources::TextureFactory::Get()->GetTexture("_RED");
+				//Texture* Specular = Eternal::Resources::TextureFactory::Get()->GetTexture("_RED");
+				//Texture* Normal = Eternal::Resources::TextureFactory::Get()->GetTexture("_DEFAULT_NORMAL");
 				if (Node->GetSrcObjectCount<FbxSurfaceMaterial>() > 0)
 				{
 					FbxSurfaceMaterial* Material = Node->GetSrcObject<FbxSurfaceMaterial>(0);
@@ -270,16 +270,16 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 								{
 									*PrefixEnd = 0;
 
-									sprintf_s(TextureKey, "%s_diff%s", FileName, Extension);
-									Diffuse = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
+									//sprintf_s(TextureKey, "%s_diff%s", FileName, Extension);
+									//Diffuse = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
 
-									sprintf_s(TextureKey, "%s_spec%s", FileName, Extension);
-									Texture* CustomSpecularMap = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
-									Specular = CustomSpecularMap ? CustomSpecularMap : Specular;
+									//sprintf_s(TextureKey, "%s_spec%s", FileName, Extension);
+									//Texture* CustomSpecularMap = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
+									//Specular = CustomSpecularMap ? CustomSpecularMap : Specular;
 
-									sprintf_s(TextureKey, "%s_ddn%s", FileName, Extension);
-									Texture* CustomNormalMap = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
-									Normal = CustomNormalMap ? CustomNormalMap : Normal;
+									//sprintf_s(TextureKey, "%s_ddn%s", FileName, Extension);
+									//Texture* CustomNormalMap = Eternal::Resources::TextureFactory::Get()->GetTexture(TextureKey);
+									//Normal = CustomNormalMap ? CustomNormalMap : Normal;
 								}
 							}
 						}
@@ -307,7 +307,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
 
 				//ETERNAL_BREAK();
-				Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::_ImportNode]Texture import not implemented!");
+				LogWrite(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::_ImportNode]Texture import not implemented!");
 				//OutMesh.SetTexture(Diffuse, Specular, Normal);
 			}
 		} break;
