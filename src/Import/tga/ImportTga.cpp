@@ -34,8 +34,6 @@ uint8_t* ImportTga::Import(_In_ const string& Path, _Out_ uint32_t& Height, _Out
 	//GetCurrentDirectory(255, Dir);
 	//ETERNAL_ASSERT(PathFileExists(Path.c_str()) == 1);
 
-	uint8_t* ImageBuffer;
-
 	File::File* TgaFile = CreateFileHandle(Path);
 	TgaFile->Open(File::File::READ);
 	uint64_t TgaFileSize = TgaFile->GetFileSize();
@@ -44,8 +42,8 @@ uint8_t* ImportTga::Import(_In_ const string& Path, _Out_ uint32_t& Height, _Out
 	TgaFile->Close();
 	delete TgaFile;
 
-	Tga::TgaImage TgaImageObj(TgaContent, TgaFileSize);
-	TgaImageObj.GetImage(Width, Height, ImageBuffer);
+	Tga::TgaImage TgaImageLoader(TgaContent, TgaFileSize);
+	uint8_t* ImageBuffer = TgaImageLoader.GetImage(Width, Height);
 	
 	delete[] TgaContent;
 	TgaContent = nullptr;
