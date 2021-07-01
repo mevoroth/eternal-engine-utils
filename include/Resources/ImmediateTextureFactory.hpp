@@ -27,7 +27,7 @@ namespace Eternal
 
 			virtual void BeginBatch() override final;
 			virtual void EndBatch() override final;
-			virtual bool CreateTextureResource(_In_ const string& InName, _Inout_ RawTextureData& InOutTextureData, _Out_ Resource*& OutTexture) override final;
+			virtual bool CreateTextureResource(_In_ const string& InName, _In_ const RawTextureData& InTextureData, _Out_ Resource*& OutTexture) override final;
 
 		private:
 			GraphicsContext&	_Context;

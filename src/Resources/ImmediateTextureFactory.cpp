@@ -55,47 +55,59 @@ namespace Eternal
 			_CommandList = nullptr;
 		}
 
-		bool ImmediateTextureFactoryCreateGpuResourceCallback::CreateTextureResource(_In_ const string& InName, _Inout_ RawTextureData& InOutTextureData, _Out_ Resource*& OutTexture)
+		bool ImmediateTextureFactoryCreateGpuResourceCallback::CreateTextureResource(_In_ const string& InName, _In_ const RawTextureData& InTextureData, _Out_ Resource*& OutTexture)
 		{
 			using namespace Eternal::Graphics;
 
 			//////////////////////////////////////////////////////////////////////////
 			// CPU Buffer
-			std::string UploadBufferName = "AnonymousUploadBuffer";
-			BufferResourceCreateInformation UploadBufferCreateInformation(
+			std::string UploadTextureName = "AnonymousTextureBuffer";
+			const uint32_t UploadBufferSize = InTextureData.Width * InTextureData.Height * InTextureData.DepthOrArraySize * InTextureData.Stride;
+			//TextureResourceCreateInformation UploadBufferTextureInformation(
+			BufferResourceCreateInformation UploadBufferTextureInformation(
 				_Context.GetDevice(),
-				UploadBufferName,
+				UploadTextureName,
+				//TextureCreateInformation(
+				//	ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
+				//	Format::FORMAT_RGBA8888,
+				//	ResourceUsage::RESOURCE_USAGE_SHADER_RESOURCE,
+				//	InTextureData.Width,
+				//	InTextureData.Height,
+				//	InTextureData.DepthOrArraySize,
+				//	1
+				//),
+				//ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD,
+				//TransitionState::TRANSITION_COPY_READ
 				BufferCreateInformation(
-					Format::FORMAT_RGBA8888,
+					Format::FORMAT_BGRA8888,
 					ResourceUsage::RESOURCE_USAGE_NONE,
-					InOutTextureData.Width * InOutTextureData.Height * InOutTextureData.DepthOrArraySize * InOutTextureData.Stride
+					UploadBufferSize
 				),
 				ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD
 			);
 
-			Resource* UploadBuffer = CreateBuffer(UploadBufferCreateInformation);
+			//Resource* UploadTexture = CreateTexture(UploadBufferTextureInformation);
+			Resource* UploadTexture = CreateBuffer(UploadBufferTextureInformation);
+
+			//////////////////////////////////////////////////////////////////////////
+			// Map
+			MapRange UploadTextureMapRange(UploadBufferSize);
+			void* UploadTextureDataPtr = UploadTexture->Map(UploadTextureMapRange);
+			memcpy(UploadTextureDataPtr, InTextureData.TextureData, UploadBufferSize);
+			UploadTexture->Unmap(UploadTextureMapRange);
 
 			//////////////////////////////////////////////////////////////////////////
 			// GPU Texture
-			//_In_ const ResourceDimension& InResourceDimension,
-			//	_In_ const Format& InFormat,
-			//	_In_ const ResourceUsage& InResourceUsage,
-			//	_In_ uint32_t InWidth,
-			//	_In_ uint32_t InHeight = 1,
-			//	_In_ uint32_t InDepthOrArraySize = 1,
-			//	_In_ uint32_t InMIPLevels = 1,
-			//	_In_ const float InClearValue[ComponentCount] = DefaultClearValue
-
 			TextureResourceCreateInformation GPUTextureCreateInformation(
 				_Context.GetDevice(),
 				InName,
 				TextureCreateInformation(
 					ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
-					Format::FORMAT_RGBA8888,
+					Format::FORMAT_BGRA8888,
 					ResourceUsage::RESOURCE_USAGE_SHADER_RESOURCE,
-					InOutTextureData.Width,
-					InOutTextureData.Height,
-					InOutTextureData.DepthOrArraySize,
+					InTextureData.Width,
+					InTextureData.Height,
+					InTextureData.DepthOrArraySize,
 					1
 				),
 				ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_MEMORY,
@@ -103,6 +115,24 @@ namespace Eternal
 			);
 			OutTexture = CreateTexture(GPUTextureCreateInformation);
 
+			//////////////////////////////////////////////////////////////////////////
+			// Upload
+			_CommandList->CopyResource(
+				*OutTexture,
+				*UploadTexture,
+				CopyRegion(
+					//TextureFromBufferRegion(
+					//	Extent3D(InOutTextureData.Width, InOutTextureData.Height, InOutTextureData.DepthOrArraySize),
+					//	UploadBufferSize
+					//)
+					TextureRegion(
+						Extent3D(InTextureData.Width, InTextureData.Height, InTextureData.DepthOrArraySize)
+					)
+				)
+			);
+
+			//////////////////////////////////////////////////////////////////////////
+			// Transition
 			ResourceTransition TextureCopyWriteToShaderResource(
 				OutTexture,
 				TransitionState::TRANSITION_PIXEL_SHADER_READ
@@ -110,66 +140,6 @@ namespace Eternal
 			_CommandList->Transition(
 				&TextureCopyWriteToShaderResource, 1
 			);
-
-			//vk::ImageMemoryBarrier TextureMemoryBarrier(
-			//	vk::AccessFlagBits(),
-			//	vk::AccessFlagBits::eTransferWrite,
-			//	vk::ImageLayout::eUndefined,
-			//	vk::ImageLayout::eTransferDstOptimal,
-			//	0, 0,
-			//	Texture,
-			//	vk::ImageSubresourceRange(
-			//		vk::ImageAspectFlagBits::eColor,
-			//		0, 1,
-			//		0, 1
-			//	)
-			//);
-
-			//CmdList.pipelineBarrier(
-			//	vk::PipelineStageFlagBits::eHost,
-			//	vk::PipelineStageFlagBits::eTransfer,
-			//	vk::DependencyFlagBits(),
-			//	0, static_cast<vk::MemoryBarrier*>(nullptr),
-			//	0, static_cast<vk::BufferMemoryBarrier*>(nullptr),
-			//	1, &TextureMemoryBarrier
-			//);
-
-			//vk::BufferImageCopy TextureRegion(
-			//	0ull, TextureData.Width, TextureData.Height,
-			//	vk::ImageSubresourceLayers(
-			//		vk::ImageAspectFlagBits::eColor,
-			//		0, 0, 1
-			//	),
-			//	vk::Offset3D(),
-			//	vk::Extent3D(TextureData.Width, TextureData.Height, TextureData.Depth)
-			//);
-
-			//CmdList.copyBufferToImage(
-			//	StagingBuffer,
-			//	Texture,
-			//	vk::ImageLayout::eTransferDstOptimal,
-			//	1, &TextureRegion
-			//);
-
-			//TextureMemoryBarrier.setSrcAccessMask(vk::AccessFlagBits::eTransferWrite);
-			//TextureMemoryBarrier.setDstAccessMask(vk::AccessFlagBits::eShaderRead);
-			//TextureMemoryBarrier.setOldLayout(vk::ImageLayout::eTransferDstOptimal);
-			//TextureMemoryBarrier.setNewLayout(vk::ImageLayout::eShaderReadOnlyOptimal);
-
-			//CmdList.pipelineBarrier(
-			//	vk::PipelineStageFlagBits::eTransfer,
-			//	vk::PipelineStageFlagBits::eFragmentShader,
-			//	vk::DependencyFlagBits(),
-			//	0, static_cast<vk::MemoryBarrier*>(nullptr),
-			//	0, static_cast<vk::BufferMemoryBarrier*>(nullptr),
-			//	1, &TextureMemoryBarrier
-			//);
-
-			////// Clean up staging resources
-			////vkFreeMemory(get_device().get_handle(), staging_memory, nullptr);
-			////vkDestroyBuffer(get_device().get_handle(), staging_buffer, nullptr);
-
-			//OutTexture = reinterpret_cast<Eternal::Graphics::Resource*>(&Texture);
 
 			return true;
 		}

@@ -50,7 +50,7 @@ namespace Eternal
 		public:
 			virtual void BeginBatch() = 0;
 			virtual void EndBatch() = 0;
-			virtual bool CreateTextureResource(_In_ const string& InName, _Inout_ RawTextureData& TextureData, _Out_ Resource*& OutTexture) = 0;
+			virtual bool CreateTextureResource(_In_ const string& InName, _In_ const RawTextureData& InTextureData, _Out_ Resource*& OutTexture) = 0;
 		};
 
 		struct TextureFactoryCreateInformation
