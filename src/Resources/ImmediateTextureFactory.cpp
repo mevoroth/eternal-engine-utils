@@ -67,27 +67,15 @@ namespace Eternal
 			BufferResourceCreateInformation UploadBufferTextureInformation(
 				_Context.GetDevice(),
 				UploadTextureName,
-				//TextureCreateInformation(
-				//	ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
-				//	Format::FORMAT_RGBA8888,
-				//	ResourceUsage::RESOURCE_USAGE_SHADER_RESOURCE,
-				//	InTextureData.Width,
-				//	InTextureData.Height,
-				//	InTextureData.DepthOrArraySize,
-				//	1
-				//),
-				//ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD,
-				//TransitionState::TRANSITION_COPY_READ
 				BufferCreateInformation(
 					Format::FORMAT_BGRA8888,
-					ResourceUsage::RESOURCE_USAGE_NONE,
+					BufferResourceUsage::BUFFER_RESOURCE_USAGE_COPY_READ,
 					UploadBufferSize
 				),
 				ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD
 			);
 
-			//Resource* UploadTexture = CreateTexture(UploadBufferTextureInformation);
-			Resource* UploadTexture = CreateBuffer(UploadBufferTextureInformation);
+			Resource* UploadTexture = CreateBuffer(UploadBufferTextureInformation); // TODO: Release LEAKING HERE
 
 			//////////////////////////////////////////////////////////////////////////
 			// Map
@@ -104,7 +92,7 @@ namespace Eternal
 				TextureCreateInformation(
 					ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
 					Format::FORMAT_BGRA8888,
-					ResourceUsage::RESOURCE_USAGE_SHADER_RESOURCE,
+					TextureResourceUsage::TEXTURE_RESOURCE_USAGE_SHADER_RESOURCE | TextureResourceUsage::TEXTURE_RESOURCE_USAGE_COPY_WRITE,
 					InTextureData.Width,
 					InTextureData.Height,
 					InTextureData.DepthOrArraySize,
@@ -121,12 +109,9 @@ namespace Eternal
 				*OutTexture,
 				*UploadTexture,
 				CopyRegion(
-					//TextureFromBufferRegion(
-					//	Extent3D(InOutTextureData.Width, InOutTextureData.Height, InOutTextureData.DepthOrArraySize),
-					//	UploadBufferSize
-					//)
-					TextureRegion(
-						Extent3D(InTextureData.Width, InTextureData.Height, InTextureData.DepthOrArraySize)
+					TextureFromBufferRegion(
+						Extent3D(InTextureData.Width, InTextureData.Height, InTextureData.DepthOrArraySize),
+						UploadBufferSize
 					)
 				)
 			);
