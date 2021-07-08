@@ -68,7 +68,7 @@ namespace Eternal
 				_Context.GetDevice(),
 				UploadTextureName,
 				BufferCreateInformation(
-					Format::FORMAT_BGRA8888,
+					Format::FORMAT_BGRA8888_UNORM,
 					BufferResourceUsage::BUFFER_RESOURCE_USAGE_COPY_READ,
 					UploadBufferSize
 				),
@@ -91,7 +91,7 @@ namespace Eternal
 				InName,
 				TextureCreateInformation(
 					ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
-					Format::FORMAT_BGRA8888,
+					Format::FORMAT_BGRA8888_UNORM,
 					TextureResourceUsage::TEXTURE_RESOURCE_USAGE_SHADER_RESOURCE | TextureResourceUsage::TEXTURE_RESOURCE_USAGE_COPY_WRITE,
 					InTextureData.Width,
 					InTextureData.Height,
