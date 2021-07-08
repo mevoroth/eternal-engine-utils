@@ -336,6 +336,11 @@ namespace Eternal
 				ETERNAL_ASSERT(Storage::GetSize() > 0);
 				return Routine::IsSet(InIndex, *this);
 			}
+
+			void Reset()
+			{
+				Storage::Reset();
+			}
 		};
 	}
 }
