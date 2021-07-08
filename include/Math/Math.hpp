@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdlib>
+
 namespace Eternal
 {
 	namespace Math
@@ -20,6 +22,18 @@ namespace Eternal
 		bool IsPowerOfTwo(T Number)
 		{
 			return Number && ((Number & (Number - 1)) == 0);
+		}
+
+		template<typename T>
+		T Min(T A, T B)
+		{
+			return min(A, B);
+		}
+
+		template<typename T>
+		T Max(T A, T B)
+		{
+			return max(A, B);
 		}
 	}
 }
