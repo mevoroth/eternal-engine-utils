@@ -83,6 +83,7 @@ namespace Eternal
 			void* UploadTextureDataPtr = UploadTexture->Map(UploadTextureMapRange);
 			memcpy(UploadTextureDataPtr, InTextureData.TextureData, UploadBufferSize);
 			UploadTexture->Unmap(UploadTextureMapRange);
+			_Context.DelayedDelete(UploadTexture);
 
 			//////////////////////////////////////////////////////////////////////////
 			// GPU Texture
