@@ -10,8 +10,8 @@ namespace Eternal
 		class MutexAutoLock
 		{
 		public:
-			inline MutexAutoLock(Mutex* MutexObj)
-				: _Mutex(MutexObj)
+			inline MutexAutoLock(Mutex* InMutex)
+				: _Mutex(InMutex)
 			{
 				ETERNAL_ASSERT(_Mutex);
 				_Mutex->Lock();

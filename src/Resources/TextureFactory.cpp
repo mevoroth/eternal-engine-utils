@@ -78,7 +78,7 @@ void TextureFactory::ProcessRequests()
 		_NewRequestsMutex->Unlock();
 	}
 
-	for (auto& PendingRequestIterator = _PendingLoadTextureRequests.begin(); PendingRequestIterator != _PendingLoadTextureRequests.end(); )
+	for (auto PendingRequestIterator = _PendingLoadTextureRequests.begin(); PendingRequestIterator != _PendingLoadTextureRequests.end(); )
 	{
 		TextureFactoryLoadedTexture LoadedTexture(*PendingRequestIterator);
 
@@ -96,7 +96,7 @@ void TextureFactory::ProcessRequests()
 	if (_PendingCreateGpuResourceRequests.size())
 	{
 		Callbacks.CreateGpuResourceCallback.BeginBatch();
-		for (auto& PendingRequestIterator = _PendingCreateGpuResourceRequests.begin(); PendingRequestIterator != _PendingCreateGpuResourceRequests.end(); )
+		for (auto PendingRequestIterator = _PendingCreateGpuResourceRequests.begin(); PendingRequestIterator != _PendingCreateGpuResourceRequests.end(); )
 		{
 			Resource* OutTexture = nullptr;
 			if (Callbacks.CreateGpuResourceCallback.CreateTextureResource(PendingRequestIterator->Name, PendingRequestIterator->TextureData, OutTexture))

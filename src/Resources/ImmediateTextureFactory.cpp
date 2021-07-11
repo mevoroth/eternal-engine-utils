@@ -40,7 +40,7 @@ namespace Eternal
 		void ImmediateTextureFactoryCreateGpuResourceCallback::BeginBatch()
 		{
 			ETERNAL_ASSERT(!_CommandList);
-			_CommandList = _Context.CreateNewCommandList(CommandType::COMMAND_TYPE_GRAPHIC);
+			_CommandList = _Context.CreateNewCommandList(CommandType::COMMAND_TYPE_GRAPHIC, "TextureStreaming");
 			_CommandList->Begin(_Context);
 
 		}
@@ -49,9 +49,6 @@ namespace Eternal
 		{
 			ETERNAL_ASSERT(_CommandList);
 			_CommandList->End();
-			_Context.GetGraphicsQueue().SubmitCommandLists(
-				&_CommandList, 1
-			);
 			_CommandList = nullptr;
 		}
 
@@ -75,7 +72,7 @@ namespace Eternal
 				ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD
 			);
 
-			Resource* UploadTexture = CreateBuffer(UploadBufferTextureInformation); // TODO: Release LEAKING HERE
+			Resource* UploadTexture = CreateBuffer(UploadBufferTextureInformation);
 
 			//////////////////////////////////////////////////////////////////////////
 			// Map

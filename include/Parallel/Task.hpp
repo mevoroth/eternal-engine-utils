@@ -1,10 +1,7 @@
 #ifndef _TASK_HPP_
 #define _TASK_HPP_
 
-#ifdef ETERNAL_DEBUG
 #include <string>
-using namespace std;
-#endif
 
 namespace Eternal
 {

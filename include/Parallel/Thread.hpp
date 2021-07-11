@@ -10,6 +10,7 @@ namespace Eternal
 		public:
 			typedef uint32_t (*ThreadFunction)(void*);
 
+			virtual ~Thread() {}
 			virtual void Create(ThreadFunction Function, void* FunctionParams) = 0;
 		};
 	}

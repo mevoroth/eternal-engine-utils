@@ -13,6 +13,7 @@ namespace Eternal
 		class ConditionVariable
 		{
 		public:
+			virtual ~ConditionVariable() {}
 			virtual void NotifyAll() = 0;
 			virtual void NotifyOne() = 0;
 			virtual void WaitFor(_In_ Mutex& MutexObj, _In_ TimeNanoSecondsT NanoSeconds) = 0;

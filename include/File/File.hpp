@@ -19,6 +19,7 @@ namespace Eternal
 				CUR = 1,
 				END = 2
 			};
+			virtual ~File() {}
 			virtual void Open(const OpenMode& OpenModeObj) = 0;
 			virtual void Close() = 0;
 			virtual void Read(uint8_t* Block, uint64_t Size) = 0;

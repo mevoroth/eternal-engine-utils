@@ -260,7 +260,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 							FbxTexture* TextureObject = ColorChannel.GetSrcObject<FbxTexture>();
 							if (TextureObject)
 							{
-								char TextureKey[1024];
+								//char TextureKey[1024];
 								char FileName[255];
 								char Extension[8];
 								_splitpath_s(FbxCast<FbxFileTexture>(TextureObject)->GetFileName(), nullptr, 0, nullptr, 0, FileName, 255, Extension, 8);
