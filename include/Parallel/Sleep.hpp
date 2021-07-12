@@ -1,7 +1,6 @@
-#ifndef _SLEEP_HPP_
-#define _SLEEP_HPP_
+#pragma once
 
-#include "Time/Time.hpp"
+#include "Time/Timer.hpp"
 
 namespace Eternal
 {
@@ -12,5 +11,3 @@ namespace Eternal
 		extern void Sleep(const TimeNanoSecondsT& NanoSeconds);
 	}
 }
-
-#endif

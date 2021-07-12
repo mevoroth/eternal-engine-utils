@@ -1,19 +1,17 @@
-#ifndef _TIME_FACTORY_HPP_
-#define _TIME_FACTORY_HPP_
+#pragma once
 
 namespace Eternal
 {
 	namespace Time
 	{
-		class Time;
+		class Timer;
 
-		enum TimeType
+		enum class TimeType
 		{
-			WIN
+			TIME_TYPE_WIN
 		};
 
-		Time* CreateTime(_In_ const TimeType& TimeTypObj);
+		Timer* CreateTimer(_In_ const TimeType& InTimeType);
+		void DestroyTimer(_Inout_ Timer*& InOutTimer);
 	}
 }
-
-#endif

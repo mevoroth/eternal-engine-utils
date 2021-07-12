@@ -1,27 +1,26 @@
-#ifndef _CFILE_HPP_
-#define _CFILE_HPP_
+#pragma once
 
 #include <string>
-#include "File.hpp"
+#include "File/File.hpp"
 #include <cstdio>
 
 namespace Eternal
 {
-	namespace File
+	namespace FileSystem
 	{
-		class CFile : public File
+		class CFile final : public File
 		{
 		public:
-			static bool Exists(const std::string& FileName);
+			static bool Exists(_In_ const std::string& InFileName);
 
-			CFile(const std::string& FileName);
-			virtual void Open(const OpenMode& OpenModeObj) override;
-			virtual void Close() override;
-			virtual void Read(uint8_t* Block, uint64_t Size) override;
-			virtual void Write(uint8_t* Block, uint64_t Size) override;
-			virtual void Seek(uint64_t Offset, const Origin& OriginObj) override;
-			virtual uint64_t Tell() const override;
-			virtual uint64_t GetFileSize() override;
+			CFile(_In_ const std::string& InFileName);
+			virtual void Open(_In_ const OpenMode& InOpenMode) override final;
+			virtual void Close() override final;
+			virtual void Read(_In_ uint8_t* InBlock, _In_ uint64_t InSize) override final;
+			virtual void Write(_In_ uint8_t* InBlock, _In_ uint64_t InSize) override final;
+			virtual void Seek(_In_ uint64_t InOffset, _In_ const Origin& InOrigin) override final;
+			virtual uint64_t Tell() const override final;
+			virtual uint64_t GetFileSize() override final;
 
 		private:
 			std::string _FileName;
@@ -30,5 +29,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

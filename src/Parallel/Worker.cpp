@@ -1,136 +1,117 @@
 #include "Parallel/Worker.hpp"
 
-#define VC_EXTRALEAN
-#define WIN32_LEAN_AND_MEAN
-#define WIN32_EXTRA_LEAN
-#include <Windows.h>
-
 #include "Parallel/Thread.hpp"
-#include "Parallel/StdAtomicS32.hpp"
-#include "Parallel/StdConditionVariable.hpp"
-#include "Parallel/StdMutex.hpp"
+#include "Parallel/ThreadFactory.hpp"
+#include "Parallel/AtomicS32.hpp"
+#include "Parallel/AtomicS32Factory.hpp"
+#include "Parallel/ConditionVariable.hpp"
+#include "Parallel/ConditionVariableFactory.hpp"
+#include "Parallel/Mutex.hpp"
+#include "Parallel/MutexFactory.hpp"
 #include "Parallel/Task.hpp"
 #include "Parallel/Sleep.hpp"
 
-#include "Parallel/Task.hpp"
-
-using namespace Eternal::Parallel;
-
-uint32_t Worker::WorkerRun(void* Args)
+namespace Eternal
 {
-	WorkerArgs* Arguments = (WorkerArgs*)Args;
-
-	while (Arguments->Running->Load())
+	namespace Parallel
 	{
-		Arguments->WorkerConditionVariableMutex->Lock();
-		Arguments->WorkerConditionVariable->Wait(*Arguments->WorkerConditionVariableMutex);
-		Arguments->WorkerConditionVariableMutex->Unlock();
+		Worker::WorkerArguments::WorkerArguments()
+			: WorkerRunning(CreateAtomicS32(1))
+			, WorkerExecuting(CreateAtomicS32())
+			, WorkerConditionVariableMutex(CreateMutex())
+			, WorkerConditionVariable(CreateConditionVariable())
+		{
+		}
 
-		Arguments->IsExecutingTask->Store(1);
+		Worker::WorkerArguments::~WorkerArguments()
+		{
+			DestroyConditionVariable(WorkerConditionVariable);
+			DestroyMutex(WorkerConditionVariableMutex);
+			DestroyAtomicS32(WorkerExecuting);
+			DestroyAtomicS32(WorkerRunning);
+		}
 
-		while (Arguments->IsPushing->Load())
-			Sleep(1);
+		uint32_t Worker::WorkerRunGeneric(_In_ void* InArguments)
+		{
+			ETERNAL_ASSERT(InArguments);
+			WorkerArguments& Arguments = *(WorkerArguments*)InArguments;
 
-		//ETERNAL_ASSERT(Arguments->TaskObj->GetState() == Task::SETUP);
+			OPTICK_THREAD(Arguments.Name.c_str());
 
-//#ifdef ETERNAL_DEBUG
-//		OutputDebugString("Executing ");
-//		OutputDebugString(Arguments->TaskObj->GetTaskName().c_str());
-//		OutputDebugString("\n");
-//#endif
+			while (Arguments.WorkerRunning->Load())
+			{
+				OPTICK_FRAME(Arguments.Name.c_str());
+				Arguments.WorkerConditionVariableMutex->Lock();
+				Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
 
-		Arguments->TaskObj->Setup();
-		Arguments->TaskObj->Execute();
+				Arguments.WorkerExecuting->Store(1);
+				Arguments.WorkerTask->Execute();
+				Arguments.WorkerTask = nullptr;
+				Arguments.WorkerExecuting->Store(0);
+			}
 
-//#ifdef ETERNAL_DEBUG
-//		OutputDebugString("Finishing ");
-//		OutputDebugString(Arguments->TaskObj->GetTaskName().c_str());
-//		OutputDebugString("\n");
-//#endif
+			return 0;
+		}
 
-		Arguments->IsAvailable->Store(1);
+		uint32_t Worker::WorkerRunDedicated(_In_ void* InArguments)
+		{
+			ETERNAL_ASSERT(InArguments);
+			WorkerArguments& Arguments = *(WorkerArguments*)InArguments;
+
+			OPTICK_THREAD(Arguments.Name.c_str());
+
+			while (Arguments.WorkerRunning->Load())
+			{
+				OPTICK_FRAME(Arguments.Name.c_str());
+				if (!Arguments.WorkerTask)
+				{
+					Arguments.WorkerConditionVariableMutex->Lock();
+					Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
+				}
+
+				Arguments.WorkerExecuting->Store(1);
+				Arguments.WorkerTask->Execute();
+				Arguments.WorkerExecuting->Store(0);
+			}
+
+			return 0;
+		}
+
+		Worker::Worker(_In_ const string& InName, _In_ ThreadFunction InFunction)
+		{
+			_WorkerArguments.Name = InName;
+			_Thread = CreateThread(InName, InFunction == nullptr ? &WorkerRunGeneric : InFunction, &_WorkerArguments);
+		}
+
+		Worker::~Worker()
+		{
+			DestroyThread(_Thread);
+		}
+
+		bool Worker::IsAvailable() const
+		{
+			return _WorkerArguments.WorkerExecuting->Load() == 0;
+		}
+
+		void Worker::Shutdown()
+		{
+			ETERNAL_ASSERT(IsAvailable());
+			_WorkerArguments.WorkerRunning->Store(0);
+		}
+
+		bool Worker::EnqueueTask(_In_ Task* InTask)
+		{
+			if (!IsAvailable())
+				return false;
+
+			ETERNAL_ASSERT(!_WorkerArguments.WorkerTask);
+
+			_WorkerArguments.WorkerTask = InTask;
+
+			_WorkerArguments.WorkerConditionVariableMutex->Unlock();
+			_WorkerArguments.WorkerConditionVariable->NotifyOne();
+
+			return true;
+		}
 	}
-
-	return 0;
-}
-
-Worker::Worker(Thread* ThreadObj)
-{
-	_Running = new StdAtomicS32(1);
-	_WorkerConditionVariableMutex = new StdMutex();
-	_WorkerConditionVariable = new StdConditionVariable();
-	_IsExecutingTask = new StdAtomicS32(0);
-	_IsAvailable = new StdAtomicS32(1);
-	_Pushing = new StdAtomicS32(0);
-
-	_WorkerArgs = new WorkerArgs(
-		_Running,
-		_WorkerConditionVariable,
-		_WorkerConditionVariableMutex,
-		_Task,
-		_IsExecutingTask,
-		_IsAvailable,
-		_Pushing
-	);
-
-	ThreadObj->Create(Worker::WorkerRun, _WorkerArgs);
-}
-
-Worker::~Worker()
-{
-	delete _WorkerArgs;
-	_WorkerArgs = nullptr;
-
-	delete _Pushing;
-	_Pushing = nullptr;
-
-	delete _IsAvailable;
-	_IsAvailable = nullptr;
-
-	delete _IsExecutingTask;
-	_IsExecutingTask = nullptr;
-
-	delete _WorkerConditionVariable;
-	_WorkerConditionVariable = nullptr;
-	
-	delete _WorkerConditionVariableMutex;
-	_WorkerConditionVariableMutex = nullptr;
-
-	delete _Running;
-	_Running = nullptr;
-}
-
-void Worker::Shutdown()
-{
-	ETERNAL_ASSERT(_Running->Load());
-	_Running->Store(0);
-}
-
-bool Worker::IsAvailable() const
-{
-	return _IsAvailable->Load() != 0;
-}
-
-bool Worker::PushTask(Task* TaskObj)
-{
-	ETERNAL_ASSERT(IsAvailable());
-
-	if (_Pushing->CompareAndSwap(0, 1))
-		return false;
-
-	_IsAvailable->Store(0);
-	_IsExecutingTask->Store(0);
-	_Task = TaskObj;
-
-	while (!_IsExecutingTask->Load())
-	{
-		_WorkerConditionVariableMutex->Lock();
-		_WorkerConditionVariable->NotifyOne();
-		_WorkerConditionVariableMutex->Unlock();
-
-		Sleep(1);
-	}
-
-	_Pushing->Store(0);
-	return true;
 }

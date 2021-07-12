@@ -1,5 +1,4 @@
-#ifndef _CPU_CORE_COUNT_HPP_
-#define _CPU_CORE_COUNT_HPP_
+#pragma once
 
 namespace Eternal
 {
@@ -8,5 +7,3 @@ namespace Eternal
 		extern uint32_t CpuCoreCount();
 	}
 }
-
-#endif

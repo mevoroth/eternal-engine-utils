@@ -1,10 +1,11 @@
-#ifndef _CONDITION_VARIABLE_HPP_
-#define _CONDITION_VARIABLE_HPP_
-
-#include "Time/Time.hpp"
+#pragma once
 
 namespace Eternal
 {
+	namespace Time
+	{
+		using TimeNanoSecondsT	= uint64_t;
+	}
 	namespace Parallel
 	{
 		using namespace Eternal::Time;
@@ -16,10 +17,8 @@ namespace Eternal
 			virtual ~ConditionVariable() {}
 			virtual void NotifyAll() = 0;
 			virtual void NotifyOne() = 0;
-			virtual void WaitFor(_In_ Mutex& MutexObj, _In_ TimeNanoSecondsT NanoSeconds) = 0;
-			virtual void Wait(_In_ Mutex& MutexObj) = 0;
+			virtual void WaitFor(_In_ Mutex& InMutex, _In_ TimeNanoSecondsT InNanoSeconds) = 0;
+			virtual void Wait(_In_ Mutex& InMutex) = 0;
 		};
 	}
 }
-
-#endif

@@ -1,26 +1,23 @@
-#ifndef _MULTI_CHANNEL_LOG_HPP_
-#define _MULTI_CHANNEL_LOG_HPP_
+#pragma once
 
 #include "Log/Log.hpp"
 
 namespace Eternal
 {
-	namespace Log
+	namespace LogSystem
 	{
 		using namespace std;
 
-		class MultiChannelLog : public Log
+		enum class LogType;
+
+		class MultiChannelLog final : public Log
 		{
 		public:
-			MultiChannelLog();
+			MultiChannelLog(_In_ const vector<LogType>& InLogTypes);
 			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) override;
 			
-			void Add(_In_ Log* LogObj);
-
 		private:
 			vector<Log*> _Channels;
 		};
 	}
 }
-
-#endif

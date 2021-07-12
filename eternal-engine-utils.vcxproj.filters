@@ -58,10 +58,10 @@
     <ClInclude Include="include\Container\Stack.hpp">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="include\Time\Time.hpp">
+    <ClInclude Include="include\Time\Timer.hpp">
       <Filter>Time</Filter>
     </ClInclude>
-    <ClInclude Include="include\Time\Win\WinTime.hpp">
+    <ClInclude Include="include\Time\Win\WinTimer.hpp">
       <Filter>Time\Win</Filter>
     </ClInclude>
     <ClInclude Include="include\Parallel\Thread.hpp">
@@ -71,9 +71,6 @@
       <Filter>Parallel</Filter>
     </ClInclude>
     <ClInclude Include="include\Parallel\Task.hpp">
-      <Filter>Parallel</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Parallel\TaskManager.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
     <ClInclude Include="include\Parallel\Mutex.hpp">
@@ -117,9 +114,6 @@
     </ClInclude>
     <ClInclude Include="include\File\FileFactory.hpp">
       <Filter>File</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Parallel\TaskScheduler.hpp">
-      <Filter>Parallel</Filter>
     </ClInclude>
     <ClInclude Include="include\Parallel\CpuCoreCount.hpp">
       <Filter>Parallel</Filter>
@@ -208,15 +202,21 @@
     <ClInclude Include="include\Math\Math.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="include\Parallel\ParallelSystem.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\ThreadFactory.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\ConditionVariableFactory.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Time\Win\WinTime.cpp">
+    <ClCompile Include="src\Time\Win\WinTimer.cpp">
       <Filter>Time\Win</Filter>
     </ClCompile>
     <ClCompile Include="src\Parallel\StdThread.cpp">
-      <Filter>Parallel</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Parallel\TaskManager.cpp">
       <Filter>Parallel</Filter>
     </ClCompile>
     <ClCompile Include="src\Parallel\StdMutex.cpp">
@@ -246,9 +246,6 @@
     <ClCompile Include="src\File\FileFactory.cpp">
       <Filter>File</Filter>
     </ClCompile>
-    <ClCompile Include="src\Parallel\TaskScheduler.cpp">
-      <Filter>Parallel</Filter>
-    </ClCompile>
     <ClCompile Include="src\Parallel\StdSleep.cpp">
       <Filter>Parallel</Filter>
     </ClCompile>
@@ -261,7 +258,7 @@
     <ClCompile Include="src\Time\TimeFactory.cpp">
       <Filter>Time</Filter>
     </ClCompile>
-    <ClCompile Include="src\Time\Time.cpp">
+    <ClCompile Include="src\Time\Timer.cpp">
       <Filter>Time</Filter>
     </ClCompile>
     <ClCompile Include="src\Log\FileLog\FileLog.cpp">
@@ -305,6 +302,15 @@
     </ClCompile>
     <ClCompile Include="src\Bit\BitField.cpp">
       <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Parallel\ParallelSystem.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\ThreadFactory.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parallel\ConditionVariableFactory.cpp">
+      <Filter>Parallel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

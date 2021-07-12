@@ -1,14 +1,17 @@
-#ifndef _LOG_HPP_
-#define _LOG_HPP_
+#pragma once
 
-#include "Time/Time.hpp"
+#include "Time/Timer.hpp"
 #include <string>
 
 using namespace std;
 
 namespace Eternal
 {
-	namespace Log
+	namespace Time
+	{
+		using TimeMicroSecondsT	= uint64_t;
+	}
+	namespace LogSystem
 	{
 		using namespace Eternal::Time;
 
@@ -55,24 +58,22 @@ namespace Eternal
 			TimeMicroSecondsT GetElaspedTime() const;
 
 		private:
-			static Log* _Inst;
+			static Log* _Instance;
 
 			TimeMicroSecondsT _InitialTime = 0ull;
 		};
 	}
 
 	// Alias
-	extern const Log::Log::LogLevel& LogInfo;
-	extern const Log::Log::LogLevel& LogWarning;
-	extern const Log::Log::LogLevel& LogError;
-	extern const Log::Log::LogLevel& LogCritical;
+	extern const LogSystem::Log::LogLevel& LogInfo;
+	extern const LogSystem::Log::LogLevel& LogWarning;
+	extern const LogSystem::Log::LogLevel& LogError;
+	extern const LogSystem::Log::LogLevel& LogCritical;
 
-	extern const Log::Log::LogCategory& LogGraphics;
-	extern const Log::Log::LogCategory& LogEngine;
-	extern const Log::Log::LogCategory& LogSave;
-	extern const Log::Log::LogCategory& LogImport;
+	extern const LogSystem::Log::LogCategory& LogGraphics;
+	extern const LogSystem::Log::LogCategory& LogEngine;
+	extern const LogSystem::Log::LogCategory& LogSave;
+	extern const LogSystem::Log::LogCategory& LogImport;
 
-	void LogWrite(_In_ const Log::Log::LogLevel& Level, _In_ const Log::Log::LogCategory& Category, _In_ const string& Message);
+	void LogWrite(_In_ const LogSystem::Log::LogLevel& Level, _In_ const LogSystem::Log::LogCategory& Category, _In_ const string& Message);
 }
-
-#endif

@@ -44,10 +44,12 @@
     <ClInclude Include="include\Parallel\AtomicS32Factory.hpp" />
     <ClInclude Include="include\Parallel\AtomicU64.hpp" />
     <ClInclude Include="include\Parallel\ConditionVariable.hpp" />
+    <ClInclude Include="include\Parallel\ConditionVariableFactory.hpp" />
     <ClInclude Include="include\Parallel\CpuCoreCount.hpp" />
     <ClInclude Include="include\Parallel\Mutex.hpp" />
     <ClInclude Include="include\Parallel\MutexAutoLock.hpp" />
     <ClInclude Include="include\Parallel\MutexFactory.hpp" />
+    <ClInclude Include="include\Parallel\ParallelSystem.hpp" />
     <ClInclude Include="include\Parallel\Sleep.hpp" />
     <ClInclude Include="include\Parallel\StdAtomicS32.hpp" />
     <ClInclude Include="include\Parallel\StdAtomicU64.hpp" />
@@ -55,9 +57,8 @@
     <ClInclude Include="include\Parallel\StdMutex.hpp" />
     <ClInclude Include="include\Parallel\StdThread.hpp" />
     <ClInclude Include="include\Parallel\Task.hpp" />
-    <ClInclude Include="include\Parallel\TaskManager.hpp" />
-    <ClInclude Include="include\Parallel\TaskScheduler.hpp" />
     <ClInclude Include="include\Parallel\Thread.hpp" />
+    <ClInclude Include="include\Parallel\ThreadFactory.hpp" />
     <ClInclude Include="include\Parallel\Worker.hpp" />
     <ClInclude Include="include\Resources\ImmediateTextureFactory.hpp" />
     <ClInclude Include="include\Resources\Pool.hpp" />
@@ -67,12 +68,13 @@
     <ClInclude Include="include\SaveSystem\GameDataSaveSystem.hpp" />
     <ClInclude Include="include\SaveSystem\GameDataLoader.hpp" />
     <ClInclude Include="include\SaveSystem\SaveSystem.hpp" />
-    <ClInclude Include="include\Time\Time.hpp" />
+    <ClInclude Include="include\Time\Timer.hpp" />
     <ClInclude Include="include\Time\TimeFactory.hpp" />
-    <ClInclude Include="include\Time\Win\WinTime.hpp" />
+    <ClInclude Include="include\Time\Win\WinTimer.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Parallel\ParallelSystem.cpp" />
     <ClCompile Include="src\Bit\Bit.cpp" />
     <ClCompile Include="src\Bit\BitField.cpp" />
     <ClCompile Include="src\DebugTools\Debug.cpp" />
@@ -87,6 +89,7 @@
     <ClCompile Include="src\Log\LogFactory.cpp" />
     <ClCompile Include="src\Log\MultiChannelLog\MultiChannelLog.cpp" />
     <ClCompile Include="src\Parallel\AtomicS32Factory.cpp" />
+    <ClCompile Include="src\Parallel\ConditionVariableFactory.cpp" />
     <ClCompile Include="src\Parallel\MutexFactory.cpp" />
     <ClCompile Include="src\Parallel\StdCpuCoreCount.cpp" />
     <ClCompile Include="src\Parallel\StdSleep.cpp" />
@@ -94,17 +97,16 @@
     <ClCompile Include="src\Parallel\StdMutex.cpp" />
     <ClCompile Include="src\Parallel\StdThread.cpp" />
     <ClCompile Include="src\Parallel\Task.cpp" />
-    <ClCompile Include="src\Parallel\TaskManager.cpp" />
-    <ClCompile Include="src\Parallel\TaskScheduler.cpp" />
+    <ClCompile Include="src\Parallel\ThreadFactory.cpp" />
     <ClCompile Include="src\Parallel\Worker.cpp" />
     <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp" />
     <ClCompile Include="src\Resources\TextureFactory.cpp" />
     <ClCompile Include="src\SaveSystem\GameDataCollection.cpp" />
     <ClCompile Include="src\SaveSystem\GameDataSaveSystem.cpp" />
     <ClCompile Include="src\SaveSystem\SaveSystem.cpp" />
-    <ClCompile Include="src\Time\Time.cpp" />
+    <ClCompile Include="src\Time\Timer.cpp" />
     <ClCompile Include="src\Time\TimeFactory.cpp" />
-    <ClCompile Include="src\Time\Win\WinTime.cpp" />
+    <ClCompile Include="src\Time\Win\WinTimer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23D5DF8E-B7C8-40C2-B797-8C06280D1F24}</ProjectGuid>
@@ -161,7 +163,7 @@
     <LibraryPath>$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Code\FBX\FBX SDK\2020.0.1\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Code\FBX\FBX SDK\2020.0.1\include;$(SolutionDir)eternal-engine-extern\optick\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -208,8 +210,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>FBXSDK_SHARED;ETERNAL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForcedIncludeFiles>sal.h;UtilsSettings.hpp</ForcedIncludeFiles>
+      <PreprocessorDefinitions>FBXSDK_SHARED;ETERNAL_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ForcedIncludeFiles>sal.h;UtilsSettings.hpp;optick.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -226,7 +228,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FBXSDK_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForcedIncludeFiles>sal.h;UtilsSettings.hpp</ForcedIncludeFiles>
+      <ForcedIncludeFiles>sal.h;UtilsSettings.hpp;optick.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>

@@ -1,9 +1,8 @@
-#ifndef _FILE_HPP_
-#define _FILE_HPP_
+#pragma once
 
 namespace Eternal
 {
-	namespace File
+	namespace FileSystem
 	{
 		class File
 		{
@@ -20,15 +19,13 @@ namespace Eternal
 				END = 2
 			};
 			virtual ~File() {}
-			virtual void Open(const OpenMode& OpenModeObj) = 0;
+			virtual void Open(_In_ const OpenMode& InOpenMode) = 0;
 			virtual void Close() = 0;
-			virtual void Read(uint8_t* Block, uint64_t Size) = 0;
-			virtual void Write(uint8_t* Block, uint64_t Size) = 0;
-			virtual void Seek(uint64_t Offset, const Origin& OriginObj) = 0;
+			virtual void Read(_In_ uint8_t* InBlock, _In_ uint64_t InSize) = 0;
+			virtual void Write(_In_ uint8_t* InBlock, _In_ uint64_t InSize) = 0;
+			virtual void Seek(_In_ uint64_t InOffset, _In_ const Origin& InOrigin) = 0;
 			virtual uint64_t Tell() const = 0;
 			virtual uint64_t GetFileSize() = 0;
 		};
 	}
 }
-
-#endif

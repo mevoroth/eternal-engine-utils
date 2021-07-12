@@ -1,5 +1,4 @@
-#ifndef _STD_MUTEX_HPP_
-#define _STD_MUTEX_HPP_
+#pragma once
 
 #include "Mutex.hpp"
 
@@ -24,5 +23,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

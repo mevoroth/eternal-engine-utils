@@ -1,74 +1,36 @@
 #include "Parallel/Task.hpp"
+#include "Parallel/AtomicS32.hpp"
+#include "Parallel/AtomicS32Factory.hpp"
 
-using namespace Eternal::Parallel;
-
-void Task::Schedule()
+namespace Eternal
 {
-	ETERNAL_ASSERT(_TaskState == IDLE);
-	SetState(SCHEDULED);
-}
+	namespace Parallel
+	{
+		static constexpr int IsTaskExecuting	= 1;
+		static constexpr int IsTaskDone			= 0;
 
-void Task::SetTaskName(const string& TaskName)
-{
-#ifdef ETERNAL_DEBUG
-	_TaskName = TaskName;
-#endif
-}
+		Task::Task()
+			: _IsExecuting(CreateAtomicS32())
+		{
+		}
 
-void Task::SetFrameConstraint(_In_ bool FrameConstraint)
-{
-	_FrameConstraint = FrameConstraint;
-}
+		void Task::SetTaskName(const string& TaskName)
+		{
+		#ifdef ETERNAL_DEBUG
+			_TaskName = TaskName;
+		#endif
+		}
 
-bool Task::GetFrameConstraint() const
-{
-	return _FrameConstraint;
-}
+		void Task::Execute()
+		{
+			_IsExecuting->Store(IsTaskExecuting);
+			DoExecute();
+			_IsExecuting->Store(IsTaskDone);
+		}
 
-void Task::SetInstanceCount(_In_ int InstanceCount)
-{
-	ETERNAL_ASSERT(GetState() == IDLE);
-	_InstanceCount = InstanceCount;
-	_InstanceID = 0;
-}
-
-int Task::GetInstanceCount() const
-{
-	return _InstanceCount;
-}
-
-void Task::Setup()
-{
-	ETERNAL_ASSERT(GetState() == SCHEDULED);
-	ETERNAL_ASSERT(_InstanceID < _InstanceCount);
-	SetState(SETTINGUP);
-	DoSetup();
-	SetState(SETUP);
-}
-
-void Task::Reset()
-{
-	ETERNAL_ASSERT(GetState() == DONE);
-	DoReset();
-	_InstanceID = 0;
-	SetState(IDLE);
-}
-
-void Task::Execute()
-{
-	ETERNAL_ASSERT(GetState() == SETUP);
-	SetState(EXECUTING);
-	DoExecute();
-
-	++_InstanceID;
-	if (_InstanceID < _InstanceCount)
-		SetState(IDLE);
-	else
-		SetState(DONE);
-}
-
-int Task::GetInstanceID() const
-{
-	ETERNAL_ASSERT(GetState() != IDLE);
-	return _InstanceID;
+		bool Task::IsDone() const
+		{
+			return _IsExecuting->Load() == IsTaskDone;
+		}
+	}
 }

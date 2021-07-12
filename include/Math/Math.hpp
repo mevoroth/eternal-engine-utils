@@ -27,13 +27,13 @@ namespace Eternal
 		template<typename T>
 		T Min(T A, T B)
 		{
-			return min(A, B);
+			return std::min(A, B);
 		}
 
 		template<typename T>
 		T Max(T A, T B)
 		{
-			return max(A, B);
+			return std::max(A, B);
 		}
 	}
 }

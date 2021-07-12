@@ -1,24 +1,25 @@
-#ifndef _LOG_FACTORY_HPP_
-#define _LOG_FACTORY_HPP_
+#pragma once
+
+#include <vector>
 
 namespace Eternal
 {
-	namespace Log
+	namespace LogSystem
 	{
+		using namespace std;
+
 		class Log;
 
-		enum LogType
+		enum class LogType
 		{
-			FILE,
-			CONSOLE,
-			MULTI_CHANNEL
+			LOG_TYPE_FILE,
+			LOG_TYPE_CONSOLE,
+			LOG_TYPE_MULTI_CHANNEL
 		};
 
-		Log* CreateLog(_In_ const LogType& LogTypeObj, _In_ const char* Session);
-		Log* CreateMultiChannelLog(_In_ Log** Logs, _In_ int LogsCount);
+		Log* CreateLog(_In_ const LogType& InLogType, _In_ const char* InSession = nullptr);
+		Log* CreateMultiChannelLog(_In_ const vector<LogType>& InLogTypes);
 
-		void DeleteLog(Log*& LogObj);
+		void DeleteLog(Log*& InLog);
 	}
 }
-
-#endif

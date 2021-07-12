@@ -1,5 +1,4 @@
-#ifndef _TASK_HPP_
-#define _TASK_HPP_
+#pragma once
 
 #include <string>
 
@@ -9,65 +8,27 @@ namespace Eternal
 	{
 		using namespace std;
 
+		class AtomicS32;
+
 		class Task
 		{
 		public:
-			enum TaskState
-			{
-				IDLE,
-				SCHEDULED,
-				SETTINGUP,
-				SETUP,
-				EXECUTING,
-				DONE
-			};
+			Task();
 			virtual ~Task() {}
 
-			void Setup();
-			void Reset();
-			void Execute();
-
-			virtual void DoSetup() = 0;
-			virtual void DoReset() = 0;
 			virtual void DoExecute() = 0;
-			void Schedule();
-			void SetFrameConstraint(_In_ bool FrameConstraint);
-			bool GetFrameConstraint() const;
-			void SetInstanceCount(_In_ int InstanceCount);
-			int GetInstanceCount() const;
-			int GetInstanceID() const;
 
-			const TaskState& GetState() const
-			{
-				return _TaskState;
-			}
-
+			void Execute();
+			bool IsDone() const;
 			void SetTaskName(const string& TaskName);
 			const string& GetTaskName() const
 			{
-#ifdef ETERNAL_DEBUG
 				return _TaskName;
-#else
-				return "";
-#endif
-			}
-
-		protected:
-			inline void SetState(const TaskState& State)
-			{
-				_TaskState = State;
 			}
 
 		private:
-			TaskState _TaskState = IDLE;
-			bool _FrameConstraint = true;
-			int _InstanceCount = 1;
-			int _InstanceID = 0;
-#ifdef ETERNAL_DEBUG
-			string _TaskName;
-#endif
+			string		_TaskName;
+			AtomicS32*	_IsExecuting = nullptr;
 		};
 	}
 }
-
-#endif

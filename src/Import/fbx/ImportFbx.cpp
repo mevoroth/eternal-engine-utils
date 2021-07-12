@@ -18,7 +18,7 @@
 
 using namespace Eternal::Import;
 using namespace Eternal::Graphics;
-using namespace Eternal::File;
+using namespace Eternal::FileSystem;
 using namespace Eternal::GraphicData;
 
 ImportFbx* ImportFbx::_Inst = nullptr;
@@ -35,8 +35,8 @@ ImportFbx::ImportFbx()
 	_SdkMgr->SetIOSettings(_Settings);
 	_FbxImporter = FbxImporter::Create(_SdkMgr, "");
 
-	Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::ImportFbx]UV.y has been inversed!");
-	Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::ImportFbx]Pos.w = 1.f!");
+	LogWrite(LogWarning, LogImport, "[ImportFbx::ImportFbx]UV.y has been inversed!");
+	LogWrite(LogWarning, LogImport, "[ImportFbx::ImportFbx]Pos.w = 1.f!");
 }
 
 ImportFbx* ImportFbx::Get()
@@ -67,7 +67,7 @@ void ImportFbx::Import(_In_ const std::string& Path, _Out_ Mesh*& OutMesh, _Out_
 		FbxStatus& Status = _FbxImporter->GetStatus();
 		std::string ErrorMessage = "[ImportFbx::Import]";
 		ErrorMessage.append(Status.GetErrorString());
-		Eternal::Log::Log::Get()->Write(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, ErrorMessage.c_str());
+		LogWrite(LogWarning, LogImport, ErrorMessage.c_str());
 
 		// LOG
 		//ETERNAL_BREAK();
@@ -307,7 +307,7 @@ void ImportFbx::_ImportNode(_In_ const FbxNode* Node, _Out_ Mesh& OutMeshObj, _O
 				//OutputDebugString(fbxsdk_2015_1::FbxCast<FbxFileTexture>(DiffuseColorTexture)->GetFileName());
 
 				//ETERNAL_BREAK();
-				LogWrite(Eternal::Log::Log::Warning, Eternal::Log::Log::Import, "[ImportFbx::_ImportNode]Texture import not implemented!");
+				LogWrite(LogWarning, LogImport, "[ImportFbx::_ImportNode]Texture import not implemented!");
 				//OutMesh.SetTexture(Diffuse, Specular, Normal);
 			}
 		} break;

@@ -1,5 +1,4 @@
-#ifndef _STD_THREAD_HPP_
-#define _STD_THREAD_HPP_
+#pragma once
 
 #include "Parallel/Thread.hpp"
 
@@ -11,15 +10,18 @@ namespace Eternal
 {
 	namespace Parallel
 	{
-		class StdThread : public Thread
+		class StdThread final : public Thread
 		{
 		public:
-			virtual void Create(ThreadFunction Function, void* FunctionParams) override;
+			StdThread(_In_ const string& InName)
+				: Thread(InName)
+			{
+			}
+
+			virtual void Create(_In_ ThreadFunction InFunction, _In_ void* InFunctionParameters) override final;
 
 		private:
 			thread _Thread;
 		};
 	}
 }
-
-#endif

@@ -2,7 +2,7 @@
 
 using namespace Eternal::Parallel;
 
-void StdThread::Create(ThreadFunction Function, void* FunctionParams)
+void StdThread::Create(ThreadFunction InFunction, void* InFunctionParameters)
 {
-	_Thread = thread(Function, FunctionParams);
+	_Thread = thread(InFunction, InFunctionParameters);
 }

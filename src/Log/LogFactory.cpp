@@ -6,37 +6,28 @@
 
 namespace Eternal
 {
-	namespace Log
+	namespace LogSystem
 	{
-		Log* CreateLog(_In_ const LogType& LogTypeObj, _In_ const char* Session)
+		Log* CreateLog(_In_ const LogType& InLogType, _In_ const char* InSession)
 		{
-			switch (LogTypeObj)
+			switch (InLogType)
 			{
-			case FILE:
-				return new FileLog(Session);
-				break;
+			case LogType::LOG_TYPE_FILE:
+				return new FileLog(InSession);
 
-			case CONSOLE:
+			case LogType::LOG_TYPE_CONSOLE:
 				return new ConsoleLog();
-				break;
 
-			case MULTI_CHANNEL:
+			case LogType::LOG_TYPE_MULTI_CHANNEL:
 				ETERNAL_BREAK(); // Multi Channel Log must be created with CreateMultiChannelLog()
 				break;
 			}
 			return nullptr;
 		}
 
-		Log* CreateMultiChannelLog(_In_ Log** Logs, _In_ int LogsCount)
+		Log* CreateMultiChannelLog(_In_ const vector<LogType>& InLogTypes)
 		{
-			MultiChannelLog* MultiChannelLogObj = new MultiChannelLog();
-
-			for (int LogIndex = 0; LogIndex < LogsCount; ++LogIndex)
-			{
-				MultiChannelLogObj->Add(Logs[LogIndex]);
-			}
-
-			return MultiChannelLogObj;
+			return new MultiChannelLog(InLogTypes);
 		}
 
 		void DeleteLog(Log*& LogObj)

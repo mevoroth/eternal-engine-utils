@@ -1,5 +1,4 @@
-#ifndef _STD_CONDITION_VARIABLE_HPP_
-#define _STD_CONDITION_VARIABLE_HPP_
+#pragma once
 
 #include "ConditionVariable.hpp"
 
@@ -16,13 +15,11 @@ namespace Eternal
 		public:
 			virtual void NotifyAll() override;
 			virtual void NotifyOne() override;
-			virtual void WaitFor(_In_ Mutex& MutexObj, _In_ TimeNanoSecondsT NanoSeconds) override;
-			virtual void Wait(_In_ Mutex& MutexObj) override;
+			virtual void WaitFor(_In_ Mutex& InMutex, _In_ TimeNanoSecondsT InNanoSeconds) override;
+			virtual void Wait(_In_ Mutex& InMutex) override;
 
 		private:
 			condition_variable_any _ConditionVariable;
 		};
 	}
 }
-
-#endif

@@ -10,5 +10,11 @@ namespace Eternal
 		{
 			return new StdAtomicS32(Value);
 		}
+
+		void DestroyAtomicS32(_Inout_ AtomicS32*& InOutAtomic)
+		{
+			delete InOutAtomic;
+			InOutAtomic = nullptr;
+		}
 	}
 }

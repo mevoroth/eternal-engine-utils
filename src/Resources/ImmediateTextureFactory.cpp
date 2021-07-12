@@ -16,7 +16,7 @@ namespace Eternal
 	{
 		bool ImmediateTextureFactoryLoadTextureCallback::LoadTexture(_In_ const string& Path, _Out_ RawTextureData& OutTextureData)
 		{
-			using namespace Eternal::File;
+			using namespace Eternal::FileSystem;
 			using namespace Eternal::Import;
 
 			if (FileExists(Path))

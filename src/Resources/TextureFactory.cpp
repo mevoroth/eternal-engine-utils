@@ -9,7 +9,7 @@
 using namespace Eternal::Resources;
 using namespace Eternal::Import;
 using namespace Eternal::Graphics;
-using namespace Eternal::File;
+using namespace Eternal::FileSystem;
 
 TextureFactory* TextureFactory::_Instance = nullptr;
 vector<string> TextureFactory::_IncludePaths;
@@ -146,6 +146,6 @@ void TextureFactory::_InsertNewTexture(_In_ const string& InName, _In_ Resource*
 
 TextureFactoryRequest::TextureFactoryRequest(const string& InName, const string& InPath)
 	: Name(InName)
-	, Path(FilePath::Find(InPath, FileType::TEXTURES))
+	, Path(FilePath::Find(InPath, FileType::FILE_TYPE_TEXTURES))
 {
 }

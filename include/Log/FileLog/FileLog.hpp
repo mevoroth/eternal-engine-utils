@@ -1,20 +1,19 @@
-#ifndef _FILE_LOG_HPP_
-#define _FILE_LOG_HPP_
+#pragma once
 
 #include "Log/Log.hpp"
 
 namespace Eternal
 {
-	namespace File
+	namespace FileSystem
 	{
 		class File;
 	}
 
-	namespace Log
+	namespace LogSystem
 	{
-		using namespace Eternal::File;
+		using namespace Eternal::FileSystem;
 
-		class FileLog : public Log
+		class FileLog final : public Log
 		{
 		public:
 			FileLog(_In_ const char* FileName);
@@ -22,10 +21,8 @@ namespace Eternal
 			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) override;
 
 		private:
-			Eternal::File::File* _LogFiles[LogLevelCount];
-			Eternal::File::File* _LogAllFile = nullptr;
+			File* _LogFiles[LogLevelCount];
+			File* _LogAllFile = nullptr;
 		};
 	}
 }
-
-#endif

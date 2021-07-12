@@ -6,7 +6,6 @@
 #include "SaveSystem/GameDataSaveSystem.hpp"
 
 using namespace Eternal::SaveSystem;
-using namespace Eternal::File;
 
 SaveSystem* SaveSystem::_Inst = nullptr;
 //vector<string> SaveSystem::_IncludePaths;
@@ -33,20 +32,21 @@ SaveSystem* SaveSystem::Get()
 
 void* SaveSystem::Load(_In_ const string& SaveFile)
 {
-	string FilePath = FilePath::Find(SaveFile, FileType::SAVES);
+	//string FilePath = FilePath::Find(SaveFile, FileType::SAVES);
 
-	Eternal::File::File* Save = CreateFileHandle(FilePath);
-	Save->Open(Eternal::File::File::READ);
+	//Eternal::File::File* Save = CreateFileHandle(FilePath);
+	//Save->Open(Eternal::File::File::READ);
 
-	uint64_t SaveFileSize = Save->GetFileSize();
-	uint8_t* SaveContent = new uint8_t[SaveFileSize];
-	memset(SaveContent, 0x0, SaveFileSize);
+	//uint64_t SaveFileSize = Save->GetFileSize();
+	//uint8_t* SaveContent = new uint8_t[SaveFileSize];
+	//memset(SaveContent, 0x0, SaveFileSize);
 
-	Save->Read(SaveContent, SaveFileSize);
-	Save->Close();
-	DestroyFileHandle(Save);
+	//Save->Read(SaveContent, SaveFileSize);
+	//Save->Close();
+	//DestroyFileHandle(Save);
 
-	return _SaveSystem->Load(SaveContent);
+	//return _SaveSystem->Load(SaveContent);
+	return nullptr;
 }
 
 void SaveSystem::SetGameDataLoader(_In_ GameDataLoader* Loader)

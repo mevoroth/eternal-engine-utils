@@ -1,18 +1,15 @@
-#ifndef _FILE_FACTORY_HPP_
-#define _FILE_FACTORY_HPP_
+#pragma once
 
 #include <string>
 
 namespace Eternal
 {
-	namespace File
+	namespace FileSystem
 	{
 		class File;
 
-		File* CreateFileHandle(const std::string& FileName);
-		void DestroyFileHandle(File*& FileObj);
-		bool FileExists(const std::string& FileName);
+		File* CreateFileHandle(_In_ const std::string& InFileName);
+		void DestroyFileHandle(_In_ File*& InFile);
+		bool FileExists(_In_ const std::string& InFileName);
 	}
 }
-
-#endif

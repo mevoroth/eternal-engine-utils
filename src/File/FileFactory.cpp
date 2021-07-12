@@ -7,27 +7,27 @@
 
 namespace Eternal
 {
-	namespace File
+	namespace FileSystem
 	{
-		File* CreateFileHandle(const std::string& FileName)
+		File* CreateFileHandle(const std::string& InFileName)
 		{
 #ifdef ETERNAL_USE_CFILE
-			return new CFile(FileName);
+			return new CFile(InFileName);
 #else
 			return nullptr;
 #endif
 		}
 
-		void DestroyFileHandle(File*& FileObj)
+		void DestroyFileHandle(File*& InFile)
 		{
-			delete FileObj;
-			FileObj = nullptr;
+			delete InFile;
+			InFile = nullptr;
 		}
 
-		bool FileExists(const std::string& FileName)
+		bool FileExists(const std::string& InFileName)
 		{
 #ifdef ETERNAL_USE_CFILE
-			return CFile::Exists(FileName);
+			return CFile::Exists(InFileName);
 #else
 			return false;
 #endif
