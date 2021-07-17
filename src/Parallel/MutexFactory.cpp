@@ -8,7 +8,7 @@ namespace Eternal
 	{
 		Mutex* CreateMutex()
 		{
-#if ETERNAL_USE_STD_MUTEX
+#if ETERNAL_USE_STD_PARALLEL
 			return new StdMutex();
 #endif
 			ETERNAL_BREAK();

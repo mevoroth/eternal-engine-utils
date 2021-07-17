@@ -18,6 +18,7 @@ namespace Eternal
 		Worker::WorkerArguments::WorkerArguments()
 			: WorkerRunning(CreateAtomicS32(1))
 			, WorkerExecuting(CreateAtomicS32())
+			, WorkerDone(CreateAtomicS32())
 			, WorkerConditionVariableMutex(CreateMutex())
 			, WorkerConditionVariable(CreateConditionVariable())
 		{
@@ -27,6 +28,7 @@ namespace Eternal
 		{
 			DestroyConditionVariable(WorkerConditionVariable);
 			DestroyMutex(WorkerConditionVariableMutex);
+			DestroyAtomicS32(WorkerDone);
 			DestroyAtomicS32(WorkerExecuting);
 			DestroyAtomicS32(WorkerRunning);
 		}
@@ -44,11 +46,16 @@ namespace Eternal
 				Arguments.WorkerConditionVariableMutex->Lock();
 				Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
 
-				Arguments.WorkerExecuting->Store(1);
-				Arguments.WorkerTask->Execute();
-				Arguments.WorkerTask = nullptr;
-				Arguments.WorkerExecuting->Store(0);
+				if (Arguments.WorkerTask)
+				{
+					Arguments.WorkerExecuting->Store(1);
+					Arguments.WorkerTask->Execute();
+					Arguments.WorkerTask = nullptr;
+					Arguments.WorkerExecuting->Store(0);
+				}
 			}
+
+			Arguments.WorkerDone->Store(1);
 
 			return 0;
 		}
@@ -74,6 +81,8 @@ namespace Eternal
 				Arguments.WorkerExecuting->Store(0);
 			}
 
+			Arguments.WorkerDone->Store(1);
+
 			return 0;
 		}
 
@@ -93,10 +102,20 @@ namespace Eternal
 			return _WorkerArguments.WorkerExecuting->Load() == 0;
 		}
 
+		bool Worker::IsDone() const
+		{
+			return _WorkerArguments.WorkerDone->Load() == 1;
+		}
+
 		void Worker::Shutdown()
 		{
-			ETERNAL_ASSERT(IsAvailable());
 			_WorkerArguments.WorkerRunning->Store(0);
+		}
+
+		void Worker::WakeWorker()
+		{
+			_WorkerArguments.WorkerConditionVariableMutex->Unlock();
+			_WorkerArguments.WorkerConditionVariable->NotifyOne();
 		}
 
 		bool Worker::EnqueueTask(_In_ Task* InTask)
@@ -108,8 +127,7 @@ namespace Eternal
 
 			_WorkerArguments.WorkerTask = InTask;
 
-			_WorkerArguments.WorkerConditionVariableMutex->Unlock();
-			_WorkerArguments.WorkerConditionVariable->NotifyOne();
+			WakeWorker();
 
 			return true;
 		}

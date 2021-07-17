@@ -26,7 +26,9 @@ namespace Eternal
 			~Worker();
 
 			void Shutdown();
+			void WakeWorker();
 			bool IsAvailable() const;
+			bool IsDone() const;
 			bool EnqueueTask(_In_ Task* InTask);
 
 		private:
@@ -38,6 +40,7 @@ namespace Eternal
 				Task* WorkerTask								= nullptr;
 				AtomicS32* WorkerRunning						= nullptr;
 				AtomicS32* WorkerExecuting						= nullptr;
+				AtomicS32* WorkerDone							= nullptr;
 				Mutex* WorkerConditionVariableMutex				= nullptr;
 				ConditionVariable* WorkerConditionVariable		= nullptr;
 				string Name;

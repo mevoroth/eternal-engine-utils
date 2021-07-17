@@ -43,6 +43,12 @@ namespace Eternal
 						std::string WorkerName = std::string("Worker ") + InParallelSystemCreateInformation.DedicatedTasks[DedicatedWorkerIndex]->GetTaskName();
 						_Workers[WorkerIndex++] = new Worker(WorkerName, _HasAllDedicatedCore() ? Worker::WorkerRunDedicated : nullptr);
 					}
+
+					if (_HasAllDedicatedCore())
+					{
+						for (int32_t DedicatedWorkerIndex = 0; DedicatedWorkerIndex < _DedicatedWorkersCount; ++DedicatedWorkerIndex)
+							_Workers[_GenericWorkersCount + DedicatedWorkerIndex]->EnqueueTask(InParallelSystemCreateInformation.DedicatedTasks[DedicatedWorkerIndex]);
+					}
 				}
 				else
 				{
@@ -55,7 +61,18 @@ namespace Eternal
 		ParallelSystem::~ParallelSystem()
 		{
 			for (uint32_t WorkerIndex = 0; WorkerIndex < _Workers.size(); ++WorkerIndex)
+				_Workers[WorkerIndex]->Shutdown();
+
+			for (uint32_t WorkerIndex = 0; WorkerIndex < _Workers.size(); ++WorkerIndex)
+			{
+				while (!_Workers[WorkerIndex]->IsDone())
+				{
+					_Workers[WorkerIndex]->WakeWorker();
+					Sleep(1);
+				}
+
 				delete _Workers[WorkerIndex];
+			}
 		}
 
 		void ParallelSystem::StartFrame()
@@ -111,7 +128,7 @@ namespace Eternal
 				else
 				{
 					vector<Task*>& DedicatedTasks = _ParallelSystemCreateInformation.DedicatedTasks;
-					for (uint32_t DedicatedWorkerIndex = 0; DedicatedWorkerIndex < _DedicatedWorkersCount; ++DedicatedWorkerIndex)
+					for (int32_t DedicatedWorkerIndex = 0; DedicatedWorkerIndex < _DedicatedWorkersCount; ++DedicatedWorkerIndex)
 					{
 						if (_Workers[_GenericWorkersCount + DedicatedWorkerIndex]->IsAvailable())
 						{

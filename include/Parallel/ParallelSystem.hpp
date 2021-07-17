@@ -15,6 +15,12 @@ namespace Eternal
 
 		struct ParallelSystemCreateInformation
 		{
+			ParallelSystemCreateInformation(_In_ uint32_t InFrameCount, _In_ const vector<Task*>& InDedicatedTasks = vector<Task*>())
+				: DedicatedTasks(InDedicatedTasks)
+				, FrameCount(InFrameCount)
+			{
+			}
+
 			vector<Task*> DedicatedTasks;
 			uint32_t FrameCount = 0;
 		};

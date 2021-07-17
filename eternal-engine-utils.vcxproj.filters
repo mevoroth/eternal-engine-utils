@@ -46,9 +46,6 @@
     <Filter Include="Log\MultiChannelLog">
       <UniqueIdentifier>{c5497792-dea3-4bca-9b61-a4e406adade4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SaveSystem">
-      <UniqueIdentifier>{5af31353-8225-4d10-9fb5-9416dd7f100f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{79e54434-d41a-4972-90f2-aa0712a54628}</UniqueIdentifier>
     </Filter>
@@ -154,21 +151,6 @@
     <ClInclude Include="include\Log\MultiChannelLog\MultiChannelLog.hpp">
       <Filter>Log\MultiChannelLog</Filter>
     </ClInclude>
-    <ClInclude Include="include\SaveSystem\GameData.hpp">
-      <Filter>SaveSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SaveSystem\GameDataCollection.hpp">
-      <Filter>SaveSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SaveSystem\GameDataSaveSystem.hpp">
-      <Filter>SaveSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SaveSystem\SaveSystem.hpp">
-      <Filter>SaveSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SaveSystem\GameDataLoader.hpp">
-      <Filter>SaveSystem</Filter>
-    </ClInclude>
     <ClInclude Include="include\Parallel\AtomicS32Factory.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
@@ -210,6 +192,18 @@
     </ClInclude>
     <ClInclude Include="include\Parallel\ConditionVariableFactory.hpp">
       <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\ThreadLocalStorage.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Resources\MeshPayload.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parallel\StdThreadLocalStorage.hpp">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Resources\Streaming.hpp">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,15 +270,6 @@
     <ClCompile Include="src\Log\MultiChannelLog\MultiChannelLog.cpp">
       <Filter>Log\MultiChannelLog</Filter>
     </ClCompile>
-    <ClCompile Include="src\SaveSystem\GameDataCollection.cpp">
-      <Filter>SaveSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SaveSystem\GameDataSaveSystem.cpp">
-      <Filter>SaveSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SaveSystem\SaveSystem.cpp">
-      <Filter>SaveSystem</Filter>
-    </ClCompile>
     <ClCompile Include="src\Parallel\AtomicS32Factory.cpp">
       <Filter>Parallel</Filter>
     </ClCompile>
@@ -311,6 +296,9 @@
     </ClCompile>
     <ClCompile Include="src\Parallel\ConditionVariableFactory.cpp">
       <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Streaming.cpp">
+      <Filter>Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

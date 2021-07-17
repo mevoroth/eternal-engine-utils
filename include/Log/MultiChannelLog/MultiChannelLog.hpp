@@ -14,6 +14,7 @@ namespace Eternal
 		{
 		public:
 			MultiChannelLog(_In_ const vector<LogType>& InLogTypes);
+			~MultiChannelLog();
 			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) override;
 			
 		private:

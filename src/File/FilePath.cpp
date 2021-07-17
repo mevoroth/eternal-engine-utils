@@ -27,7 +27,6 @@ namespace Eternal
 			if (FileFound)
 				return FullPath;
 	
-			ETERNAL_BREAK();
 			return string();
 		}
 

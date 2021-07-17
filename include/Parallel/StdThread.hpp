@@ -18,6 +18,8 @@ namespace Eternal
 			{
 			}
 
+			~StdThread();
+
 			virtual void Create(_In_ ThreadFunction InFunction, _In_ void* InFunctionParameters) override final;
 
 		private:

@@ -11,8 +11,9 @@ namespace Eternal
 		enum class FileType
 		{
 			FILE_TYPE_SHADERS	= 0,
-			SAVES				= 1,
+			FILE_TYPE_LEVELS	= 1,
 			FILE_TYPE_TEXTURES	= 2,
+			FILE_TYPE_MESHES,
 			FILE_TYPE_COUNT
 		};
 
