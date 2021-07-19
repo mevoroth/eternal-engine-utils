@@ -9,20 +9,15 @@ namespace Eternal
 		static constexpr int IsTaskExecuting	= 1;
 		static constexpr int IsTaskDone			= 0;
 
-		Task::Task()
+		Task::Task(_In_ const TaskCreateInformation& InTaskCreateInformation)
 			: _IsExecuting(CreateAtomicS32())
+			, _TaskCreateInformation(InTaskCreateInformation)
 		{
-		}
-
-		void Task::SetTaskName(const string& TaskName)
-		{
-		#ifdef ETERNAL_DEBUG
-			_TaskName = TaskName;
-		#endif
 		}
 
 		void Task::Execute()
 		{
+			ETERNAL_PROFILER(BASIC)(GetTaskName().c_str());
 			_IsExecuting->Store(IsTaskExecuting);
 			DoExecute();
 			_IsExecuting->Store(IsTaskDone);

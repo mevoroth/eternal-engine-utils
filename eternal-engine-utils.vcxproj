@@ -63,17 +63,18 @@
     <ClInclude Include="include\Parallel\ThreadLocalStorage.hpp" />
     <ClInclude Include="include\Parallel\Worker.hpp" />
     <ClInclude Include="include\Resources\ImmediateTextureFactory.hpp" />
-    <ClInclude Include="include\Resources\MeshPayload.hpp" />
+    <ClInclude Include="include\Resources\MeshLoader.hpp" />
+    <ClInclude Include="include\Resources\Payload.hpp" />
     <ClInclude Include="include\Resources\Pool.hpp" />
     <ClInclude Include="include\Resources\Streaming.hpp" />
     <ClInclude Include="include\Resources\TextureFactory.hpp" />
+    <ClInclude Include="include\Resources\TextureLoader.hpp" />
     <ClInclude Include="include\Time\Timer.hpp" />
     <ClInclude Include="include\Time\TimeFactory.hpp" />
     <ClInclude Include="include\Time\Win\WinTimer.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\Parallel\ParallelSystem.cpp" />
     <ClCompile Include="src\Bit\Bit.cpp" />
     <ClCompile Include="src\Bit\BitField.cpp" />
     <ClCompile Include="src\DebugTools\Debug.cpp" />
@@ -90,6 +91,7 @@
     <ClCompile Include="src\Parallel\AtomicS32Factory.cpp" />
     <ClCompile Include="src\Parallel\ConditionVariableFactory.cpp" />
     <ClCompile Include="src\Parallel\MutexFactory.cpp" />
+    <ClCompile Include="src\Parallel\ParallelSystem.cpp" />
     <ClCompile Include="src\Parallel\StdCpuCoreCount.cpp" />
     <ClCompile Include="src\Parallel\StdSleep.cpp" />
     <ClCompile Include="src\Parallel\StdConditionVariable.cpp" />
@@ -99,8 +101,10 @@
     <ClCompile Include="src\Parallel\ThreadFactory.cpp" />
     <ClCompile Include="src\Parallel\Worker.cpp" />
     <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp" />
+    <ClCompile Include="src\Resources\MeshLoader.cpp" />
     <ClCompile Include="src\Resources\Streaming.cpp" />
     <ClCompile Include="src\Resources\TextureFactory.cpp" />
+    <ClCompile Include="src\Resources\TextureLoader.cpp" />
     <ClCompile Include="src\Time\Timer.cpp" />
     <ClCompile Include="src\Time\TimeFactory.cpp" />
     <ClCompile Include="src\Time\Win\WinTimer.cpp" />
@@ -207,7 +211,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ETERNAL_DEBUG=1;IMGUI_USER_CONFIG="Imgui/ImguiConfig.hpp";FBXSDK_SHARED;ETERNAL_USE_STD_PARALLEL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ETERNAL_DEBUG=1;IMGUI_USER_CONFIG="Imgui/ImguiConfig.hpp";FBXSDK_SHARED;ETERNAL_USE_STD_PARALLEL=1;ETERNAL_PROFILER_USE_VERBOSE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>sal.h;UtilsSettings.hpp;optick.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

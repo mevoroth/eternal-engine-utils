@@ -1,4 +1,5 @@
 #include "Parallel/StdMutex.hpp"
+#include "Log/Log.hpp"
 
 using namespace Eternal::Parallel;
 

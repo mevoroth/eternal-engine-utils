@@ -45,6 +45,7 @@ namespace Eternal
 				OPTICK_FRAME(Arguments.Name.c_str());
 				Arguments.WorkerConditionVariableMutex->Lock();
 				Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
+				Arguments.WorkerConditionVariableMutex->Unlock();
 
 				if (Arguments.WorkerTask)
 				{
@@ -74,6 +75,7 @@ namespace Eternal
 				{
 					Arguments.WorkerConditionVariableMutex->Lock();
 					Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
+					Arguments.WorkerConditionVariableMutex->Unlock();
 				}
 
 				Arguments.WorkerExecuting->Store(1);

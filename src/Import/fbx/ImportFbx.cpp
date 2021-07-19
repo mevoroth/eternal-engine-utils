@@ -65,7 +65,7 @@ namespace Eternal
 				}
 			}
 
-			OutMeshPayload.MeshObject = new GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>();
+			OutMeshPayload.LoadedMesh = new GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>();
 
 			FbxScene* Scene = FbxScene::Create(_SdkManager, "scene");
 			_FbxImporter->Import(Scene);
@@ -74,7 +74,7 @@ namespace Eternal
 			Box.SetMin(Vector3(std::numeric_limits<float>::infinity()));
 			Box.SetMax(Vector3(-std::numeric_limits<float>::infinity()));
 
-			_ImportNode(Scene->GetRootNode(), *OutMeshPayload.MeshObject, Box, OutMeshPayload);
+			_ImportNode(Scene->GetRootNode(), *OutMeshPayload.LoadedMesh, Box, OutMeshPayload);
 
 			GenericMesh<PositionColorVertex, uint16_t>* BoundingBoxMesh = new GenericMesh<PositionColorVertex, uint16_t>();
 			PositionColorVertex BoundingBoxVertex[] = {

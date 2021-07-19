@@ -4,7 +4,7 @@
 
 #include "Mesh/GenericMesh.hpp"
 #include "Mesh/BoundingBox.hpp"
-#include "Resources/MeshPayload.hpp"
+#include "Resources/Payload.hpp"
 
 namespace Eternal
 {
