@@ -17,7 +17,7 @@ namespace Eternal
 	}
 	namespace Core
 	{
-		class System;
+		class MeshComponent;
 	}
 
 	namespace Resources
@@ -25,6 +25,7 @@ namespace Eternal
 		using namespace std;
 		using namespace Eternal::Parallel;
 		using namespace Eternal::FileSystem;
+		using namespace Eternal::Core;
 
 		enum class AssetType
 		{
@@ -39,7 +40,7 @@ namespace Eternal
 
 		struct StreamingLoader
 		{
-			virtual void LoadPayload(_In_ const StreamingRequest& InRequest, _Out_ Payload*& OutPayload) const = 0;
+			virtual void LoadPayload(_In_ const StreamingRequest* InRequest, _Out_ Payload*& OutPayload) const = 0;
 			virtual void DestroyPayloadLoader() = 0;
 		};
 
@@ -56,12 +57,12 @@ namespace Eternal
 			}
 		};
 
-		using RequestQueueType = array<vector<StreamingRequest>, static_cast<int32_t>(AssetType::ASSET_TYPE_COUNT)>;
+		using RequestQueueType = array<vector<StreamingRequest*>, static_cast<int32_t>(AssetType::ASSET_TYPE_COUNT)>;
 		using PayloadQueueType = array<vector<Payload*>, static_cast<int32_t>(AssetType::ASSET_TYPE_COUNT)>;
 
 		struct Payload
 		{
-			void Add(_In_ const StreamingRequest& InRequest);
+			void Add(_In_ StreamingRequest* InRequest);
 			
 			template<typename PayloadFunctor>
 			void Process(_In_ PayloadFunctor PayloadFunction)
@@ -82,21 +83,6 @@ namespace Eternal
 			
 		};
 
-		struct LevelRequest : public StreamingRequest
-		{
-			LevelRequest(_In_ const string& InPath);
-		};
-
-		struct MeshRequest : public StreamingRequest
-		{
-			MeshRequest(_In_ const string& InPath);
-		};
-
-		struct TextureRequest : public StreamingRequest
-		{
-			TextureRequest(_In_ const string& InPath);
-		};
-
 		class Streaming
 		{
 		public:
@@ -108,7 +94,7 @@ namespace Eternal
 			void RegisterLoader(_In_ const AssetType& InAssetType, _In_ const StreamingLoader* InLoader);
 			const StreamingLoader* GetLoader(_In_ const AssetType& InAssetType);
 
-			void EnqueueRequest(_In_ const StreamingRequest& InRequest);
+			void EnqueueRequest(_In_ StreamingRequest* InRequest);
 			void CommitRequests();
 			void GatherPayloads();
 			template<typename PayloadFunctor>

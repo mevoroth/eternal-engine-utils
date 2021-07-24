@@ -17,12 +17,14 @@ namespace Eternal
 			_ImportFbx = nullptr;
 		}
 
-		void MeshLoader::LoadPayload(_In_ const StreamingRequest& InRequest, _Out_ Payload*& OutPayload) const
+		void MeshLoader::LoadPayload(_In_ const StreamingRequest* InRequest, _Out_ Payload*& OutPayload) const
 		{
 			ETERNAL_PROFILER(BASIC)();
-			OutPayload = new MeshPayload();
-			*OutPayload = std::move(_ImportFbx->Import(InRequest.RequestPath));
-			LogWrite(LogInfo, LogImport, string("Loaded [") + InRequest.RequestPath + "]");
+			const MeshRequest* InMeshRequest = static_cast<const MeshRequest*>(InRequest);
+
+			OutPayload = new MeshPayload(InMeshRequest);
+			*static_cast<MeshPayload*>(OutPayload) = std::move(_ImportFbx->Import(InRequest->RequestPath));
+			LogWrite(LogInfo, LogImport, string("Loaded [") + InRequest->RequestPath + "]");
 		}
 
 		void MeshLoader::DestroyPayloadLoader()

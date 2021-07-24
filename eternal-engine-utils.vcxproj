@@ -102,6 +102,7 @@
     <ClCompile Include="src\Parallel\Worker.cpp" />
     <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp" />
     <ClCompile Include="src\Resources\MeshLoader.cpp" />
+    <ClCompile Include="src\Resources\Payload.cpp" />
     <ClCompile Include="src\Resources\Streaming.cpp" />
     <ClCompile Include="src\Resources\TextureFactory.cpp" />
     <ClCompile Include="src\Resources\TextureLoader.cpp" />

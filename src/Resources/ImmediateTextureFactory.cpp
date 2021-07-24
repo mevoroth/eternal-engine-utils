@@ -77,7 +77,7 @@ namespace Eternal
 			//////////////////////////////////////////////////////////////////////////
 			// Map
 			MapRange UploadTextureMapRange(UploadBufferSize);
-			void* UploadTextureDataPtr = UploadTexture->Map(UploadTextureMapRange);
+			void* UploadTextureDataPtr = UploadTexture->Map<>(UploadTextureMapRange);
 			memcpy(UploadTextureDataPtr, InTextureData.TextureData, UploadBufferSize);
 			UploadTexture->Unmap(UploadTextureMapRange);
 			_Context.DelayedDelete(UploadTexture);

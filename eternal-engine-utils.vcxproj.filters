@@ -312,5 +312,8 @@
     <ClCompile Include="src\Resources\MeshLoader.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\Resources\Payload.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

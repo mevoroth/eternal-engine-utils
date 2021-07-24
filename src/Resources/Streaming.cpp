@@ -57,9 +57,9 @@ namespace Eternal
 			return _Loaders[static_cast<int32_t>(InAssetType)];
 		}
 
-		void Streaming::EnqueueRequest(_In_ const StreamingRequest& InRequest)
+		void Streaming::EnqueueRequest(_In_ StreamingRequest* InRequest)
 		{
-			_Enqueued[ConvertFileTypeToQueueIndex(InRequest.RequestType)].push_back(InRequest);
+			_Enqueued[ConvertFileTypeToQueueIndex(InRequest->RequestType)].push_back(InRequest);
 		}
 
 		StreamingQueue& Streaming::GetFinishedStreaming()
@@ -149,24 +149,9 @@ namespace Eternal
 		{
 		}
 
-		LevelRequest::LevelRequest(_In_ const string& InPath)
-			: StreamingRequest(InPath, FileType::FILE_TYPE_LEVELS)
+		void Payload::Add(_In_ StreamingRequest* InRequest)
 		{
-		}
-
-		MeshRequest::MeshRequest(_In_ const string& InPath)
-			: StreamingRequest(InPath, FileType::FILE_TYPE_MESHES)
-		{
-		}
-
-		TextureRequest::TextureRequest(_In_ const string& InPath)
-			: StreamingRequest(InPath, FileType::FILE_TYPE_TEXTURES)
-		{
-		}
-
-		void Payload::Add(_In_ const StreamingRequest& InRequest)
-		{
-			AdditionalRequests[ConvertFileTypeToQueueIndex(InRequest.RequestType)].push_back(InRequest);
+			AdditionalRequests[ConvertFileTypeToQueueIndex(InRequest->RequestType)].push_back(InRequest);
 		}
 	}
 }

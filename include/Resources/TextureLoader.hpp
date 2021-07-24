@@ -18,7 +18,7 @@ namespace Eternal
 			TextureLoader();
 			~TextureLoader();
 
-			virtual void LoadPayload(_In_ const StreamingRequest& InRequest, _Out_ Payload*& OutPayload) const override final;
+			virtual void LoadPayload(_In_ const StreamingRequest* InRequest, _Out_ Payload*& OutPayload) const override final;
 			virtual void DestroyPayloadLoader() override final;
 
 		private:

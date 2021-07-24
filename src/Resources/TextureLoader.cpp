@@ -21,19 +21,19 @@ namespace Eternal
 			_ImportTga = nullptr;
 		}
 
-		void TextureLoader::LoadPayload(_In_ const StreamingRequest& InRequest, _Out_ Payload*& OutPayload) const
+		void TextureLoader::LoadPayload(_In_ const StreamingRequest* InRequest, _Out_ Payload*& OutPayload) const
 		{
 			ETERNAL_PROFILER(BASIC)();
 			uint32_t Height	= 0;
 			uint32_t Width	= 0;
-			uint8_t* ImageData = _ImportTga->Import(InRequest.RequestPath, Height, Width);
+			uint8_t* ImageData = _ImportTga->Import(InRequest->RequestPath, Height, Width);
 
 			OutPayload = new TexturePayload();
 			TexturePayload& PayLoadIntermediate = *static_cast<TexturePayload*>(OutPayload);
 			PayLoadIntermediate.TextureData.Initialize(
 				ImageData, Width, Height, 1, 4
 			);
-			LogWrite(LogInfo, LogImport, string("Loaded [") + InRequest.RequestPath + "]");
+			LogWrite(LogInfo, LogImport, string("Loaded [") + InRequest->RequestPath + "]");
 		}
 
 		void TextureLoader::DestroyPayloadLoader()

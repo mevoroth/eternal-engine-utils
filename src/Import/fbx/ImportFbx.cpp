@@ -1,19 +1,9 @@
 #include "Import/fbx/ImportFbx.hpp"
 
-//#define VC_EXTRALEAN
-//#define WIN32_LEAN_AND_MEAN
-//#define WIN32_EXTRA_LEAN
-//#include <windows.h>
-//
-//#include <cstdlib>
-//
-//#include "UtilsSettings.hpp"
-//#include "File/FileFactory.hpp"
-
-//#include "Mesh/Bone.hpp"
-//#include "Mesh/BoundingBox.hpp"
 #include <cstdio>
 #include "GraphicData/MeshVertexFormat.hpp"
+#include "Transform/Transform.hpp"
+#include "Mesh/GenericMesh.hpp"
 #include "File/FilePath.hpp"
 #include "Log/Log.hpp"
 
@@ -24,13 +14,74 @@ namespace Eternal
 		using namespace Eternal::FileSystem;
 		using namespace Eternal::GraphicData;
 
-		ImportFbx* ImportFbx::_Instance = nullptr;
+		namespace ImportFbxPrivate
+		{
+			class Mesh
+			{
+			public:
+
+				void PushVertex(_In_ const PositionNormalTangentBinormalUVVertex& V)
+				{
+					_Vertices.push_back(V);
+				}
+
+				void PushTriangle(_In_ uint16_t V0, _In_ uint16_t V1, _In_ uint16_t V2)
+				{
+					_Indices.push_back(V0);
+					_Indices.push_back(V1);
+					_Indices.push_back(V2);
+				}
+
+				Transform& GetTransform()
+				{
+					return _Transform;
+				}
+				const Transform& GetTransform() const
+				{
+					return _Transform;
+				}
+
+				const Mesh& GetSubMesh(_In_ uint32_t Index) const
+				{
+					ETERNAL_ASSERT(Index < _SubMeshes.size());
+					return _SubMeshes[Index];
+				}
+
+				size_t GetSubMeshesCount() const
+				{
+					return _SubMeshes.size();
+				}
+
+				void PushMesh(_In_ Mesh SubMesh)
+				{
+					_SubMeshes.push_back(SubMesh);
+				}
+
+				bool IsValid() const { return _Vertices.size() > 0; }
+
+				void SetTexture(_In_ const TextureType& InTextureType, _In_ const string& InTextureKey)
+				{
+					_Maps[static_cast<uint32_t>(InTextureType)] = InTextureKey;
+				}
+
+				const vector<uint16_t>& GetIndices() const { return _Indices; }
+				const vector<PositionNormalTangentBinormalUVVertex>& GetVertices() const { return _Vertices; }
+				PositionNormalTangentBinormalUVVertex& GetVertex(uint32_t Index)
+				{
+					return _Vertices[Index];
+				}
+
+			protected:
+				vector<uint16_t>														_Indices;
+				vector<PositionNormalTangentBinormalUVVertex>							_Vertices;
+				vector<Mesh>															_SubMeshes;
+				Transform																_Transform;
+				array<string, static_cast<uint32_t>(TextureType::TEXTURE_TYPE_COUNT)>	_Maps;
+			};
+		}
 
 		ImportFbx::ImportFbx()
 		{
-			ETERNAL_ASSERT(!_Instance);
-			_Instance = this;
-
 			_SdkManager = FbxManager::Create();
 			_Settings = FbxIOSettings::Create(_SdkManager, IOSROOT);
 
@@ -39,12 +90,6 @@ namespace Eternal
 
 			LogWrite(LogWarning, LogImport, "[ImportFbx::ImportFbx]UV.y has been inversed!");
 			LogWrite(LogWarning, LogImport, "[ImportFbx::ImportFbx]Pos.w = 1.f!");
-		}
-
-		ImportFbx* ImportFbx::Get()
-		{
-			ETERNAL_ASSERT(_Instance);
-			return _Instance;
 		}
 
 		MeshPayload ImportFbx::Import(_In_ const std::string& InPath)
@@ -65,69 +110,106 @@ namespace Eternal
 				}
 			}
 
-			OutMeshPayload.LoadedMesh = new GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>();
-
-			FbxScene* Scene = FbxScene::Create(_SdkManager, "scene");
-			_FbxImporter->Import(Scene);
+			ImportFbxPrivate::Mesh IntermediateMesh;
 
 			BoundingBox Box;
 			Box.SetMin(Vector3(std::numeric_limits<float>::infinity()));
 			Box.SetMax(Vector3(-std::numeric_limits<float>::infinity()));
 
-			_ImportNode(Scene->GetRootNode(), *OutMeshPayload.LoadedMesh, Box, OutMeshPayload);
+			FbxScene* Scene = FbxScene::Create(_SdkManager, "scene");
+			_FbxImporter->Import(Scene);
 
-			GenericMesh<PositionColorVertex, uint16_t>* BoundingBoxMesh = new GenericMesh<PositionColorVertex, uint16_t>();
-			PositionColorVertex BoundingBoxVertex[] = {
-				{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0x000000FF },
-				{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0x0000FFFF },
-				{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0x00FF00FF },
-				{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0x00FFFFFF },
-				{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0xFF0000FF },
-				{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0xFF00FFFF },
-				{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0xFFFF00FF },
-				{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0xFFFFFFFF },
-			};
-			for (int BoundingBoxVertexIndex = 0; BoundingBoxVertexIndex < ETERNAL_ARRAYSIZE(BoundingBoxVertex); ++BoundingBoxVertexIndex)
-				BoundingBoxMesh->PushVertex(BoundingBoxVertex[BoundingBoxVertexIndex]);
-
-			// -X
-			BoundingBoxMesh->PushTriangle(2, 0, 3);
-			BoundingBoxMesh->PushTriangle(0, 1, 3);
-
-			// +X
-			BoundingBoxMesh->PushTriangle(4, 6, 5);
-			BoundingBoxMesh->PushTriangle(6, 7, 5);
-	
-			// -Y
-			BoundingBoxMesh->PushTriangle(0, 4, 1);
-			BoundingBoxMesh->PushTriangle(4, 5, 1);
-
-			// +Y
-			BoundingBoxMesh->PushTriangle(6, 2, 7);
-			BoundingBoxMesh->PushTriangle(2, 3, 7);
-
-			// -Z
-			BoundingBoxMesh->PushTriangle(2, 6, 0);
-			BoundingBoxMesh->PushTriangle(6, 4, 0);
-
-			// +Z
-			BoundingBoxMesh->PushTriangle(1, 5, 3);
-			BoundingBoxMesh->PushTriangle(5, 7, 3);
-
-			OutMeshPayload.BoundingBox = BoundingBoxMesh;
+			_ImportNode(Scene->GetRootNode(), IntermediateMesh, Box, OutMeshPayload);
 
 			Scene->Destroy(true);
+
+			//_Flatten_Combine(IntermediateMesh, OutMeshPayload);
+			_Flatten_Split(IntermediateMesh, OutMeshPayload);
+
+			GenericMesh<PositionColorVertex>* BoundingBoxMesh = new GenericMesh<PositionColorVertex>();
+			BoundingBoxMesh->Add(
+				{
+					2, 0, 3,	0, 1, 3, // -X
+					4, 6, 5,	6, 7, 5, // +X
+					0, 4, 1,	4, 5, 1, // -Y
+					6, 2, 7,	2, 3, 7, // +Y
+					2, 6, 0,	6, 4, 0, // -Z
+					1, 5, 3,	5, 7, 3  // +Z
+				},
+				{
+					{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0x000000FF },
+					{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0x0000FFFF },
+					{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0x00FF00FF },
+					{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0x00FFFFFF },
+					{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0xFF0000FF },
+					{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0xFF00FFFF },
+					{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0xFFFF00FF },
+					{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0xFFFFFFFF },
+				},
+				IntermediateMesh.GetTransform().GetModelMatrix()
+			);
+
+			OutMeshPayload.BoundingBox = BoundingBoxMesh;
 
 			return OutMeshPayload;
 		}
 
-		void ImportFbx::_ImportPoses(_In_ FbxScene* Scene)
+		struct MeshNodeContext
 		{
-			int PoseCount = Scene->GetPoseCount();
-			for (int PoseIndex = 0; PoseIndex < PoseCount; ++PoseIndex)
+			Matrix4x4 WorldTransformMatrix = Matrix4x4::Identity;
+		};
+
+		static void ImportFbx_Flatten_Combine_Node(_In_ const ImportFbxPrivate::Mesh& InMesh, _In_ const MeshNodeContext& InMeshNodeContext, _Inout_ MeshPayload& InOutMeshPayload)
+		{
+			MeshNodeContext CurrentNodeContext =
 			{
-				FbxPose* Pose = Scene->GetPose(PoseIndex);
+				InMeshNodeContext.WorldTransformMatrix * InMesh.GetTransform().GetModelMatrix()
+			};
+
+			if (InMesh.IsValid())
+			{
+				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
+
+				uint32_t FlattenedVerticesCount = InOutMesh->GetVerticesCount();
+				ETERNAL_ASSERT((InMesh.GetVertices().size() + FlattenedVerticesCount) < InOutMesh->GetIndicesMaxCount());
+				InOutMesh->AddMerge(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix);
 			}
+
+			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
+				ImportFbx_Flatten_Combine_Node(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
+		}
+
+		void ImportFbx::_Flatten_Combine(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
+		{
+			MeshNodeContext RootNodeContext;
+			InOutMeshPayload.LoadedMesh = new MeshCollection();
+			InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
+			ImportFbx_Flatten_Combine_Node(InMesh, RootNodeContext, InOutMeshPayload);
+		}
+
+		static void ImportFbx_Flatten_Split_Node(_In_ const ImportFbxPrivate::Mesh& InMesh, _In_ const MeshNodeContext& InMeshNodeContext, _Inout_ MeshPayload& InOutMeshPayload)
+		{
+			MeshNodeContext CurrentNodeContext =
+			{
+				InMeshNodeContext.WorldTransformMatrix * InMesh.GetTransform().GetModelMatrix()
+			};
+
+			if (InMesh.IsValid())
+			{
+				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
+				InOutMesh->Add(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix);
+			}
+
+			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
+				ImportFbx_Flatten_Split_Node(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
+		}
+
+		void ImportFbx::_Flatten_Split(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
+		{
+			MeshNodeContext RootNodeContext;
+			InOutMeshPayload.LoadedMesh = new MeshCollection();
+			InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
+			ImportFbx_Flatten_Split_Node(InMesh, RootNodeContext, InOutMeshPayload);
 		}
 
 		//void ImportFbx::_ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture)
@@ -147,12 +229,8 @@ namespace Eternal
 		//	}
 		//}
 
-		void ImportFbx::_ImportNode(_In_ const FbxNode* InNode, _Out_ Mesh& OutMesh, _Inout_ BoundingBox& InOutBoundingBox, _Inout_ MeshPayload& InOutMeshPayload)
+		void ImportFbx::_ImportNode(_In_ const FbxNode* InNode, _Inout_ ImportFbxPrivate::Mesh& InOutMesh, _Inout_ BoundingBox& InOutBoundingBox, _Inout_ MeshPayload& InOutMeshPayload)
 		{
-			GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>& OutGenericMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>&>(OutMesh);
-
-			OutGenericMesh.SetName(InNode->GetName());
-
 			const FbxNodeAttribute* Attribute = InNode->GetNodeAttribute();
 			if (Attribute)
 			{
@@ -185,7 +263,7 @@ namespace Eternal
 						InOutBoundingBox.SetMin(NewMin);
 						InOutBoundingBox.SetMax(NewMax);
 
-						OutGenericMesh.PushVertex(Vertex);
+						InOutMesh.PushVertex(Vertex);
 					}
 
 					int VertexId = 0;
@@ -193,14 +271,14 @@ namespace Eternal
 					for (int PolygonIndex = 0, PolygonCount = InFbxMesh->GetPolygonCount(); PolygonIndex < PolygonCount; ++PolygonIndex)
 					{
 						int PolygonSize = InFbxMesh->GetPolygonSize(PolygonIndex);
-						OutGenericMesh.PushTriangle(
+						InOutMesh.PushTriangle(
 							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 0)),
 							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 1)),
 							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 2))
 						);
 						if (PolygonSize == 4) // Quad
 						{
-							OutGenericMesh.PushTriangle(
+							InOutMesh.PushTriangle(
 								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 0)),
 								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 2)),
 								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 3))
@@ -212,13 +290,13 @@ namespace Eternal
 						{
 							int ControlPointIndex = InFbxMesh->GetPolygonVertex(PolygonIndex, PositionInPolygon);
 
-							_GetNormal(InFbxMesh, ControlPointIndex, VertexId, OutGenericMesh);
-							_GetTangent(InFbxMesh, ControlPointIndex, VertexId, OutGenericMesh);
-							_GetBinormal(InFbxMesh, ControlPointIndex, VertexId, OutGenericMesh);
+							_ImportNode_GetNormal(InFbxMesh, ControlPointIndex, VertexId, InOutMesh);
+							_ImportNode_GetTangent(InFbxMesh, ControlPointIndex, VertexId, InOutMesh);
+							_ImportNode_GetBinormal(InFbxMesh, ControlPointIndex, VertexId, InOutMesh);
 
 							++VertexId;
 						}
-						_GetUV(InFbxMesh, PolygonIndex, OutGenericMesh);
+						_ImportNode_GetUV(InFbxMesh, PolygonIndex, InOutMesh);
 					}
 
 					//_ImportSkeletal(InFbxMesh);
@@ -257,7 +335,7 @@ namespace Eternal
 											if (PrefixEnd)
 												*PrefixEnd = 0;
 
-											auto RequestTexture = [&FileName, &Extension, &OutMesh, &InOutMeshPayload](_In_ const char* MapName, _In_ const TextureType& InTextureType)
+											auto RequestTexture = [&FileName, &Extension, &InOutMesh, &InOutMeshPayload](_In_ const char* MapName, _In_ const TextureType& InTextureType)
 											{
 												char TextureKey[1024];
 												char TexturePath[1024];
@@ -269,7 +347,7 @@ namespace Eternal
 												if (FilePath::Find(TexturePath, FileType::FILE_TYPE_TEXTURES).size() > 0)
 												{
 													InOutMeshPayload.TextureRequests.push_back(TextureRequest);
-													OutMesh.SetTexture(InTextureType, TextureKey);
+													InOutMesh.SetTexture(InTextureType, TextureKey);
 												}
 												else
 												{
@@ -296,7 +374,7 @@ namespace Eternal
 				//} break;
 				}
 			}
-			OutGenericMesh.GetTransform().Translate(
+			InOutMesh.GetTransform().Translate(
 				Vector3(
 					static_cast<float>(InNode->LclTranslation.Get()[0]),
 					static_cast<float>(InNode->LclTranslation.Get()[1]),
@@ -304,7 +382,7 @@ namespace Eternal
 				)
 			);
 
-			OutGenericMesh.GetTransform().Rotate(
+			InOutMesh.GetTransform().Rotate(
 				Vector3(
 					static_cast<float>(InNode->LclRotation.Get()[0]),
 					static_cast<float>(InNode->LclRotation.Get()[1]),
@@ -312,7 +390,7 @@ namespace Eternal
 				)
 			);
 
-			OutGenericMesh.GetTransform().Scale(
+			InOutMesh.GetTransform().Scale(
 				Vector3(
 					static_cast<float>(InNode->LclScaling.Get()[0]),
 					static_cast<float>(InNode->LclScaling.Get()[1]),
@@ -322,17 +400,16 @@ namespace Eternal
 
 			for (int NodeChildIndex = 0; NodeChildIndex < InNode->GetChildCount(); ++NodeChildIndex)
 			{
-				Mesh* SubMesh = new GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>();
+				ImportFbxPrivate::Mesh SubMesh;
 		
-				_ImportNode(InNode->GetChild(NodeChildIndex), *SubMesh, InOutBoundingBox, InOutMeshPayload);
+				_ImportNode(InNode->GetChild(NodeChildIndex), SubMesh, InOutBoundingBox, InOutMeshPayload);
 		
-				OutGenericMesh.PushMesh(SubMesh);
+				InOutMesh.PushMesh(SubMesh);
 			}
 		}
 
-		void ImportFbx::_GetUV(_In_ FbxMesh * InMesh, _In_ uint32_t InPolygonIndex, _Inout_ Mesh& OutMesh)
+		void ImportFbx::_ImportNode_GetUV(_In_ FbxMesh * InMesh, _In_ uint32_t InPolygonIndex, _Inout_ ImportFbxPrivate::Mesh& InOutMesh)
 		{
-			GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>& OutGenericMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>&>(OutMesh);
 			for (uint32_t VertexIndex = 0, VerticesCount = InMesh->GetPolygonSize(InPolygonIndex); VertexIndex < VerticesCount; ++VertexIndex)
 			{
 				uint32_t Vertex = InMesh->GetPolygonVertex(InPolygonIndex, VertexIndex);
@@ -348,16 +425,15 @@ namespace Eternal
 				}
 				//ETERNAL_BREAK();
 
-				OutGenericMesh.GetVertex(Vertex).UV = Vector2(
+				InOutMesh.GetVertex(Vertex).UV = Vector2(
 					static_cast<float>(UV[0]),
 					static_cast<float>(1.0f - UV[1])
 				);
 			}
 		}
 
-		void ImportFbx::_GetNormal(_In_ FbxMesh * InMesh, _In_ int InControlPointIndex, _In_ int VertexIndex, _Inout_ Mesh& OutMesh)
+		void ImportFbx::_ImportNode_GetNormal(_In_ FbxMesh * InMesh, _In_ int InControlPointIndex, _In_ int VertexIndex, _Inout_ ImportFbxPrivate::Mesh& InOutMesh)
 		{
-			GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>& OutGenericMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>&>(OutMesh);
 			for (int NormalIndex = 0, NormalCount = InMesh->GetElementNormalCount(); NormalIndex < NormalCount; ++NormalIndex)
 			{
 				FbxGeometryElementNormal* NormalElement = InMesh->GetElementNormal(NormalIndex);
@@ -389,7 +465,7 @@ namespace Eternal
 						ETERNAL_BREAK();
 					}
 				}
-				OutGenericMesh.GetVertex(InControlPointIndex).Normal += Vector3(
+				InOutMesh.GetVertex(InControlPointIndex).Normal = Vector3(
 					static_cast<float>(Normal[0]),
 					static_cast<float>(Normal[1]),
 					static_cast<float>(Normal[2])
@@ -399,9 +475,8 @@ namespace Eternal
 			}
 		}
 
-		void ImportFbx::_GetTangent(_In_ FbxMesh* InMesh, _In_ int InControlPointIndex, _In_ int InVertexIndex, _Inout_ Mesh& OutMesh)
+		void ImportFbx::_ImportNode_GetTangent(_In_ FbxMesh* InMesh, _In_ int InControlPointIndex, _In_ int InVertexIndex, _Inout_ ImportFbxPrivate::Mesh& InOutMesh)
 		{
-			GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>& OutGenericMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>&>(OutMesh);
 			for (int TangentIndex = 0, TangentCount = InMesh->GetElementTangentCount(); TangentIndex < TangentCount; ++TangentIndex)
 			{
 				FbxGeometryElementTangent* TangentElement = InMesh->GetElementTangent(TangentIndex);
@@ -422,7 +497,7 @@ namespace Eternal
 					default:
 						ETERNAL_BREAK();
 					}
-					OutGenericMesh.GetVertex(InControlPointIndex).Tangent = Vector3(
+					InOutMesh.GetVertex(InControlPointIndex).Tangent = Vector3(
 						static_cast<float>(Tangent[0]),
 						static_cast<float>(Tangent[1]),
 						static_cast<float>(Tangent[2])
@@ -432,9 +507,8 @@ namespace Eternal
 			}
 		}
 
-		void ImportFbx::_GetBinormal(_In_ FbxMesh* InMesh, _In_ int InControlPointIndex, _In_ int InVertexIndex, _Inout_ Mesh& OutMesh)
+		void ImportFbx::_ImportNode_GetBinormal(_In_ FbxMesh* InMesh, _In_ int InControlPointIndex, _In_ int InVertexIndex, _Inout_ ImportFbxPrivate::Mesh& InOutMesh)
 		{
-			GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>& OutGenericMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex, uint16_t>&>(OutMesh);
 			for (int BinormalIndex = 0, BinormalCount = InMesh->GetElementBinormalCount(); BinormalIndex < BinormalCount; ++BinormalIndex)
 			{
 				FbxGeometryElementBinormal* BinormalElement = InMesh->GetElementBinormal(BinormalIndex);
@@ -455,7 +529,7 @@ namespace Eternal
 					default:
 						ETERNAL_BREAK();
 					}
-					OutGenericMesh.GetVertex(InControlPointIndex).Binormal = Vector3(
+					InOutMesh.GetVertex(InControlPointIndex).Binormal = Vector3(
 						static_cast<float>(Binormal[0]),
 						static_cast<float>(Binormal[1]),
 						static_cast<float>(Binormal[2])
@@ -465,11 +539,20 @@ namespace Eternal
 			}
 		}
 
-		void ImportFbx::_ImportSkeletal(_In_ FbxMesh* MeshObj)
+		void ImportFbx::_ImportPoses(_In_ FbxScene* Scene)
 		{
-			bool HasVertexCache = MeshObj->GetDeformerCount(FbxDeformer::eVertexCache) && ((FbxVertexCacheDeformer*)MeshObj->GetDeformer(0, FbxDeformer::eVertexCache))->Active.Get();
-			bool HasShape = MeshObj->GetShapeCount() > 0;
-			bool HasDeformation = MeshObj->GetDeformerCount(FbxDeformer::eSkin) > 0;
+			int PoseCount = Scene->GetPoseCount();
+			for (int PoseIndex = 0; PoseIndex < PoseCount; ++PoseIndex)
+			{
+				FbxPose* Pose = Scene->GetPose(PoseIndex);
+			}
+		}
+
+		void ImportFbx::_ImportSkeletal(_In_ FbxMesh* InMesh)
+		{
+			bool HasVertexCache = InMesh->GetDeformerCount(FbxDeformer::eVertexCache) && ((FbxVertexCacheDeformer*)InMesh->GetDeformer(0, FbxDeformer::eVertexCache))->Active.Get();
+			bool HasShape = InMesh->GetShapeCount() > 0;
+			bool HasDeformation = InMesh->GetDeformerCount(FbxDeformer::eSkin) > 0;
 
 
 			if (HasVertexCache)
@@ -480,17 +563,17 @@ namespace Eternal
 			{
 				if (HasShape)
 				{
-					_GetBlendShape(MeshObj);
+					_GetBlendShape(InMesh);
 				}
-				_GetSkinning(MeshObj);
+				_GetSkinning(InMesh);
 			}
 		}
 
-		void ImportFbx::_GetBlendShape(_In_ FbxMesh* MeshObj)
+		void ImportFbx::_GetBlendShape(_In_ FbxMesh* InMesh)
 		{
 		}
 
-		void ImportFbx::_GetSkinning(_In_ FbxMesh* MeshObj)
+		void ImportFbx::_GetSkinning(_In_ FbxMesh* InMesh)
 		{
 			return;
 			//int DeformerCount = MeshObj->GetDeformerCount(FbxDeformer::eSkin);
