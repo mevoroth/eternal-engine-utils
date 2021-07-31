@@ -6,11 +6,6 @@ namespace Eternal
 {
 	namespace Resources
 	{
-		MeshPayload::MeshPayload(_In_ const MeshRequest* InMeshRequest)
-		{
-			ComponentsToUpdate = std::move(InMeshRequest->ComponentsToUpdate);
-		}
-
 		MeshRequest::MeshRequest(_In_ const string& InPath)
 			: StreamingRequest(InPath, FileType::FILE_TYPE_MESHES)
 		{

@@ -22,8 +22,9 @@ namespace Eternal
 			ETERNAL_PROFILER(BASIC)();
 			const MeshRequest* InMeshRequest = static_cast<const MeshRequest*>(InRequest);
 
-			OutPayload = new MeshPayload(InMeshRequest);
+			OutPayload = new MeshPayload();
 			*static_cast<MeshPayload*>(OutPayload) = std::move(_ImportFbx->Import(InRequest->RequestPath));
+			static_cast<MeshPayload*>(OutPayload)->ComponentsToUpdate = std::move(InMeshRequest->ComponentsToUpdate);
 			LogWrite(LogInfo, LogImport, string("Loaded [") + InRequest->RequestPath + "]");
 		}
 

@@ -175,7 +175,7 @@ namespace Eternal
 		public:
 
 			static constexpr StorageType FullChunk = StorageType(0ull);
-			static constexpr StorageType EmptyChunk = StorageType(~0ull);
+			static constexpr StorageType EmptyChunk = static_cast<StorageType>(~0ull);
 
 			static constexpr size_t ChunkBitCount = sizeof(StorageType) * 8;
 

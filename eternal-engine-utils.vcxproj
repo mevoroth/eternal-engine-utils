@@ -27,6 +27,7 @@
     <ClInclude Include="include\Container\RingBuffer.hpp" />
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\DebugTools\Debug.hpp" />
+    <ClInclude Include="include\Event\EventSender.h" />
     <ClInclude Include="include\File\CFile.hpp" />
     <ClInclude Include="include\File\File.hpp" />
     <ClInclude Include="include\File\FileFactory.hpp" />
@@ -218,6 +219,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4189;4100</DisableSpecificWarnings>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

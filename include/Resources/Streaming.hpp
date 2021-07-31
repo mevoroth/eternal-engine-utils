@@ -101,7 +101,7 @@ namespace Eternal
 			void ProcessGathered(_In_ const AssetType& InAssetType, _In_ PayloadFunctor PayloadFunction)
 			{
 				vector<Payload*>& Payloads = _Gathered[static_cast<int32_t>(InAssetType)];
-				for (uint32_t PayloadIndex = 0, PayloadCount = Payloads.size(); PayloadIndex < PayloadCount; ++PayloadIndex)
+				for (uint32_t PayloadIndex = 0; PayloadIndex < Payloads.size(); ++PayloadIndex)
 					Payloads[PayloadIndex]->Process(PayloadFunction);
 				Payloads.clear();
 			}

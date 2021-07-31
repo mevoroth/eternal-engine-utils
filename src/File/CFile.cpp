@@ -32,7 +32,7 @@ namespace Eternal
 			case WRITE:
 				Flags = "wb";
 				break;
-			case READ | WRITE:
+			case READ_WRITE:
 				Flags = "r+b";
 				break;
 

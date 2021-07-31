@@ -146,7 +146,7 @@ namespace Eternal
 					{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0xFFFF00FF },
 					{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0xFFFFFFFF },
 				},
-				IntermediateMesh.GetTransform().GetModelMatrix()
+				IntermediateMesh.GetTransform().GetViewToWorld()
 			);
 
 			OutMeshPayload.BoundingBox = BoundingBoxMesh;
@@ -163,7 +163,7 @@ namespace Eternal
 		{
 			MeshNodeContext CurrentNodeContext =
 			{
-				InMeshNodeContext.WorldTransformMatrix * InMesh.GetTransform().GetModelMatrix()
+				InMeshNodeContext.WorldTransformMatrix * InMesh.GetTransform().GetViewToWorld()
 			};
 
 			if (InMesh.IsValid())
@@ -191,7 +191,7 @@ namespace Eternal
 		{
 			MeshNodeContext CurrentNodeContext =
 			{
-				InMeshNodeContext.WorldTransformMatrix * InMesh.GetTransform().GetModelMatrix()
+				InMeshNodeContext.WorldTransformMatrix * InMesh.GetTransform().GetViewToWorld()
 			};
 
 			if (InMesh.IsValid())

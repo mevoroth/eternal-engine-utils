@@ -25,8 +25,6 @@ namespace Eternal
 
 		struct MeshPayload : public Payload
 		{
-			MeshPayload(_In_ const MeshRequest* InMeshRequest);
-
 			MeshCollection*					LoadedMesh	= nullptr;
 			Mesh*							BoundingBox	= nullptr;
 			vector<TextureFactoryRequest>	TextureRequests;

@@ -9,8 +9,9 @@ namespace Eternal
 		public:
 			enum OpenMode
 			{
-				READ = 0x1,
-				WRITE = 0x2
+				READ		= 0x1,
+				WRITE		= 0x2,
+				READ_WRITE	= READ | WRITE
 			};
 			enum Origin
 			{

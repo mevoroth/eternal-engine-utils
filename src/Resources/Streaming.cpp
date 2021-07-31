@@ -14,7 +14,7 @@ namespace Eternal
 	{
 		static constexpr uint32_t QUEUE_INDICES[] =
 		{
-			-1,
+			~0u,
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_LEVEL),
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_TEXTURE),
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_MESH)

@@ -175,9 +175,6 @@
     <ClInclude Include="include\Resources\ImmediateTextureFactory.hpp">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="include\DebugTools\Debug.hpp">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="include\Bit\BitField.hpp">
       <Filter>Container</Filter>
     </ClInclude>
@@ -210,6 +207,12 @@
     </ClInclude>
     <ClInclude Include="include\Resources\MeshLoader.hpp">
       <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Event\EventSender.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DebugTools\Debug.hpp">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,9 +291,6 @@
     <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
-    <ClCompile Include="src\DebugTools\Debug.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\Bit\BitField.cpp">
       <Filter>Container</Filter>
     </ClCompile>
@@ -314,6 +314,9 @@
     </ClCompile>
     <ClCompile Include="src\Resources\Payload.cpp">
       <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugTools\Debug.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
