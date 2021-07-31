@@ -59,7 +59,7 @@ namespace Eternal
 			//////////////////////////////////////////////////////////////////////////
 			// CPU Buffer
 			std::string UploadBufferName = "AnonymousTextureBuffer";
-			const uint32_t UploadBufferSize = InTextureData.Width * InTextureData.Height * InTextureData.DepthOrArraySize * InTextureData.Stride;
+			const uint32_t UploadBufferSize = InTextureData.Width * InTextureData.Height * InTextureData.DepthOrArraySize;
 			//TextureResourceCreateInformation UploadBufferTextureInformation(
 			BufferResourceCreateInformation UploadBufferTextureInformation(
 				_Context.GetDevice(),
@@ -67,6 +67,7 @@ namespace Eternal
 				BufferCreateInformation(
 					Format::FORMAT_BGRA8888_UNORM,
 					BufferResourceUsage::BUFFER_RESOURCE_USAGE_COPY_READ,
+					InTextureData.Stride,
 					UploadBufferSize
 				),
 				ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD
