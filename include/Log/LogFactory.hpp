@@ -20,6 +20,6 @@ namespace Eternal
 		Log* CreateLog(_In_ const LogType& InLogType, _In_ const char* InSession = nullptr);
 		Log* CreateMultiChannelLog(_In_ const vector<LogType>& InLogTypes);
 
-		void DeleteLog(Log*& InLog);
+		void DestroyLog(_Inout_ Log*& InLog);
 	}
 }

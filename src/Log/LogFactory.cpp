@@ -30,10 +30,10 @@ namespace Eternal
 			return new MultiChannelLog(InLogTypes);
 		}
 
-		void DeleteLog(Log*& LogObj)
+		void DestroyLog(_Inout_ Log*& InLog)
 		{
-			delete LogObj;
-			LogObj = nullptr;
+			delete InLog;
+			InLog = nullptr;
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace Eternal
 		MultiChannelLog::~MultiChannelLog()
 		{
 			for (uint32_t ChannelIndex = 0; ChannelIndex < _Channels.size(); ++ChannelIndex)
-				DeleteLog(_Channels[ChannelIndex]);
+				DestroyLog(_Channels[ChannelIndex]);
 		}
 
 		void MultiChannelLog::Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage)
