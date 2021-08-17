@@ -37,6 +37,7 @@ namespace Eternal
 
 		struct StreamingRequest;
 		struct Payload;
+		class TextureFactory;
 
 		struct StreamingLoader
 		{
@@ -62,7 +63,7 @@ namespace Eternal
 
 		struct Payload
 		{
-			void Add(_In_ StreamingRequest* InRequest);
+			void AddRequest(_In_ StreamingRequest* InRequest);
 			
 			template<typename PayloadFunctor>
 			void Process(_In_ PayloadFunctor PayloadFunction)
@@ -80,7 +81,7 @@ namespace Eternal
 
 			RequestQueueType PendingRequests;
 			PayloadQueueType LoadedRequests;
-			
+			PayloadQueueType PendingDestroyedRequests;
 		};
 
 		class Streaming
@@ -88,7 +89,7 @@ namespace Eternal
 		public:
 			static constexpr uint32_t StreamingQueueCount = 2;
 
-			Streaming();
+			Streaming(_In_ TextureFactory& InTextureFactory);
 			~Streaming();
 
 			void RegisterLoader(_In_ const AssetType& InAssetType, _In_ const StreamingLoader* InLoader);
@@ -98,16 +99,17 @@ namespace Eternal
 			void CommitRequests();
 			void GatherPayloads();
 			template<typename PayloadFunctor>
-			void ProcessGathered(_In_ const AssetType& InAssetType, _In_ PayloadFunctor PayloadFunction)
+			void ProcessGathered(_In_ const AssetType& InAssetType, _Inout_ PayloadQueueType& InOutDelayedDestroyed, _In_ PayloadFunctor InPayloadFunction)
 			{
 				vector<Payload*>& Payloads = _Gathered[static_cast<int32_t>(InAssetType)];
 				for (uint32_t PayloadIndex = 0; PayloadIndex < Payloads.size(); ++PayloadIndex)
-					Payloads[PayloadIndex]->Process(PayloadFunction);
-				Payloads.clear();
+					Payloads[PayloadIndex]->Process(InPayloadFunction);
+				std::swap(InOutDelayedDestroyed[static_cast<int32_t>(InAssetType)], Payloads);
 			}
 			StreamingQueue& GetFinishedStreaming();
 			StreamingQueue& GetPendingStreaming();
 			void AdvanceStreaming();
+			void Shutdown() { _Running = false; }
 
 		private:
 
@@ -120,6 +122,7 @@ namespace Eternal
 			Mutex*										_QueueMutex				= nullptr;
 			Mutex*										_SleepMutex				= nullptr;
 			ConditionVariable*							_SleepConditionVariable	= nullptr;
+			bool										_Running				= true;
 		};
 	}
 }

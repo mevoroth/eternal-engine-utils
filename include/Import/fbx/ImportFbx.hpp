@@ -31,7 +31,8 @@ namespace Eternal
 
 			//void _ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture);
 			void _Flatten_Combine(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload);
-			void _Flatten_Split(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload);
+			void _Flatten_Split_SingleMesh(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload);
+			void _Flatten_Split_MultipleMeshes(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload);
 
 			void _ImportNode(_In_ const FbxNode* InNode, _Inout_ ImportFbxPrivate::Mesh& InOutMesh, _Inout_ BoundingBox& InOutBoundingBox, _Inout_ MeshPayload& InOutMeshPayload);
 			void _ImportNode_GetUV(_In_ FbxMesh* InMesh, _In_ uint32_t PolygonIndex, _Inout_ ImportFbxPrivate::Mesh& InOutMesh);

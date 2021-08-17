@@ -3,6 +3,7 @@
 #include <cstdio>
 #include "GraphicData/MeshVertexFormat.hpp"
 #include "Transform/Transform.hpp"
+#include "Material/Material.hpp"
 #include "Mesh/GenericMesh.hpp"
 #include "File/FilePath.hpp"
 #include "Log/Log.hpp"
@@ -13,6 +14,7 @@ namespace Eternal
 	{
 		using namespace Eternal::FileSystem;
 		using namespace Eternal::GraphicData;
+		using namespace Eternal::Components;
 
 		namespace ImportFbxPrivate
 		{
@@ -57,12 +59,17 @@ namespace Eternal
 					_SubMeshes.push_back(SubMesh);
 				}
 
-				bool IsValid() const { return _Vertices.size() > 0; }
-
-				void SetTexture(_In_ const TextureType& InTextureType, _In_ const string& InTextureKey)
+				void SetMaterial(_In_ Components::Material* InMaterial)
 				{
-					_Maps[static_cast<uint32_t>(InTextureType)] = InTextureKey;
+					_Material = InMaterial;
 				}
+
+				Components::Material* GetMaterial() const
+				{
+					return _Material;
+				}
+
+				bool IsValid() const { return _Vertices.size() > 0; }
 
 				const vector<uint16_t>& GetIndices() const { return _Indices; }
 				const vector<PositionNormalTangentBinormalUVVertex>& GetVertices() const { return _Vertices; }
@@ -72,11 +79,11 @@ namespace Eternal
 				}
 
 			protected:
-				vector<uint16_t>														_Indices;
-				vector<PositionNormalTangentBinormalUVVertex>							_Vertices;
-				vector<Mesh>															_SubMeshes;
-				Transform																_Transform;
-				array<string, static_cast<uint32_t>(TextureType::TEXTURE_TYPE_COUNT)>	_Maps;
+				vector<uint16_t>								_Indices;
+				vector<PositionNormalTangentBinormalUVVertex>	_Vertices;
+				vector<Mesh>									_SubMeshes;
+				Transform										_Transform;
+				Components::Material*							_Material = nullptr;
 			};
 		}
 
@@ -124,10 +131,11 @@ namespace Eternal
 			Scene->Destroy(true);
 
 			//_Flatten_Combine(IntermediateMesh, OutMeshPayload);
-			_Flatten_Split(IntermediateMesh, OutMeshPayload);
+			_Flatten_Split_SingleMesh(IntermediateMesh, OutMeshPayload);
+			//_Flatten_Split_MultipleMeshes(IntermediateMesh, OutMeshPayload);
 
 			GenericMesh<PositionColorVertex>* BoundingBoxMesh = new GenericMesh<PositionColorVertex>();
-			BoundingBoxMesh->Add(
+			BoundingBoxMesh->AddMesh(
 				{
 					2, 0, 3,	0, 1, 3, // -X
 					4, 6, 5,	6, 7, 5, // +X
@@ -146,7 +154,8 @@ namespace Eternal
 					{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0xFFFF00FF },
 					{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0xFFFFFFFF },
 				},
-				IntermediateMesh.GetTransform().GetViewToWorld()
+				IntermediateMesh.GetTransform().GetViewToWorld(),
+				nullptr
 			);
 
 			OutMeshPayload.BoundingBox = BoundingBoxMesh;
@@ -172,7 +181,7 @@ namespace Eternal
 
 				uint32_t FlattenedVerticesCount = InOutMesh->GetVerticesCount();
 				ETERNAL_ASSERT((InMesh.GetVertices().size() + FlattenedVerticesCount) < InOutMesh->GetIndicesMaxCount());
-				InOutMesh->AddMerge(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix);
+				InOutMesh->AddMergeMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial());
 			}
 
 			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
@@ -187,6 +196,7 @@ namespace Eternal
 			ImportFbx_Flatten_Combine_Node(InMesh, RootNodeContext, InOutMeshPayload);
 		}
 
+		template<bool IsMultipleMeshes = false>
 		static void ImportFbx_Flatten_Split_Node(_In_ const ImportFbxPrivate::Mesh& InMesh, _In_ const MeshNodeContext& InMeshNodeContext, _Inout_ MeshPayload& InOutMeshPayload)
 		{
 			MeshNodeContext CurrentNodeContext =
@@ -196,20 +206,29 @@ namespace Eternal
 
 			if (InMesh.IsValid())
 			{
+				if (IsMultipleMeshes)
+					InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
 				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
-				InOutMesh->Add(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix);
+				InOutMesh->AddMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial());
 			}
 
 			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
-				ImportFbx_Flatten_Split_Node(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
+				ImportFbx_Flatten_Split_Node<IsMultipleMeshes>(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
 		}
 
-		void ImportFbx::_Flatten_Split(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
+		void ImportFbx::_Flatten_Split_SingleMesh(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
 		{
 			MeshNodeContext RootNodeContext;
 			InOutMeshPayload.LoadedMesh = new MeshCollection();
 			InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
 			ImportFbx_Flatten_Split_Node(InMesh, RootNodeContext, InOutMeshPayload);
+		}
+
+		void ImportFbx::_Flatten_Split_MultipleMeshes(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
+		{
+			MeshNodeContext RootNodeContext;
+			InOutMeshPayload.LoadedMesh = new MeshCollection();
+			ImportFbx_Flatten_Split_Node<true>(InMesh, RootNodeContext, InOutMeshPayload);
 		}
 
 		//void ImportFbx::_ImportTextureFromFBX(_In_ FbxSurfaceMaterial* SurfaceMaterial, _In_ const Channel& ChannelIndex, _In_ const char* TextureSuffix, _Out_ Texture*& OutTexture)
@@ -273,15 +292,15 @@ namespace Eternal
 						int PolygonSize = InFbxMesh->GetPolygonSize(PolygonIndex);
 						InOutMesh.PushTriangle(
 							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 0)),
-							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 1)),
-							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 2))
+							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 2)),
+							static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 1))
 						);
 						if (PolygonSize == 4) // Quad
 						{
 							InOutMesh.PushTriangle(
 								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 0)),
-								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 2)),
-								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 3))
+								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 3)),
+								static_cast<uint16_t>(InFbxMesh->GetPolygonVertex(PolygonIndex, 2))
 							);
 						}
 						ETERNAL_ASSERT(PolygonSize <= 4);
@@ -302,6 +321,11 @@ namespace Eternal
 					//_ImportSkeletal(InFbxMesh);
 
 					{
+						Components::Material* MeshMaterial = new Components::Material();
+						InOutMesh.SetMaterial(MeshMaterial);
+
+						bool MaterialIsInitialized = false;
+
 						int MaterialCount = InNode->GetSrcObjectCount<FbxSurfaceMaterial>();
 						ETERNAL_ASSERT(MaterialCount == 1);
 						if (InNode->GetSrcObjectCount<FbxSurfaceMaterial>() > 0)
@@ -335,7 +359,7 @@ namespace Eternal
 											if (PrefixEnd)
 												*PrefixEnd = 0;
 
-											auto RequestTexture = [&FileName, &Extension, &InOutMesh, &InOutMeshPayload](_In_ const char* MapName, _In_ const TextureType& InTextureType)
+											auto RequestTexture = [&FileName, &Extension, &InOutMesh, &InOutMeshPayload, MeshMaterial, &MaterialIsInitialized](_In_ const char* MapName, _In_ const TextureType& InTextureType)
 											{
 												char TextureKey[1024];
 												char TexturePath[1024];
@@ -343,20 +367,30 @@ namespace Eternal
 												sprintf_s(TextureKey, "%s_%s", FileName, MapName);
 												sprintf_s(TexturePath, "%s_%s%s", FileName, MapName, Extension);
 
-												TextureFactoryRequest TextureRequest(TextureKey, TexturePath);
-												if (FilePath::Find(TexturePath, FileType::FILE_TYPE_TEXTURES).size() > 0)
+												string TextureFullPath = FilePath::Find(TexturePath, FileType::FILE_TYPE_TEXTURES);
+												
+												TextureRequest* NewTextureRequest = nullptr;
+												if (TextureFullPath.size() > 0)
 												{
-													InOutMeshPayload.TextureRequests.push_back(TextureRequest);
-													InOutMesh.SetTexture(InTextureType, TextureKey);
+													NewTextureRequest										= new TextureRequest(TextureFullPath, TextureKey, TextureKey);
+													NewTextureRequest->MaterialToUpdate.MaterialToUpdate	= MeshMaterial;
+													NewTextureRequest->MaterialToUpdate.Slot				= static_cast<uint32_t>(InTextureType);
 												}
 												else
 												{
+													NewTextureRequest										= new TextureRequest(FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES), "black", "black");
+													NewTextureRequest->MaterialToUpdate.MaterialToUpdate	= MeshMaterial;
+													NewTextureRequest->MaterialToUpdate.Slot				= static_cast<uint32_t>(InTextureType);
 													LogWrite(LogInfo, LogImport, string("Missing texture: [") + TextureKey + "] " + TexturePath);
 												}
+												InOutMeshPayload.AddRequest(NewTextureRequest);
 											};
 
-											RequestTexture("diffuse", TextureType::TEXTURE_TYPE_DIFFUSE);
-											RequestTexture("normal", TextureType::TEXTURE_TYPE_NORMAL);
+											RequestTexture("diffuse",						TextureType::TEXTURE_TYPE_DIFFUSE);
+											RequestTexture("normal",						TextureType::TEXTURE_TYPE_NORMAL);
+											RequestTexture("roughness_metallic_specular",	TextureType::TEXTURE_TYPE_ROUGHNESS_METALLIC_SPECULAR);
+
+											MaterialIsInitialized = true;
 										}
 										else
 										{
@@ -364,6 +398,17 @@ namespace Eternal
 										}
 									}
 								}
+							}
+						}
+
+						if (!MaterialIsInitialized)
+						{
+							for (uint32_t TextureIndex = 0; TextureIndex < static_cast<uint32_t>(TextureType::TEXTURE_TYPE_COUNT); ++TextureIndex)
+							{
+								TextureRequest* NewTextureRequest						= new TextureRequest(FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES), "black", "black");
+								NewTextureRequest->MaterialToUpdate.MaterialToUpdate	= MeshMaterial;
+								NewTextureRequest->MaterialToUpdate.Slot				= TextureIndex;
+								InOutMeshPayload.AddRequest(NewTextureRequest);
 							}
 						}
 					}

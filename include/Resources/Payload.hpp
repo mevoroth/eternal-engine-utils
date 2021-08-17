@@ -14,6 +14,7 @@ namespace Eternal
 	{
 		class Mesh;
 		class MeshCollection;
+		class Material;
 	}
 	namespace Resources
 	{
@@ -23,17 +24,37 @@ namespace Eternal
 
 		//////////////////////////////////////////////////////////////////////////
 
+		struct MaterialUpdate
+		{
+			MaterialUpdate() {}
+			MaterialUpdate(_In_ const TextureKey& InKey, _In_ const string& InTextureName)
+				: Key(InKey)
+				, TextureName(InTextureName)
+			{
+			}
+
+			Material* MaterialToUpdate	= nullptr;
+			uint32_t Slot				= ~0u;
+			TextureKey Key;
+			string TextureName;
+		};
+
+		//////////////////////////////////////////////////////////////////////////
+
 		struct MeshPayload : public Payload
 		{
-			MeshCollection*					LoadedMesh	= nullptr;
-			Mesh*							BoundingBox	= nullptr;
-			vector<TextureFactoryRequest>	TextureRequests;
-			vector<MeshComponent*> ComponentsToUpdate;
+			MeshCollection*			LoadedMesh	= nullptr;
+			Mesh*					BoundingBox	= nullptr;
+			vector<MeshComponent*>	ComponentsToUpdate;
 		};
 
 		struct TexturePayload : public Payload
 		{
+			~TexturePayload();
+
 			RawTextureData TextureData;
+
+			MaterialUpdate MaterialToUpdate;
 		};
 
 		//////////////////////////////////////////////////////////////////////////
@@ -47,7 +68,9 @@ namespace Eternal
 
 		struct TextureRequest : public StreamingRequest
 		{
-			TextureRequest(_In_ const string& InPath);
+			TextureRequest(_In_ const string& InPath, _In_ const TextureKey& InKey, _In_ const string& InTextureName);
+
+			MaterialUpdate MaterialToUpdate;
 		};
 	}
 }

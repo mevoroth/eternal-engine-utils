@@ -14,24 +14,24 @@ namespace Eternal
 	{
 		using namespace Eternal::Graphics;
 
-		class ImmediateTextureFactoryLoadTextureCallback : public TextureFactoryLoadTextureCallback
-		{
-		public:
-			virtual bool LoadTexture(_In_ const string& Path, _Out_ RawTextureData& OutTextureData) override final;
-		};
+		//class ImmediateTextureFactoryLoadTextureCallback : public TextureFactoryLoadTextureCallback
+		//{
+		//public:
+		//	virtual bool LoadTexture(_In_ const string& Path, _Out_ RawTextureData& OutTextureData) override final;
+		//};
 
-		class ImmediateTextureFactoryCreateGpuResourceCallback : public TextureFactoryCreateGpuResourceCallback
-		{
-		public:
-			ImmediateTextureFactoryCreateGpuResourceCallback(_In_ GraphicsContext& InContext);
+		//class ImmediateTextureFactoryCreateGpuResourceCallback : public TextureFactoryCreateGpuResourceCallback
+		//{
+		//public:
+		//	ImmediateTextureFactoryCreateGpuResourceCallback(_In_ GraphicsContext& InContext);
 
-			virtual void BeginBatch() override final;
-			virtual void EndBatch() override final;
-			virtual bool CreateTextureResource(_In_ const string& InName, _In_ const RawTextureData& InTextureData, _Out_ Resource*& OutTexture) override final;
+		//	virtual void BeginBatch() override final;
+		//	virtual void EndBatch() override final;
+		//	virtual bool CreateTextureResource(_In_ const string& InName, _In_ const RawTextureData& InTextureData, _Out_ Resource*& OutTexture) override final;
 
-		private:
-			GraphicsContext&	_Context;
-			CommandList*		_CommandList = nullptr;
-		};
+		//private:
+		//	GraphicsContext&	_Context;
+		//	CommandList*		_CommandList = nullptr;
+		//};
 	}
 }

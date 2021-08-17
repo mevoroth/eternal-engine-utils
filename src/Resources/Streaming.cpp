@@ -25,13 +25,13 @@ namespace Eternal
 			return QUEUE_INDICES[static_cast<uint32_t>(InFileType)];
 		}
 
-		Streaming::Streaming()
+		Streaming::Streaming(_In_ TextureFactory& InTextureFactory)
 			: _QueueMutex(CreateMutex())
 			, _SleepMutex(CreateMutex())
 			, _SleepConditionVariable(CreateConditionVariable())
 		{
 			RegisterLoader(AssetType::ASSET_TYPE_MESH, new MeshLoader());
-			RegisterLoader(AssetType::ASSET_TYPE_TEXTURE, new TextureLoader());
+			RegisterLoader(AssetType::ASSET_TYPE_TEXTURE, new TextureLoader(InTextureFactory));
 		}
 
 		Streaming::~Streaming()
@@ -76,7 +76,7 @@ namespace Eternal
 		{
 			ETERNAL_PROFILER(BASIC)();
 			bool ShouldRotateBuffers = false;
-			while (!ShouldRotateBuffers)
+			while (!ShouldRotateBuffers && _Running)
 			{
 				if (_QueueMutex->TryLock())
 				{
@@ -118,6 +118,13 @@ namespace Eternal
 					Queue.LoadedRequests[QueueType].end()
 				);
 				Queue.LoadedRequests[QueueType].clear();
+
+				//for (uint32_t RequestIndex = 0; RequestIndex < Queue.PendingDestroyedRequests[QueueType].size(); ++RequestIndex)
+				//{
+				//	delete Queue.PendingDestroyedRequests[QueueType][RequestIndex];
+				//	Queue.PendingDestroyedRequests[QueueType][RequestIndex] = nullptr;
+				//}
+				//Queue.PendingDestroyedRequests[QueueType].clear();
 			}
 		}
 
@@ -135,6 +142,8 @@ namespace Eternal
 						_Enqueued[QueueType].end()
 					);
 					_Enqueued[QueueType].clear();
+
+					//std::swap(Queue.PendingDestroyedRequests[QueueType], _Destroyed[QueueType]);
 				}
 			}
 			_SleepMutex->Unlock();
@@ -149,7 +158,7 @@ namespace Eternal
 		{
 		}
 
-		void Payload::Add(_In_ StreamingRequest* InRequest)
+		void Payload::AddRequest(_In_ StreamingRequest* InRequest)
 		{
 			AdditionalRequests[ConvertFileTypeToQueueIndex(InRequest->RequestType)].push_back(InRequest);
 		}

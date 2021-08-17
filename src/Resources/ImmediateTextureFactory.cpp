@@ -14,118 +14,118 @@ namespace Eternal
 {
 	namespace Resources
 	{
-		bool ImmediateTextureFactoryLoadTextureCallback::LoadTexture(_In_ const string& Path, _Out_ RawTextureData& OutTextureData)
-		{
-			using namespace Eternal::FileSystem;
-			using namespace Eternal::Import;
+		//bool ImmediateTextureFactoryLoadTextureCallback::LoadTexture(_In_ const string& Path, _Out_ RawTextureData& OutTextureData)
+		//{
+		//	using namespace Eternal::FileSystem;
+		//	using namespace Eternal::Import;
 
-			if (FileExists(Path))
-			{
-				uint32_t Height	= 0;
-				uint32_t Width	= 0;
-				uint8_t* ImageData = ImportTga::Get()->Import(Path, Height, Width);
+		//	if (FileExists(Path))
+		//	{
+		//		uint32_t Height	= 0;
+		//		uint32_t Width	= 0;
+		//		uint8_t* ImageData = ImportTga::Get()->Import(Path, Height, Width);
 
-				OutTextureData.Initialize(ImageData, Width, Height, 1, 4);
-				return true;
-			}
+		//		OutTextureData.Initialize(ImageData, Width, Height, 1, 4);
+		//		return true;
+		//	}
 
-			return false;
-		}
+		//	return false;
+		//}
 
-		ImmediateTextureFactoryCreateGpuResourceCallback::ImmediateTextureFactoryCreateGpuResourceCallback(_In_ GraphicsContext& InContext)
-			: _Context(InContext)
-		{
-		}
+		//ImmediateTextureFactoryCreateGpuResourceCallback::ImmediateTextureFactoryCreateGpuResourceCallback(_In_ GraphicsContext& InContext)
+		//	: _Context(InContext)
+		//{
+		//}
 
-		void ImmediateTextureFactoryCreateGpuResourceCallback::BeginBatch()
-		{
-			ETERNAL_ASSERT(!_CommandList);
-			_CommandList = _Context.CreateNewCommandList(CommandType::COMMAND_TYPE_GRAPHIC, "TextureStreaming");
-			_CommandList->Begin(_Context);
+		//void ImmediateTextureFactoryCreateGpuResourceCallback::BeginBatch()
+		//{
+		//	ETERNAL_ASSERT(!_CommandList);
+		//	_CommandList = _Context.CreateNewCommandList(CommandType::COMMAND_TYPE_GRAPHIC, "TextureStreaming");
+		//	_CommandList->Begin(_Context);
 
-		}
+		//}
 
-		void ImmediateTextureFactoryCreateGpuResourceCallback::EndBatch()
-		{
-			ETERNAL_ASSERT(_CommandList);
-			_CommandList->End();
-			_CommandList = nullptr;
-		}
+		//void ImmediateTextureFactoryCreateGpuResourceCallback::EndBatch()
+		//{
+		//	ETERNAL_ASSERT(_CommandList);
+		//	_CommandList->End();
+		//	_CommandList = nullptr;
+		//}
 
-		bool ImmediateTextureFactoryCreateGpuResourceCallback::CreateTextureResource(_In_ const string& InName, _In_ const RawTextureData& InTextureData, _Out_ Resource*& OutTexture)
-		{
-			using namespace Eternal::Graphics;
+		//bool ImmediateTextureFactoryCreateGpuResourceCallback::CreateTextureResource(_In_ const string& InName, _In_ const RawTextureData& InTextureData, _Out_ Resource*& OutTexture)
+		//{
+		//	using namespace Eternal::Graphics;
 
-			//////////////////////////////////////////////////////////////////////////
-			// CPU Buffer
-			std::string UploadBufferName = "AnonymousTextureBuffer";
-			const uint32_t UploadBufferSize = InTextureData.Width * InTextureData.Height * InTextureData.DepthOrArraySize;
-			//TextureResourceCreateInformation UploadBufferTextureInformation(
-			BufferResourceCreateInformation UploadBufferTextureInformation(
-				_Context.GetDevice(),
-				UploadBufferName,
-				BufferCreateInformation(
-					Format::FORMAT_BGRA8888_UNORM,
-					BufferResourceUsage::BUFFER_RESOURCE_USAGE_COPY_READ,
-					InTextureData.Stride,
-					UploadBufferSize
-				),
-				ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD
-			);
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// CPU Buffer
+		//	std::string UploadBufferName = "AnonymousTextureBuffer";
+		//	const uint32_t UploadBufferSize = InTextureData.Width * InTextureData.Height * InTextureData.DepthOrArraySize;
+		//	//TextureResourceCreateInformation UploadBufferTextureInformation(
+		//	BufferResourceCreateInformation UploadBufferTextureInformation(
+		//		_Context.GetDevice(),
+		//		UploadBufferName,
+		//		BufferCreateInformation(
+		//			Format::FORMAT_BGRA8888_UNORM,
+		//			BufferResourceUsage::BUFFER_RESOURCE_USAGE_COPY_READ,
+		//			InTextureData.Stride,
+		//			UploadBufferSize
+		//		),
+		//		ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_UPLOAD
+		//	);
 
-			Resource* UploadTexture = CreateBuffer(UploadBufferTextureInformation);
+		//	Resource* UploadTexture = CreateBuffer(UploadBufferTextureInformation);
 
-			//////////////////////////////////////////////////////////////////////////
-			// Map
-			MapRange UploadTextureMapRange(UploadBufferSize);
-			void* UploadTextureDataPtr = UploadTexture->Map<>(UploadTextureMapRange);
-			memcpy(UploadTextureDataPtr, InTextureData.TextureData, UploadBufferSize);
-			UploadTexture->Unmap(UploadTextureMapRange);
-			_Context.DelayedDelete(UploadTexture);
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// Map
+		//	MapRange UploadTextureMapRange(UploadBufferSize);
+		//	void* UploadTextureDataPtr = UploadTexture->Map<>(UploadTextureMapRange);
+		//	memcpy(UploadTextureDataPtr, InTextureData.TextureData, UploadBufferSize);
+		//	UploadTexture->Unmap(UploadTextureMapRange);
+		//	_Context.DelayedDelete(UploadTexture);
 
-			//////////////////////////////////////////////////////////////////////////
-			// GPU Texture
-			TextureResourceCreateInformation GPUTextureCreateInformation(
-				_Context.GetDevice(),
-				InName,
-				TextureCreateInformation(
-					ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
-					Format::FORMAT_BGRA8888_UNORM,
-					TextureResourceUsage::TEXTURE_RESOURCE_USAGE_SHADER_RESOURCE | TextureResourceUsage::TEXTURE_RESOURCE_USAGE_COPY_WRITE,
-					InTextureData.Width,
-					InTextureData.Height,
-					InTextureData.DepthOrArraySize,
-					1
-				),
-				ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_MEMORY,
-				TransitionState::TRANSITION_COPY_WRITE
-			);
-			OutTexture = CreateTexture(GPUTextureCreateInformation);
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// GPU Texture
+		//	TextureResourceCreateInformation GPUTextureCreateInformation(
+		//		_Context.GetDevice(),
+		//		InName,
+		//		TextureCreateInformation(
+		//			ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
+		//			Format::FORMAT_BGRA8888_UNORM,
+		//			TextureResourceUsage::TEXTURE_RESOURCE_USAGE_SHADER_RESOURCE | TextureResourceUsage::TEXTURE_RESOURCE_USAGE_COPY_WRITE,
+		//			InTextureData.Width,
+		//			InTextureData.Height,
+		//			InTextureData.DepthOrArraySize,
+		//			1
+		//		),
+		//		ResourceMemoryType::RESOURCE_MEMORY_TYPE_GPU_MEMORY,
+		//		TransitionState::TRANSITION_COPY_WRITE
+		//	);
+		//	OutTexture = CreateTexture(GPUTextureCreateInformation);
 
-			//////////////////////////////////////////////////////////////////////////
-			// Upload
-			_CommandList->CopyResource(
-				*OutTexture,
-				*UploadTexture,
-				CopyRegion(
-					TextureFromBufferRegion(
-						Extent3D(InTextureData.Width, InTextureData.Height, InTextureData.DepthOrArraySize),
-						UploadBufferSize
-					)
-				)
-			);
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// Upload
+		//	_CommandList->CopyResource(
+		//		*OutTexture,
+		//		*UploadTexture,
+		//		CopyRegion(
+		//			TextureFromBufferRegion(
+		//				Extent3D(InTextureData.Width, InTextureData.Height, InTextureData.DepthOrArraySize),
+		//				UploadBufferSize
+		//			)
+		//		)
+		//	);
 
-			//////////////////////////////////////////////////////////////////////////
-			// Transition
-			ResourceTransition TextureCopyWriteToShaderResource(
-				OutTexture,
-				TransitionState::TRANSITION_PIXEL_SHADER_READ
-			);
-			_CommandList->Transition(
-				&TextureCopyWriteToShaderResource, 1
-			);
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// Transition
+		//	ResourceTransition TextureCopyWriteToShaderResource(
+		//		OutTexture,
+		//		TransitionState::TRANSITION_PIXEL_SHADER_READ
+		//	);
+		//	_CommandList->Transition(
+		//		&TextureCopyWriteToShaderResource, 1
+		//	);
 
-			return true;
-		}
+		//	return true;
+		//}
 	}
 }

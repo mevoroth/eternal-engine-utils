@@ -34,6 +34,11 @@
     <ClInclude Include="include\File\FilePath.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
     <ClInclude Include="include\Import\tga\ImportTga.hpp" />
+    <ClInclude Include="include\Input\Input.hpp" />
+    <ClInclude Include="include\Input\InputFactory.hpp" />
+    <ClInclude Include="include\Input\MultiInput\MultiInput.hpp" />
+    <ClInclude Include="include\Input\WinInput\WinInput.hpp" />
+    <ClInclude Include="include\Input\XInput\XInput.hpp" />
     <ClInclude Include="include\Log\ConsoleLog\ConsoleLog.hpp" />
     <ClInclude Include="include\Log\FileLog\FileLog.hpp" />
     <ClInclude Include="include\Log\Log.hpp" />
@@ -84,6 +89,11 @@
     <ClCompile Include="src\File\FilePath.cpp" />
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
     <ClCompile Include="src\Import\tga\ImportTga.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Input\InputFactory.cpp" />
+    <ClCompile Include="src\Input\MultiInput\MultiInput.cpp" />
+    <ClCompile Include="src\Input\WinInput\WinInput.cpp" />
+    <ClCompile Include="src\Input\XInput\XInput.cpp" />
     <ClCompile Include="src\Log\ConsoleLog\ConsoleLog.cpp" />
     <ClCompile Include="src\Log\FileLog\FileLog.cpp" />
     <ClCompile Include="src\Log\Log.cpp" />

@@ -49,6 +49,18 @@
     <Filter Include="Math">
       <UniqueIdentifier>{79e54434-d41a-4972-90f2-aa0712a54628}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{72945afa-f598-4c21-b421-ec452c43ed52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\MultiInput">
+      <UniqueIdentifier>{4392d313-e7b1-432a-b271-5988ac95a9b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\XInput">
+      <UniqueIdentifier>{0b0cf2a8-d31a-45e4-96f9-487baa857721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\WinInput">
+      <UniqueIdentifier>{a38e7769-aa12-43b0-a937-6142eb017f92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -214,6 +226,21 @@
     <ClInclude Include="include\DebugTools\Debug.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\Input\Input.hpp">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input\InputFactory.hpp">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input\MultiInput\MultiInput.hpp">
+      <Filter>Input\MultiInput</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input\XInput\XInput.hpp">
+      <Filter>Input\XInput</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input\WinInput\WinInput.hpp">
+      <Filter>Input\WinInput</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTimer.cpp">
@@ -317,6 +344,21 @@
     </ClCompile>
     <ClCompile Include="src\DebugTools\Debug.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\InputFactory.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\XInput\XInput.cpp">
+      <Filter>Input\XInput</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\WinInput\WinInput.cpp">
+      <Filter>Input\WinInput</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\MultiInput\MultiInput.cpp">
+      <Filter>Input\MultiInput</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

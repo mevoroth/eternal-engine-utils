@@ -11,9 +11,17 @@ namespace Eternal
 		{
 		}
 
-		TextureRequest::TextureRequest(_In_ const string& InPath)
+		TextureRequest::TextureRequest(_In_ const string& InPath, _In_ const string& InKey, _In_ const string& InTextureName)
 			: StreamingRequest(InPath, FileType::FILE_TYPE_TEXTURES)
+			, MaterialToUpdate(InKey, InTextureName)
 		{
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		TexturePayload::~TexturePayload()
+		{
+			TextureData.Release();
 		}
 	}
 }

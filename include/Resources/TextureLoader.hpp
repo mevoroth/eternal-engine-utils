@@ -13,9 +13,11 @@ namespace Eternal
 	{
 		using namespace Eternal::Import;
 
+		class TextureFactory;
+
 		struct TextureLoader final : public StreamingLoader
 		{
-			TextureLoader();
+			TextureLoader(_In_ TextureFactory& InTextureFactory);
 			~TextureLoader();
 
 			virtual void LoadPayload(_In_ const StreamingRequest* InRequest, _Out_ Payload*& OutPayload) const override final;
@@ -23,6 +25,7 @@ namespace Eternal
 
 		private:
 			ImportTga* _ImportTga = nullptr;
+			TextureFactory& _Factory;
 		};
 
 	}
