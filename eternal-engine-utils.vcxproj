@@ -223,13 +223,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ETERNAL_DEBUG=1;IMGUI_USER_CONFIG="Imgui/ImguiConfig.hpp";FBXSDK_SHARED;ETERNAL_USE_STD_PARALLEL=1;ETERNAL_PROFILER_USE_VERBOSE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ETERNAL_DEBUG=1;IMGUI_USER_CONFIG="Imgui/ImguiConfig.hpp";FBXSDK_SHARED;ETERNAL_USE_STD_PARALLEL=1;ETERNAL_PROFILER_USE_VERBOSE=0;NOMINMAX=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>sal.h;UtilsSettings.hpp;optick.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4189;4100</DisableSpecificWarnings>
       <LanguageStandard>Default</LanguageStandard>
+      <UndefinePreprocessorDefinitions>%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
