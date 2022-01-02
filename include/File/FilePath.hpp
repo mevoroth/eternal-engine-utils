@@ -20,8 +20,8 @@ namespace Eternal
 		class FilePath
 		{
 		public:
-			static void Register(_In_ const string& FolderPath, _In_ const FileType& Type);
-			static string Find(_In_ const string& FileName, _In_ const FileType& Type);
+			static void Register(_In_ const string& InFolderPath, _In_ const FileType& InFileType);
+			static string Find(_In_ const string& InFileName, _In_ const FileType& InFileType);
 
 		private:
 			static vector<string> _FolderPaths[static_cast<int32_t>(FileType::FILE_TYPE_COUNT)];
