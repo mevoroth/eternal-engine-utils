@@ -2,21 +2,16 @@
 
 #include <string>
 
-using namespace std;
-
 namespace Eternal
 {
 	namespace Import
 	{
+		using namespace std;
+
 		class ImportTga
 		{
 		public:
-			ImportTga();
-			static ImportTga* Get();
-			uint8_t* Import(_In_ const string& Path, _Out_ uint32_t& Height, _Out_ uint32_t& Width);
-
-		private:
-			static ImportTga* _Instance;
+			uint8_t* Import(_In_ const string& InPath, _Out_ uint32_t& OutWidth, _Out_ uint32_t& OutHeight);
 		};
 	}
 }
