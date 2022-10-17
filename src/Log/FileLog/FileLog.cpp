@@ -44,8 +44,7 @@ namespace Eternal
 			for (int LogLevelIndex = 0; LogLevelIndex < Log::LogLevelCount; ++LogLevelIndex)
 			{
 				_LogFiles[LogLevelIndex]->Close();
-				delete _LogFiles[LogLevelIndex];
-				_LogFiles[LogLevelIndex] = nullptr;
+				DestroyFileHandle(_LogFiles[LogLevelIndex]);
 			}
 		}
 
