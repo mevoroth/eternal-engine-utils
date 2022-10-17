@@ -7,6 +7,7 @@ namespace Eternal
 	namespace Import
 	{
 		class ImportTga;
+		class ImportDds;
 	}
 
 	namespace Resources
@@ -25,6 +26,7 @@ namespace Eternal
 
 		private:
 			ImportTga* _ImportTga = nullptr;
+			ImportDds* _ImportDds = nullptr;
 			TextureFactory& _Factory;
 		};
 
