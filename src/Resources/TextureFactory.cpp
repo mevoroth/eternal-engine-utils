@@ -6,16 +6,22 @@ namespace Eternal
 	{
 		void RawTextureData::Initialize(
 			_In_ void* InTextureData,
+			_In_ const Format& InFormat,
+			_In_ const ResourceDimension& InDimension,
 			_In_ uint32_t InWidth,
 			_In_ uint32_t InHeight,
 			_In_ uint32_t InDepthOrArraySize,
+			_In_ uint32_t InElementsCount,
 			_In_ uint32_t InStride
 		)
 		{
 			TextureData			= InTextureData;
+			TextureFormat		= InFormat;
+			Dimension			= InDimension;
 			Width				= InWidth;
 			Height				= InHeight;
 			DepthOrArraySize	= InDepthOrArraySize;
+			ElementsCount		= InElementsCount;
 			Stride				= InStride;
 		}
 
