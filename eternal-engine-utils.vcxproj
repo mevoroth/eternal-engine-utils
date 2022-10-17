@@ -32,6 +32,7 @@
     <ClInclude Include="include\File\File.hpp" />
     <ClInclude Include="include\File\FileFactory.hpp" />
     <ClInclude Include="include\File\FilePath.hpp" />
+    <ClInclude Include="include\Import\dds\ImportDds.hpp" />
     <ClInclude Include="include\Import\fbx\ImportFbx.hpp" />
     <ClInclude Include="include\Import\tga\ImportTga.hpp" />
     <ClInclude Include="include\Input\Input.hpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="src\File\CFile.cpp" />
     <ClCompile Include="src\File\FileFactory.cpp" />
     <ClCompile Include="src\File\FilePath.cpp" />
+    <ClCompile Include="src\Import\dds\ImportDds.cpp" />
     <ClCompile Include="src\Import\fbx\ImportFbx.cpp" />
     <ClCompile Include="src\Import\tga\ImportTga.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
@@ -176,7 +178,7 @@
     <LibraryPath>$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Software\FBXSDK\2020.2\include;$(SolutionDir)eternal-engine-extern\optick\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Software\FBXSDK\2020.2\include;$(SolutionDir)eternal-engine-extern\optick\src;$(SolutionDir)eternal-engine-extern\DirectXTex;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

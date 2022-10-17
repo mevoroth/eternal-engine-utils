@@ -61,6 +61,9 @@
     <Filter Include="Input\WinInput">
       <UniqueIdentifier>{a38e7769-aa12-43b0-a937-6142eb017f92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Import\dds">
+      <UniqueIdentifier>{7e7d057c-ab7d-426f-ada9-5fe14a313c25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -241,6 +244,9 @@
     <ClInclude Include="include\Input\WinInput\WinInput.hpp">
       <Filter>Input\WinInput</Filter>
     </ClInclude>
+    <ClInclude Include="include\Import\dds\ImportDds.hpp">
+      <Filter>Import\dds</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTimer.cpp">
@@ -359,6 +365,9 @@
     </ClCompile>
     <ClCompile Include="src\Input\MultiInput\MultiInput.cpp">
       <Filter>Input\MultiInput</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Import\dds\ImportDds.cpp">
+      <Filter>Import\dds</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
