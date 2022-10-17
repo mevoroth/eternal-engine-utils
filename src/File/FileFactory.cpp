@@ -32,5 +32,33 @@ namespace Eternal
 			return false;
 #endif
 		}
+
+		FileContent LoadFileToMemory(_In_ const std::string& InFileName)
+		{
+			FileContent Content;
+
+			File* FileHandle = CreateFileHandle(InFileName);
+			FileHandle->Open(File::READ);
+			Content.Size	= FileHandle->GetFileSize();
+			Content.Content	= new uint8_t[Content.Size];
+			FileHandle->Read(Content.Content, Content.Size);
+			FileHandle->Close();
+			DestroyFileHandle(FileHandle);
+
+			return Content;
+		}
+
+		void UnloadFileFromMemory(_Inout_ FileContent& InOutFileContent)
+		{
+			delete[] InOutFileContent.Content;
+			InOutFileContent.Content	= nullptr;
+			InOutFileContent.Size		= 0;
+		}
+
+		FileContent::~FileContent()
+		{
+			//ETERNAL_ASSERT(!Content);
+			//ETERNAL_ASSERT(!Size);
+		}
 	}
 }
