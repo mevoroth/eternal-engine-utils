@@ -4,8 +4,6 @@ namespace Eternal
 {
 	namespace InputSystem
 	{
-		Input* Input::_Instance = nullptr;
-
 		Input::Input()
 		{
 			//ETERNAL_ASSERT(!_Inst);
@@ -31,19 +29,6 @@ namespace Eternal
 			_States = nullptr;
 			delete[] _Axis;
 			_Axis = nullptr;
-		}
-
-		Input* Input::Get()
-		{
-			ETERNAL_ASSERT(_Instance);
-			return _Instance;
-		}
-
-		void Input::Initialize(_In_ Input* InInput)
-		{
-			ETERNAL_ASSERT(!_Instance);
-			ETERNAL_ASSERT(InInput);
-			_Instance = InInput;
 		}
 
 		bool Input::IsDown(_In_ const Key& KeyName)

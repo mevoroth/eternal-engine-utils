@@ -293,8 +293,6 @@ namespace Eternal
 		public:
 			Input();
 			virtual ~Input();
-			static Input* Get();
-			static void Initialize(_In_ Input* InputObj);
 
 			virtual void Update() = 0;
 			virtual void NotifyKeyPressed(_In_ const Key& KeyName) = 0;
@@ -324,9 +322,6 @@ namespace Eternal
 		protected:
 			uint8_t* _States	= nullptr;
 			float* _Axis		= nullptr;
-
-		private:
-			static Input* _Instance;
 		};
 	}
 }
