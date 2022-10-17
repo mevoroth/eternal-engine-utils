@@ -9,7 +9,6 @@ namespace Eternal
 		MultiInput::MultiInput()
 			: Input()
 		{
-			Initialize(this);
 		}
 
 		void MultiInput::Update()
