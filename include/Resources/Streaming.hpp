@@ -55,6 +55,7 @@ namespace Eternal
 				: RequestPath(InPath)
 				, RequestType(InFileType)
 			{
+				ETERNAL_ASSERT(InPath.size() > 0);
 			}
 		};
 
