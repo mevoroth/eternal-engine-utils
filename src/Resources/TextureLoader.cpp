@@ -36,8 +36,8 @@ namespace Eternal
 
 			const TextureRequest* InTextureRequest	= static_cast<const TextureRequest*>(InRequest);
 
-			TexturePayload& PayloadIntermediate		= *static_cast<TexturePayload*>(OutPayload);
-			PayloadIntermediate.MaterialToUpdate	= std::move(InTextureRequest->MaterialToUpdate);
+			TexturePayload& OutPayloadIntermediate	= *static_cast<TexturePayload*>(OutPayload);
+			OutPayloadIntermediate.MaterialToUpdate	= std::move(InTextureRequest->MaterialToUpdate);
 
 			if (_Factory.TextureExists(InTextureRequest->MaterialToUpdate.Key))
 				return;
@@ -60,7 +60,7 @@ namespace Eternal
 				ImageData = _ImportTga->Import(InRequest->RequestPath, Width, Height);
 				Depth = 1;
 
-				PayloadIntermediate.TextureData.Initialize(
+				OutPayloadIntermediate.TextureData.InitializeTextureData(
 					ImageData,
 					Graphics::Format::FORMAT_BGRA8888_UNORM,
 					Graphics::ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
@@ -78,7 +78,7 @@ namespace Eternal
 
 				ImageData = _ImportDds->Import(InRequest->RequestPath, Format, Dimension, Width, Height, Depth);
 
-				PayloadIntermediate.TextureData.Initialize(
+				OutPayloadIntermediate.TextureData.InitializeTextureData(
 					ImageData,
 					Format,
 					Dimension,

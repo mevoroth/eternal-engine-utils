@@ -21,7 +21,7 @@ namespace Eternal
 
 		TexturePayload::~TexturePayload()
 		{
-			TextureData.Release();
+			TextureData.ReleaseTextureData();
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace Eternal
 
 		struct RawTextureData
 		{
-			void Initialize(
+			void InitializeTextureData(
 				_In_ void* InTextureData,
 				_In_ const Format& InFormat,
 				_In_ const ResourceDimension& InDimension,
@@ -34,7 +34,7 @@ namespace Eternal
 				_In_ uint32_t InElementsCount,
 				_In_ uint32_t InStride
 			);
-			void Release();
+			void ReleaseTextureData();
 
 			void* TextureData			= nullptr;
 			Format TextureFormat		= static_cast<Format>(0);

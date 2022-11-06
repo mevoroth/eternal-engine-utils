@@ -4,7 +4,7 @@ namespace Eternal
 {
 	namespace Resources
 	{
-		void RawTextureData::Initialize(
+		void RawTextureData::InitializeTextureData(
 			_In_ void* InTextureData,
 			_In_ const Format& InFormat,
 			_In_ const ResourceDimension& InDimension,
@@ -25,7 +25,7 @@ namespace Eternal
 			Stride				= InStride;
 		}
 
-		void RawTextureData::Release()
+		void RawTextureData::ReleaseTextureData()
 		{
 			if (TextureData)
 			{
