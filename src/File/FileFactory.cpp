@@ -40,8 +40,9 @@ namespace Eternal
 			File* FileHandle = CreateFileHandle(InFileName);
 			FileHandle->Open(File::READ);
 			Content.Size	= FileHandle->GetFileSize();
-			Content.Content	= new uint8_t[Content.Size];
+			Content.Content	= new uint8_t[Content.Size + 1];
 			FileHandle->Read(Content.Content, Content.Size);
+			Content.Content[Content.Size] = '\0';
 			FileHandle->Close();
 			DestroyFileHandle(FileHandle);
 
