@@ -134,6 +134,9 @@ namespace Eternal
 			_Flatten_Split_SingleMesh(IntermediateMesh, OutMeshPayload);
 			//_Flatten_Split_MultipleMeshes(IntermediateMesh, OutMeshPayload);
 
+			for (uint32_t MeshIndex = 0; MeshIndex < OutMeshPayload.LoadedMesh->Meshes.size(); ++MeshIndex)
+				OutMeshPayload.LoadedMesh->Meshes[MeshIndex]->SetName(InPath);
+
 			GenericMesh<PositionColorVertex>* BoundingBoxMesh = new GenericMesh<PositionColorVertex>();
 			BoundingBoxMesh->AddMesh(
 				{
