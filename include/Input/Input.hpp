@@ -10,6 +10,8 @@ namespace Eternal
 		class Input
 		{
 		public:
+			static constexpr float DefaultDeadZone = 0.1f;
+
 			enum Key
 			{
 				A = 0,
@@ -295,29 +297,33 @@ namespace Eternal
 			virtual ~Input();
 
 			virtual void Update() = 0;
-			virtual void NotifyKeyPressed(_In_ const Key& KeyName) = 0;
-			virtual void NotifyKeyReleased(_In_ const Key& KeyName) = 0;
-			virtual void NotifyAxis(_In_ const Axis& AxisName, _In_ float AxisValue) = 0;
+			virtual void NotifyKeyPressed(_In_ const Key& InKeyName) = 0;
+			virtual void NotifyKeyReleased(_In_ const Key& InKeyName) = 0;
+			virtual void NotifyAxis(_In_ const Axis& InAxisName, _In_ float InAxisValue) = 0;
 			/**
 			 * Key pressed
 			 */
-			virtual bool IsPressed(_In_ const Key& KeyName);
+			virtual bool IsPressed(_In_ const Key& InKeyName);
 			/**
 			 * Key released
 			 */
-			virtual bool IsReleased(_In_ const Key& KeyName);
+			virtual bool IsReleased(_In_ const Key& InKeyName);
 			/**
 			 * Key released frame
 			 */
-			virtual bool IsUp(_In_ const Key& KeyName);
+			virtual bool IsUp(_In_ const Key& InKeyName);
 			/**
 			 * Key pressed frame
 			 */
-			virtual bool IsDown(_In_ const Key& KeyName);
+			virtual bool IsDown(_In_ const Key& InKeyName);
 			/**
 			 * @return float between -1 and 1
 			 */
-			virtual float GetAxis(_In_ const Axis& AxisName);
+			virtual float GetAxis(_In_ const Axis& InAxisName) const;
+			/**
+			 * @return float between -1 and 1
+			 */
+			float GetAxisWithDeadZone(_In_ const Axis& InAxisName, _In_ float InDeadZone = DefaultDeadZone) const;
 
 		protected:
 			uint8_t* _States	= nullptr;

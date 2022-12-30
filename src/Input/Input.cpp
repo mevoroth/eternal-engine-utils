@@ -1,4 +1,5 @@
 #include "Input/Input.hpp"
+#include "Math/Math.hpp"
 
 namespace Eternal
 {
@@ -31,29 +32,37 @@ namespace Eternal
 			_Axis = nullptr;
 		}
 
-		bool Input::IsDown(_In_ const Key& KeyName)
+		bool Input::IsDown(_In_ const Key& InKeyName)
 		{
-			return _States[KeyName] == INPUT_PREVIOUS_STATE;
+			return _States[InKeyName] == INPUT_PREVIOUS_STATE;
 		}
 
-		bool Input::IsUp(_In_ const Key& KeyName)
+		bool Input::IsUp(_In_ const Key& InKeyName)
 		{
-			return _States[KeyName] == INPUT_CURRENT_STATE;
+			return _States[InKeyName] == INPUT_CURRENT_STATE;
 		}
 
-		bool Input::IsPressed(_In_ const Key& KeyName)
+		bool Input::IsPressed(_In_ const Key& InKeyName)
 		{
-			return (_States[KeyName] & INPUT_CURRENT_STATE) != 0;
+			return (_States[InKeyName] & INPUT_CURRENT_STATE) != 0;
 		}
 
-		bool Input::IsReleased(_In_ const Key& KeyName)
+		bool Input::IsReleased(_In_ const Key& InKeyName)
 		{
-			return (_States[KeyName] & INPUT_CURRENT_STATE) != 0;
+			return (_States[InKeyName] & INPUT_CURRENT_STATE) != 0;
 		}
 
-		float Input::GetAxis(_In_ const Axis& AxisName)
+		float Input::GetAxis(_In_ const Axis& InAxisName) const
 		{
-			return _Axis[AxisName];
+			return _Axis[InAxisName];
+		}
+
+		float Input::GetAxisWithDeadZone(_In_ const Axis& InAxisName, _In_ float InDeadZone) const
+		{
+			float AxisValue = GetAxis(InAxisName);
+			float AbsAxisValue = Math::Abs(AxisValue);
+			float AxisWithDeadZone = Math::Sign(AxisValue) * (AbsAxisValue < InDeadZone ? 0.0f : AbsAxisValue);
+			return AxisWithDeadZone;
 		}
 	}
 }

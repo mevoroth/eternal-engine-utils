@@ -21,7 +21,7 @@ namespace Eternal
 			virtual bool IsReleased(_In_ const Key& InKeyName) override;
 			virtual bool IsUp(_In_ const Key& InKeyName) override;
 			virtual bool IsDown(_In_ const Key& InKeyName) override;
-			virtual float GetAxis(_In_ const Axis& InAxisName) override;
+			virtual float GetAxis(_In_ const Axis& InAxisName) const override;
 
 			void Add(_In_ Input* InInput);
 

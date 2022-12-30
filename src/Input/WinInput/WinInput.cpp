@@ -27,21 +27,21 @@ namespace Eternal
 			_KeyRecords.clear();
 		}
 
-		void WinInput::NotifyKeyPressed(_In_ const Key& KeyName)
+		void WinInput::NotifyKeyPressed(_In_ const Key& InKeyName)
 		{
 			// Probably need mutex
-			_KeyRecords.push_back(KeyRecord(KeyName, DOWN));
+			_KeyRecords.push_back(KeyRecord(InKeyName, DOWN));
 		}
 
-		void WinInput::NotifyKeyReleased(_In_ const Key& KeyName)
+		void WinInput::NotifyKeyReleased(_In_ const Key& InKeyName)
 		{
 			// Probably need mutex
-			_KeyRecords.push_back(KeyRecord(KeyName, UP));
+			_KeyRecords.push_back(KeyRecord(InKeyName, UP));
 		}
 
-		void WinInput::NotifyAxis(_In_ const Axis& AxisName, _In_ float AxisValue)
+		void WinInput::NotifyAxis(_In_ const Axis& InAxisName, _In_ float InAxisValue)
 		{
-			_Axis[AxisName] = AxisValue;
+			_Axis[InAxisName] = InAxisValue;
 		}
 	}
 }

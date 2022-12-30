@@ -60,7 +60,7 @@ namespace Eternal
 				Down = _Inputs[InputIndex]->IsDown(InKeyName);
 			return Down;
 		}
-		float MultiInput::GetAxis(_In_ const Axis& InAxisName)
+		float MultiInput::GetAxis(_In_ const Axis& InAxisName) const
 		{
 			float AxisValue = 0.f;
 			for (uint32_t InputIndex = 0; InputIndex < _Inputs.size(); ++InputIndex)

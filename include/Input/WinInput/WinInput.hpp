@@ -17,18 +17,18 @@ namespace Eternal
 
 			WinInput();
 			virtual void Update() override;
-			virtual void NotifyKeyPressed(_In_ const Key& KeyName) override;
-			virtual void NotifyKeyReleased(_In_ const Key& KeyName) override;
-			virtual void NotifyAxis(_In_ const Axis& AxisName, _In_ float AxisValue) override;
+			virtual void NotifyKeyPressed(_In_ const Key& InKeyName) override;
+			virtual void NotifyKeyReleased(_In_ const Key& InKeyName) override;
+			virtual void NotifyAxis(_In_ const Axis& InAxisName, _In_ float InAxisValue) override;
 
 		private:
 			struct KeyRecord
 			{
 				KeyState State;
 				Key KeyName;
-				KeyRecord(const Key& KeyName, const KeyState& State)
-					: KeyName(KeyName)
-					, State(State)
+				KeyRecord(const Key& InKeyName, const KeyState& InState)
+					: KeyName(InKeyName)
+					, State(InState)
 				{
 				}
 			};
