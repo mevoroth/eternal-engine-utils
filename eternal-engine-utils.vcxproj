@@ -183,7 +183,7 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Code\FBX\FBX SDK\2020.0.1\include;$(SolutionDir)eternal-engine-extern\optick\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Software\FBXSDK\2020.2\include;$(SolutionDir)eternal-engine-extern\optick\src;$(SolutionDir)eternal-engine-extern\DirectXTex;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -244,9 +244,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2016.1.1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)eternal-engine-shaders\ShadersReflection;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FBXSDK_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForcedIncludeFiles>sal.h;UtilsSettings.hpp;optick.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>sal.h;Types/HLSLReflection.hpp;UtilsSettings.hpp;optick.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -256,6 +256,7 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <DisableSpecificWarnings>4189;4100</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
