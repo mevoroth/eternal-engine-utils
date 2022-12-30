@@ -14,7 +14,8 @@ namespace Eternal
 		{
 			switch (DDSFormat)
 			{
-			//case DXGI_FORMAT_R8G8B8A8_UNORM:
+			case DXGI_FORMAT_R8G8B8A8_UNORM:
+				return Format::FORMAT_RGBA8888_UNORM;
 			//case DXGI_FORMAT_R16G16_UNORM:
 			//case DXGI_FORMAT_R8G8_UNORM:
 			//case DXGI_FORMAT_R16_UNORM:
