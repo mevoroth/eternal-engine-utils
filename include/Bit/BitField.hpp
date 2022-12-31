@@ -126,6 +126,7 @@ namespace Eternal
 			{
 				ETERNAL_STATIC_ASSERT(ChunkCount > 0, "Size must be above 0");
 				ETERNAL_STATIC_ASSERT(sizeof(StorageType) >= 2, "Storage must be at least 16bits");
+				Reset();
 			}
 
 			constexpr StorageType GetFullChunk() const
