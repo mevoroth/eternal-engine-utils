@@ -17,7 +17,7 @@ namespace Eternal
 		};
 
 		File* CreateFileHandle(_In_ const std::string& InFileName);
-		void DestroyFileHandle(_In_ File*& InFile);
+		void DestroyFileHandle(_Inout_ File*& InFile);
 		bool FileExists(_In_ const std::string& InFileName);
 		FileContent LoadFileToMemory(_In_ const std::string& InFileName);
 		void UnloadFileFromMemory(_Inout_ FileContent& InOutFileContent);

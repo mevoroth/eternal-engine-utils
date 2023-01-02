@@ -4,7 +4,7 @@ namespace Eternal
 {
 	namespace FileSystem
 	{
-		bool CFile::Exists(const std::string& InFileName)
+		bool CFile::Exists(_In_ const std::string& InFileName)
 		{
 			ETERNAL_ASSERT(InFileName.size());
 			std::FILE* File = nullptr;
@@ -15,12 +15,12 @@ namespace Eternal
 			return FileExists;
 		}
 
-		CFile::CFile(const std::string& InFileName)
+		CFile::CFile(_In_ const std::string& InFileName)
 			: _FileName(InFileName)
 		{
 		}
 
-		void CFile::Open(const OpenMode& InOpenMode)
+		void CFile::Open(_In_ const OpenMode& InOpenMode)
 		{
 			char* Flags;
 

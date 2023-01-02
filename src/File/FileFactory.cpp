@@ -9,7 +9,7 @@ namespace Eternal
 {
 	namespace FileSystem
 	{
-		File* CreateFileHandle(const std::string& InFileName)
+		File* CreateFileHandle(_In_ const std::string& InFileName)
 		{
 #ifdef ETERNAL_USE_CFILE
 			return new CFile(InFileName);
@@ -18,7 +18,7 @@ namespace Eternal
 #endif
 		}
 
-		void DestroyFileHandle(File*& InFile)
+		void DestroyFileHandle(_Inout_ File*& InFile)
 		{
 			delete InFile;
 			InFile = nullptr;
