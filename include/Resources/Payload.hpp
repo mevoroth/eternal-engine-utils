@@ -3,6 +3,7 @@
 #include <vector>
 #include "Resources/Streaming.hpp"
 #include "Resources/TextureFactory.hpp"
+#include "Material/Material.hpp"
 
 namespace Eternal
 {
@@ -34,7 +35,7 @@ namespace Eternal
 			}
 
 			Material* MaterialToUpdate	= nullptr;
-			uint32_t Slot				= ~0u;
+			TextureType Slot			= TextureType::TEXTURE_TYPE_INVALID;
 			TextureKey Key;
 			string TextureName;
 		};

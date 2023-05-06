@@ -187,9 +187,6 @@
     <ClInclude Include="include\Parallel\MutexFactory.hpp">
       <Filter>Parallel</Filter>
     </ClInclude>
-    <ClInclude Include="include\Resources\ImmediateTextureFactory.hpp">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="include\Bit\BitField.hpp">
       <Filter>Container</Filter>
     </ClInclude>
@@ -223,7 +220,7 @@
     <ClInclude Include="include\Resources\MeshLoader.hpp">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="include\Event\EventSender.h">
+    <ClInclude Include="include\Event\EventSender.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\DebugTools\Debug.hpp">
@@ -246,6 +243,13 @@
     </ClInclude>
     <ClInclude Include="include\Import\dds\ImportDds.hpp">
       <Filter>Import\dds</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DebugTools\MemoryProfiler.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\StackMemory.hpp" />
+    <ClInclude Include="include\Resources\MeshFactory.hpp">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -321,9 +325,6 @@
     <ClCompile Include="src\Parallel\MutexFactory.cpp">
       <Filter>Parallel</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
     <ClCompile Include="src\Bit\BitField.cpp">
       <Filter>Container</Filter>
     </ClCompile>
@@ -368,6 +369,12 @@
     </ClCompile>
     <ClCompile Include="src\Import\dds\ImportDds.cpp">
       <Filter>Import\dds</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\MeshFactory.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File\File.cpp">
+      <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

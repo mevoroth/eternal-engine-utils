@@ -42,7 +42,7 @@ namespace Eternal
 
 			while (Arguments.WorkerRunning->Load())
 			{
-				OPTICK_FRAME(Arguments.Name.c_str());
+				//OPTICK_FRAME(Arguments.Name.c_str());
 				Arguments.WorkerConditionVariableMutex->Lock();
 				Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
 				Arguments.WorkerConditionVariableMutex->Unlock();
@@ -70,7 +70,7 @@ namespace Eternal
 
 			while (Arguments.WorkerRunning->Load())
 			{
-				OPTICK_FRAME(Arguments.Name.c_str());
+				//OPTICK_FRAME(Arguments.Name.c_str());
 				if (!Arguments.WorkerTask)
 				{
 					Arguments.WorkerConditionVariableMutex->Lock();

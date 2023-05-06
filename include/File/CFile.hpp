@@ -18,6 +18,7 @@ namespace Eternal
 			virtual void Close() override final;
 			virtual void Read(_In_ uint8_t* InBlock, _In_ uint64_t InSize) override final;
 			virtual void Write(_In_ uint8_t* InBlock, _In_ uint64_t InSize) override final;
+			virtual void Serialize(_Inout_ uint8_t* InOutBlock, _In_ uint64_t InSize) override final;
 			virtual void Seek(_In_ uint64_t InOffset, _In_ const Origin& InOrigin) override final;
 			virtual uint64_t Tell() const override final;
 			virtual uint64_t GetFileSize() override final;

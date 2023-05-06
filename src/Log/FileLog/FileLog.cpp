@@ -10,10 +10,10 @@ namespace Eternal
 	{
 		using namespace FileSystem;
 
-		FileLog::FileLog(_In_ const char* FileName)
+		FileLog::FileLog(_In_ const char* InFileName)
 			: Log()
 		{
-			string Prefix(FileName ? FileName : "Eternal");
+			string Prefix(InFileName ? InFileName : "Eternal");
 			string Suffix = ".log";
 
 			const Log::LogLevel* LogLevels[] = {
@@ -26,11 +26,11 @@ namespace Eternal
 			for (int LogLevelIndex = 0; LogLevelIndex < Log::LogLevelCount; ++LogLevelIndex)
 			{
 				_LogFiles[LogLevelIndex] = CreateFileHandle(Prefix + string(".") + string(LogLevels[LogLevelIndex]->Tag) + Suffix);
-				_LogFiles[LogLevelIndex]->Open(File::WRITE);
+				_LogFiles[LogLevelIndex]->Open(File::OpenMode::WRITE);
 			}
 
 			_LogAllFile = CreateFileHandle(Prefix + Suffix);
-			_LogAllFile->Open(File::WRITE);
+			_LogAllFile->Open(File::OpenMode::WRITE);
 
 			Write(Info, Engine, "Start logging");
 		}
@@ -48,15 +48,15 @@ namespace Eternal
 			}
 		}
 
-		void FileLog::Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message)
+		void FileLog::Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage)
 		{
 			char HumanReadableTime[24];
 			Eternal::Time::Timer::ToHumanReadable(GetElaspedTime(), HumanReadableTime);
 			string Temp = HumanReadableTime;
-			Temp.append("[").append(Category.Category).append("]");
-			Temp.append(Message);
+			Temp.append("[").append(InCategory.Category).append("]");
+			Temp.append(InMessage);
 			Temp.append("\n");
-			_LogFiles[Level.Index]->Write((uint8_t*)Temp.c_str(), Temp.size());
+			_LogFiles[InLevel.Index]->Write((uint8_t*)Temp.c_str(), Temp.size());
 			_LogAllFile->Write((uint8_t*)Temp.c_str(), Temp.size());
 		}
 	}

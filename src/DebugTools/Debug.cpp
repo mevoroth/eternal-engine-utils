@@ -11,6 +11,7 @@ namespace Eternal
 	{
 		void WaitForDebugger(bool BreakIfNotPresent)
 		{
+			//return;
 			while (!IsDebuggerPresent())
 			{
 				if (BreakIfNotPresent)

@@ -13,6 +13,7 @@ namespace Eternal
 		const Log::LogCategory Log::Save("Save");
 		const Log::LogCategory Log::Import("Import");
 		const Log::LogCategory Log::Graphics("Graphics");
+		const Log::LogCategory Log::Components("Components");
 
 		Log* Log::_Instance = nullptr;
 
@@ -21,7 +22,7 @@ namespace Eternal
 			_InitialTime = Eternal::Time::Timer::Get()->GetTimeMicroSeconds();
 		}
 
-		void Log::Initialize(Log* InLog)
+		void Log::Initialize(_In_ Log* InLog)
 		{
 			ETERNAL_ASSERT(!_Instance);
 			ETERNAL_ASSERT(InLog);
@@ -47,13 +48,14 @@ namespace Eternal
 	}
 
 	
-	const LogSystem::Log::LogLevel& LogInfo		= LogSystem::Log::Info;
-	const LogSystem::Log::LogLevel& LogWarning	= LogSystem::Log::Warning;
-	const LogSystem::Log::LogLevel& LogError	= LogSystem::Log::Error;
-	const LogSystem::Log::LogLevel& LogCritical	= LogSystem::Log::Critical;
+	const LogSystem::Log::LogLevel& LogInfo				= LogSystem::Log::Info;
+	const LogSystem::Log::LogLevel& LogWarning			= LogSystem::Log::Warning;
+	const LogSystem::Log::LogLevel& LogError			= LogSystem::Log::Error;
+	const LogSystem::Log::LogLevel& LogCritical			= LogSystem::Log::Critical;
 
-	const LogSystem::Log::LogCategory& LogGraphics	= LogSystem::Log::Graphics;
-	const LogSystem::Log::LogCategory& LogEngine	= LogSystem::Log::Engine;
-	const LogSystem::Log::LogCategory& LogSave		= LogSystem::Log::Save;
-	const LogSystem::Log::LogCategory& LogImport	= LogSystem::Log::Import;
+	const LogSystem::Log::LogCategory& LogGraphics		= LogSystem::Log::Graphics;
+	const LogSystem::Log::LogCategory& LogEngine		= LogSystem::Log::Engine;
+	const LogSystem::Log::LogCategory& LogSave			= LogSystem::Log::Save;
+	const LogSystem::Log::LogCategory& LogImport		= LogSystem::Log::Import;
+	const LogSystem::Log::LogCategory& LogComponents	= LogSystem::Log::Components;
 }

@@ -14,14 +14,14 @@ namespace Eternal
 		{
 		}
 
-		void ConsoleLog::Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message)
+		void ConsoleLog::Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage)
 		{
 			char HumanReadableTime[24];
 			Eternal::Time::Timer::ToHumanReadable(GetElaspedTime(), HumanReadableTime);
 			string Temp = HumanReadableTime;
-			Temp.append("[").append(Category.Category).append("]");
-			Temp.append("[").append(Level.Tag).append("]");
-			Temp.append(Message);
+			Temp.append("[").append(InCategory.Category).append("]");
+			Temp.append("[").append(InLevel.Tag).append("]");
+			Temp.append(InMessage);
 			Temp.append("\n");
 			OutputDebugString(Temp.c_str());
 		}

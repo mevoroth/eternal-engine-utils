@@ -19,7 +19,8 @@
     <ClInclude Include="include\Container\RingBuffer.hpp" />
     <ClInclude Include="include\Container\Stack.hpp" />
     <ClInclude Include="include\DebugTools\Debug.hpp" />
-    <ClInclude Include="include\Event\EventSender.h" />
+    <ClInclude Include="include\DebugTools\MemoryProfiler.hpp" />
+    <ClInclude Include="include\Event\EventSender.hpp" />
     <ClInclude Include="include\File\CFile.hpp" />
     <ClInclude Include="include\File\File.hpp" />
     <ClInclude Include="include\File\FileFactory.hpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="include\Log\MultiChannelLog\MultiChannelLog.hpp" />
     <ClInclude Include="include\Macros\Macros.hpp" />
     <ClInclude Include="include\Math\Math.hpp" />
+    <ClInclude Include="include\Memory\StackMemory.hpp" />
     <ClInclude Include="include\Parallel\AtomicS32.hpp" />
     <ClInclude Include="include\Parallel\AtomicS32Factory.hpp" />
     <ClInclude Include="include\Parallel\AtomicU64.hpp" />
@@ -61,7 +63,7 @@
     <ClInclude Include="include\Parallel\ThreadFactory.hpp" />
     <ClInclude Include="include\Parallel\ThreadLocalStorage.hpp" />
     <ClInclude Include="include\Parallel\Worker.hpp" />
-    <ClInclude Include="include\Resources\ImmediateTextureFactory.hpp" />
+    <ClInclude Include="include\Resources\MeshFactory.hpp" />
     <ClInclude Include="include\Resources\MeshLoader.hpp" />
     <ClInclude Include="include\Resources\Payload.hpp" />
     <ClInclude Include="include\Resources\Pool.hpp" />
@@ -78,6 +80,7 @@
     <ClCompile Include="src\Bit\BitField.cpp" />
     <ClCompile Include="src\DebugTools\Debug.cpp" />
     <ClCompile Include="src\File\CFile.cpp" />
+    <ClCompile Include="src\File\File.cpp" />
     <ClCompile Include="src\File\FileFactory.cpp" />
     <ClCompile Include="src\File\FilePath.cpp" />
     <ClCompile Include="src\Import\dds\ImportDds.cpp" />
@@ -105,7 +108,7 @@
     <ClCompile Include="src\Parallel\Task.cpp" />
     <ClCompile Include="src\Parallel\ThreadFactory.cpp" />
     <ClCompile Include="src\Parallel\Worker.cpp" />
-    <ClCompile Include="src\Resources\ImmediateTextureFactory.cpp" />
+    <ClCompile Include="src\Resources\MeshFactory.cpp" />
     <ClCompile Include="src\Resources\MeshLoader.cpp" />
     <ClCompile Include="src\Resources\Payload.cpp" />
     <ClCompile Include="src\Resources\Streaming.cpp" />
@@ -124,13 +127,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />

@@ -14,14 +14,18 @@ namespace Eternal
 			FILE_TYPE_LEVELS,
 			FILE_TYPE_TEXTURES,
 			FILE_TYPE_MESHES,
+			FILE_TYPE_CACHED_MESHES,
 			FILE_TYPE_COUNT
 		};
 
 		class FilePath
 		{
 		public:
+			static const vector<string>& GetFolderPaths(_In_ const FileType& InFileType);
+
 			static void Register(_In_ const string& InFolderPath, _In_ const FileType& InFileType);
 			static string Find(_In_ const string& InFileName, _In_ const FileType& InFileType);
+			static string FindOrCreate(_In_ const string& InFileName, _In_ const FileType& InFileType);
 
 		private:
 			static vector<string> _FolderPaths[static_cast<int32_t>(FileType::FILE_TYPE_COUNT)];

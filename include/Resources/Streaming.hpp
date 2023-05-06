@@ -50,6 +50,8 @@ namespace Eternal
 			string RequestPath;
 			FileType RequestType;
 
+			virtual ~StreamingRequest() {}
+
 		protected:
 			StreamingRequest(_In_ const string& InPath, _In_ const FileType& InFileType)
 				: RequestPath(InPath)
@@ -64,6 +66,8 @@ namespace Eternal
 
 		struct Payload
 		{
+			virtual ~Payload() {}
+
 			void AddRequest(_In_ StreamingRequest* InRequest);
 			
 			template<typename PayloadFunctor>

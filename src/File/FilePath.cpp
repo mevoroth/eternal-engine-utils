@@ -1,7 +1,8 @@
-#include "File/FilePath.hpp"
+	#include "File/FilePath.hpp"
 
 #include "Types/Types.hpp"
 #include "File/FileFactory.hpp"
+#include <stdlib.h>
 
 namespace Eternal
 {
@@ -9,11 +10,12 @@ namespace Eternal
 	{
 		vector<string> FilePath::_FolderPaths[static_cast<int32_t>(FileType::FILE_TYPE_COUNT)];
 
-		string FilePath::Find(_In_ const string& InFileName, _In_ const FileType& InFileType)
+		template<typename FallbackFunction>
+		static string FilePath_FindOrFallback(_In_ const string& InFileName, _In_ const FileType& InFileType, _In_ const FallbackFunction& InFallbackFunctor)
 		{
 			ETERNAL_ASSERT(static_cast<int32_t>(InFileType) < static_cast<int32_t>(FileType::FILE_TYPE_COUNT));
 			ETERNAL_ASSERT(InFileName.size() > 0);
-			vector<string>& FolderPaths = _FolderPaths[static_cast<int32_t>(InFileType)];
+			const vector<string>& FolderPaths = FilePath::GetFolderPaths(InFileType);
 
 			bool FileFound = false;
 			string FullPath;
@@ -24,10 +26,40 @@ namespace Eternal
 				if (FileFound)
 					FullPath = TempFullPath;
 			}
-			if (FileFound)
-				return FullPath;
-	
-			return string();
+
+			if (!FileFound)
+				FullPath = InFallbackFunctor(FolderPaths, InFileName);
+
+			return FullPath;
+		}
+
+		const vector<string>& FilePath::GetFolderPaths(_In_ const FileType& InFileType)
+		{
+			return _FolderPaths[static_cast<int32_t>(InFileType)];
+		}
+
+		string FilePath::Find(_In_ const string& InFileName, _In_ const FileType& InFileType)
+		{
+			return FilePath_FindOrFallback(
+				InFileName,
+				InFileType,
+				[](_In_ const vector<string>& InFolderPaths, _In_ const string& InFileName) -> string { return string(); }
+			);
+		}
+
+		string FilePath::FindOrCreate(_In_ const string& InFileName, _In_ const FileType& InFileType)
+		{
+			return FilePath_FindOrFallback(
+				InFileName,
+				InFileType,
+				[](_In_ const vector<string>& InFolderPaths, _In_ const string& InFileName) -> string
+				{
+					string FullPath = InFolderPaths[0] + InFileName;
+					File* NewFile = CreateFileHandle(FullPath);
+					DestroyFileHandle(NewFile);
+					return FullPath;
+				}
+			);
 		}
 
 		void FilePath::Register(_In_ const string& InFolderPath, _In_ const FileType& InFileType)

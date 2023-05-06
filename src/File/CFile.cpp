@@ -6,12 +6,15 @@ namespace Eternal
 	{
 		bool CFile::Exists(_In_ const std::string& InFileName)
 		{
-			ETERNAL_ASSERT(InFileName.size());
-			std::FILE* File = nullptr;
-			errno_t Err = fopen_s(&File, InFileName.c_str(), "rb");
-			bool FileExists = !Err && File;
-			if (File)
-				fclose(File);
+			bool FileExists = false;
+			if (InFileName.size() > 0)
+			{
+				std::FILE* File = nullptr;
+				errno_t Err = fopen_s(&File, InFileName.c_str(), "rb");
+				FileExists = !Err && File;
+				if (File)
+					fclose(File);
+			}
 			return FileExists;
 		}
 
@@ -22,17 +25,19 @@ namespace Eternal
 
 		void CFile::Open(_In_ const OpenMode& InOpenMode)
 		{
+			File::Open(InOpenMode);
+
 			char* Flags;
 
 			switch (InOpenMode)
 			{
-			case READ:
+			case OpenMode::READ:
 				Flags = "rb";
 				break;
-			case WRITE:
+			case OpenMode::WRITE:
 				Flags = "wb";
 				break;
-			case READ_WRITE:
+			case OpenMode::READ_WRITE:
 				Flags = "r+b";
 				break;
 
@@ -60,6 +65,14 @@ namespace Eternal
 			fwrite(InBlock, InSize, 1, _File);
 		}
 
+		void CFile::Serialize(_Inout_ uint8_t* InOutBlock, _In_ uint64_t InSize)
+		{
+			if (IsOpenedForReadExclusive())
+				Read(InOutBlock, InSize);
+			else if (IsOpenedForWriteExclusive())
+				Write(InOutBlock, InSize);
+		}
+
 		void CFile::Seek(_In_ uint64_t InOffset, _In_ const Origin& InOrigin)
 		{
 			ETERNAL_ASSERT(InOffset < 0xFFFFFFFFull);
@@ -74,9 +87,9 @@ namespace Eternal
 		uint64_t CFile::GetFileSize()
 		{
 			uint64_t Current = Tell();
-			Seek(0, END);
+			Seek(0, Origin::END);
 			uint64_t Size = Tell();
-			Seek(Current, SET);
+			Seek(Current, Origin::SET);
 			return Size;
 		}
 	}

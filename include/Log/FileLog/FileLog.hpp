@@ -16,9 +16,9 @@ namespace Eternal
 		class FileLog final : public Log
 		{
 		public:
-			FileLog(_In_ const char* FileName);
+			FileLog(_In_ const char* InFileName);
 			~FileLog();
-			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) override;
+			virtual void Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage) override;
 
 		private:
 			File* _LogFiles[LogLevelCount];

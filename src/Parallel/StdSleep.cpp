@@ -11,7 +11,7 @@ namespace Eternal
 	{
 		void Sleep(const TimeNanoSecondsT& NanoSeconds)
 		{
-			ETERNAL_PROFILER(INFO)();
+			//ETERNAL_PROFILER(INFO)();
 			this_thread::sleep_for(chrono::nanoseconds(NanoSeconds));
 		}
 	}

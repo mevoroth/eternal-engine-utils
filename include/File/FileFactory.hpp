@@ -1,19 +1,32 @@
 #pragma once
 
+#include "File/File.hpp"
 #include <string>
 
 namespace Eternal
 {
 	namespace FileSystem
 	{
-		class File;
-
 		struct FileContent
 		{
 			uint8_t* Content	= nullptr;
 			uint64_t Size		= 0ull;
 
 			~FileContent();
+		};
+
+		class FileScope
+		{
+		public:
+
+			FileScope(_In_ const std::string& InFileName, _In_ const File::OpenMode& InOpenMode);
+			~FileScope();
+
+			File* operator->() const { return _File; }
+
+		private:
+
+			File* _File = nullptr;
 		};
 
 		File* CreateFileHandle(_In_ const std::string& InFileName);

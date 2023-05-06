@@ -47,14 +47,15 @@ namespace Eternal
 			static const LogCategory Engine;
 			static const LogCategory Save;
 			static const LogCategory Import;
+			static const LogCategory Components;
 
-			static void Initialize(Log* LogObj);
+			static void Initialize(_In_ Log* InLog);
 			static Log* Get();
 
 			Log();
 			virtual ~Log() {}
 
-			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) = 0;
+			virtual void Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage) = 0;
 			TimeMicroSecondsT GetElaspedTime() const;
 
 		private:
@@ -74,6 +75,7 @@ namespace Eternal
 	extern const LogSystem::Log::LogCategory& LogEngine;
 	extern const LogSystem::Log::LogCategory& LogSave;
 	extern const LogSystem::Log::LogCategory& LogImport;
+	extern const LogSystem::Log::LogCategory& LogComponents;
 
 	void LogWrite(_In_ const LogSystem::Log::LogLevel& Level, _In_ const LogSystem::Log::LogCategory& Category, _In_ const string& Message);
 }
