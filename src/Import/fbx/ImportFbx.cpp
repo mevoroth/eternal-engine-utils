@@ -274,8 +274,7 @@ namespace Eternal
 				//NewTextureRequest->MaterialToUpdate.Slot				= InTextureType;
 			}
 
-			template<typename VectorType>
-			static void LeftHandedTransformVector(_Inout_ VectorType& InOutVector3)
+			static void LeftHandedTransformVector(_Inout_ Vector3& InOutVector3)
 			{
 				InOutVector3.x = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutVector3.x : InOutVector3.x;
 			}
@@ -298,7 +297,11 @@ namespace Eternal
 
 				void ReserveVertices(_In_ uint32_t VerticesCount) { _Vertices.reserve(VerticesCount); }
 				void ReserveIndices(_In_ uint32_t IndicesCount) { _Indices.reserve(IndicesCount); }
-				void PushVertex(_In_ const PositionNormalTangentBinormalUVVertex& InVertex) { _Vertices.push_back(InVertex); }
+				void PushVertex(_In_ const PositionNormalTangentBinormalUVVertex& InVertex)
+				{
+					_Vertices.push_back(InVertex);
+					_BoundingBox.Extend(InVertex.Position);
+				}
 
 				void PushTriangle(_In_ uint16_t InVertex0, _In_ uint16_t InVertex1, _In_ uint16_t InVertex2)
 				{
@@ -311,6 +314,7 @@ namespace Eternal
 				const Transform& GetTransform() const { return _Transform; }
 				Transform& GetLocalTransform() { return _LocalTransform; }
 				const Transform& GetLocalTransform() const { return _LocalTransform; }
+				const AxisAlignedBoundingBox& GetBoundingBox() const { return _BoundingBox; }
 
 				const Mesh& GetSubMesh(_In_ uint32_t InIndex) const
 				{
@@ -343,6 +347,7 @@ namespace Eternal
 				vector<Mesh>									_SubMeshes;
 				Transform										_Transform;
 				Transform										_LocalTransform;
+				AxisAlignedBoundingBox							_BoundingBox;
 				Components::Material*							_Material = nullptr;
 			};
 
@@ -429,31 +434,31 @@ namespace Eternal
 				_Flatten_Split_SingleMesh(IntermediateMesh, OutMeshPayload);
 				//_Flatten_Split_MultipleMeshes(IntermediateMesh, OutMeshPayload);
 
-				GenericMesh<PositionColorVertex>* BoundingBoxMesh = new GenericMesh<PositionColorVertex>();
-				BoundingBoxMesh->AddMesh(
-					{
-						2, 0, 3,	0, 1, 3, // -X
-						4, 6, 5,	6, 7, 5, // +X
-						0, 4, 1,	4, 5, 1, // -Y
-						6, 2, 7,	2, 3, 7, // +Y
-						2, 6, 0,	6, 4, 0, // -Z
-						1, 5, 3,	5, 7, 3  // +Z
-					},
-					{
-						{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0x000000FF },
-						{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0x0000FFFF },
-						{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0x00FF00FF },
-						{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0x00FFFFFF },
-						{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0xFF0000FF },
-						{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0xFF00FFFF },
-						{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0xFFFF00FF },
-						{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0xFFFFFFFF },
-					},
-					IntermediateMesh.GetLocalTransform().GetViewToWorld() * IntermediateMesh.GetTransform().GetViewToWorld(),
-					nullptr
-				);
+				//GenericMesh<PositionColorVertex>* BoundingBoxMesh = new GenericMesh<PositionColorVertex>();
+				//BoundingBoxMesh->AddMesh(
+				//	{
+				//		2, 0, 3,	0, 1, 3, // -X
+				//		4, 6, 5,	6, 7, 5, // +X
+				//		0, 4, 1,	4, 5, 1, // -Y
+				//		6, 2, 7,	2, 3, 7, // +Y
+				//		2, 6, 0,	6, 4, 0, // -Z
+				//		1, 5, 3,	5, 7, 3  // +Z
+				//	},
+				//	{
+				//		{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0x000000FF },
+				//		{ Vector4(Box.GetMin().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0x0000FFFF },
+				//		{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0x00FF00FF },
+				//		{ Vector4(Box.GetMin().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0x00FFFFFF },
+				//		{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMin().z, 1.0f), 0xFF0000FF },
+				//		{ Vector4(Box.GetMax().x, Box.GetMin().y, Box.GetMax().z, 1.0f), 0xFF00FFFF },
+				//		{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMin().z, 1.0f), 0xFFFF00FF },
+				//		{ Vector4(Box.GetMax().x, Box.GetMax().y, Box.GetMax().z, 1.0f), 0xFFFFFFFF },
+				//	},
+				//	IntermediateMesh.GetLocalTransform().GetViewToWorld() * IntermediateMesh.GetTransform().GetViewToWorld(),
+				//	nullptr
+				//);
 
-				OutMeshPayload.BoundingBoxMesh = BoundingBoxMesh;
+				//OutMeshPayload.BoundingBoxMesh = BoundingBoxMesh;
 
 				MeshCache.SerializeMesh(SerializationMode::SERIALIZATION_MODE_WRITE, InFullFilePath, MaterialTextures, OutMeshPayload);
 			}
@@ -532,7 +537,7 @@ namespace Eternal
 
 				uint32_t FlattenedVerticesCount = InOutMesh->GetVerticesCount();
 				ETERNAL_ASSERT((InMesh.GetVertices().size() + FlattenedVerticesCount) < InOutMesh->GetIndicesMaxCount());
-				InOutMesh->AddMergeMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial());
+				InOutMesh->AddMergeMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox());
 			}
 
 			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
@@ -560,7 +565,7 @@ namespace Eternal
 				if (IsMultipleMeshes)
 					InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
 				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
-				InOutMesh->AddMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial());
+				InOutMesh->AddMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox());
 			}
 
 			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
@@ -598,7 +603,7 @@ namespace Eternal
 				static_cast<float>(GlobalTranslation[1]),
 				static_cast<float>(GlobalTranslation[2])
 			);
-			LeftHandedTransformVector<Vector3>(GlobalTranslationTransformed);
+			LeftHandedTransformVector(GlobalTranslationTransformed);
 			InOutMesh.GetTransform().Translate(GlobalTranslationTransformed);
 
 			Vector3 GlobalRotationRadians(
@@ -628,7 +633,7 @@ namespace Eternal
 					static_cast<float>(LocalTranslation[1]),
 					static_cast<float>(LocalTranslation[2])
 				);
-				LeftHandedTransformVector<Vector3>(LocalTranslationTransformed);
+				LeftHandedTransformVector(LocalTranslationTransformed);
 				InOutMesh.GetLocalTransform().Translate(LocalTranslationTransformed);
 
 				Vector3 LocalRotationRadians(
@@ -788,7 +793,7 @@ namespace Eternal
 							static_cast<float>(FbxVertexComponent[1]),
 							static_cast<float>(FbxVertexComponent[2])
 						);
-						LeftHandedTransformVector<Vector3>(InOutVertexComponent);
+						LeftHandedTransformVector(InOutVertexComponent);
 					};
 
 					if (AllByControlPoints)
@@ -800,13 +805,12 @@ namespace Eternal
 						for (int ControlPointIndex = 0, ControlPointsCount = InFbxMesh->GetControlPointsCount(); ControlPointIndex < ControlPointsCount; ++ControlPointIndex)
 						{
 							PositionNormalTangentBinormalUVVertex Vertex;
-							Vertex.Position = Vector4(
+							Vertex.Position = Vector3(
 								static_cast<float>(FbxControlPoints[ControlPointIndex][0]),
 								static_cast<float>(FbxControlPoints[ControlPointIndex][1]),
-								static_cast<float>(FbxControlPoints[ControlPointIndex][2]),
-								1.0f
+								static_cast<float>(FbxControlPoints[ControlPointIndex][2])
 							);
-							LeftHandedTransformVector<Vector4>(Vertex.Position);
+							LeftHandedTransformVector(Vertex.Position);
 
 							GetSubMeshComponentElement(HasNormals, InFbxMesh->GetElementNormal(), ControlPointIndex, Vertex.Normal);
 							GetSubMeshComponentElement(HasTangents, InFbxMesh->GetElementTangent(), ControlPointIndex, Vertex.Tangent);
@@ -824,12 +828,6 @@ namespace Eternal
 								);
 								LeftHandedTransformUV(Vertex.UV);
 							}
-
-							//Vector3 NewMin = Min(InOutBoundingBox.GetMin(), InOutBoundingBox.GetMax());
-							//Vector3 NewMax = Max(InOutBoundingBox.GetMin(), InOutBoundingBox.GetMax());
-
-							//InOutBoundingBox.SetMin(NewMin);
-							//InOutBoundingBox.SetMax(NewMax);
 
 							InOutMesh.PushVertex(Vertex);
 						}
@@ -906,13 +904,12 @@ namespace Eternal
 								{
 									Indices[VertexIndex] = static_cast<uint16_t>(VerticesCount[MaterialIndex]);
 
-									Vertex.Position = Vector4(
+									Vertex.Position = Vector3(
 										static_cast<float>(FbxControlPoints[ControlPointIndex][0]),
 										static_cast<float>(FbxControlPoints[ControlPointIndex][1]),
-										static_cast<float>(FbxControlPoints[ControlPointIndex][2]),
-										1.0f
+										static_cast<float>(FbxControlPoints[ControlPointIndex][2])
 									);
-									LeftHandedTransformVector<Vector4>(Vertex.Position);
+									LeftHandedTransformVector(Vertex.Position);
 
 									if (HasNormals)
 									{
@@ -924,7 +921,7 @@ namespace Eternal
 											static_cast<float>(FbxVertexNormal[1]),
 											static_cast<float>(FbxVertexNormal[2])
 										);
-										LeftHandedTransformVector<Vector3>(Vertex.Normal);
+										LeftHandedTransformVector(Vertex.Normal);
 									}
 
 									GetSubMeshComponentElement(HasTangents, InFbxMesh->GetElementTangent(), ControlPointIndex, Vertex.Tangent);
@@ -996,16 +993,6 @@ namespace Eternal
 				//} break;
 				}
 			}
-
-			//LogWrite(LogInfo, LogImport, InNode->GetName());
-			//LogWrite(LogInfo, LogImport, "World Transform:");
-			//LogWrite(LogInfo, LogImport, string("T: [") + to_string(Translation[0]) + ";" + to_string(Translation[1]) + ";" + to_string(Translation[2]) + "]");
-			//LogWrite(LogInfo, LogImport, string("R: [") + to_string(Rotation[0]) + ";" + to_string(Rotation[1]) + ";" + to_string(Rotation[2]) + "]");
-			//LogWrite(LogInfo, LogImport, string("S: [") + to_string(Scaling[0]) + ";" + to_string(Scaling[1]) + ";" + to_string(Scaling[2]) + "]");
-			//LogWrite(LogInfo, LogImport, "Local Transform:");
-			//LogWrite(LogInfo, LogImport, string("T: [") + to_string(InNode->LclTranslation.Get()[0]) + ";" + to_string(InNode->LclTranslation.Get()[1]) + ";" + to_string(InNode->LclTranslation.Get()[2]) + "]");
-			//LogWrite(LogInfo, LogImport, string("R: [") + to_string(InNode->LclRotation.Get()[0]) + ";" + to_string(InNode->LclRotation.Get()[1]) + ";" + to_string(InNode->LclRotation.Get()[2]) + "]");
-			//LogWrite(LogInfo, LogImport, string("S: [") + to_string(InNode->LclScaling.Get()[0]) + ";" + to_string(InNode->LclScaling.Get()[1]) + ";" + to_string(InNode->LclScaling.Get()[2]) + "]");
 
 			for (int NodeChildIndex = 0, NodeChildCount = InNode->GetChildCount(); NodeChildIndex < NodeChildCount; ++NodeChildIndex)
 			{

@@ -100,10 +100,12 @@ namespace Eternal
 					uint32_t PerDrawInformationCount = static_cast<uint32_t>(InOutGenericMesh->GetGPUMesh().PerDrawInformations.size());
 					CachedMeshFile->Serialize(PerDrawInformationCount);
 					InOutGenericMesh->GetGPUMesh().PerDrawInformations.resize(PerDrawInformationCount);
+					InOutGenericMesh->GetGPUMesh().BoundingBoxes.resize(PerDrawInformationCount);
 
 					for (uint32_t PerDrawInformationIndex = 0; PerDrawInformationIndex < InOutGenericMesh->GetGPUMesh().PerDrawInformations.size(); ++PerDrawInformationIndex)
 					{
 						GPUMesh::PerDrawInformation& CurrentPerDrawInformation = InOutGenericMesh->GetGPUMesh().PerDrawInformations[PerDrawInformationIndex];
+						CachedMeshFile->Serialize(InOutGenericMesh->GetGPUMesh().BoundingBoxes[PerDrawInformationIndex]);
 						CachedMeshFile->Serialize(CurrentPerDrawInformation.IndicesOffset);
 						CachedMeshFile->Serialize(CurrentPerDrawInformation.IndicesCount);
 						CachedMeshFile->Serialize(CurrentPerDrawInformation.VerticesOffset);
