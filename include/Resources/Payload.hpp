@@ -45,7 +45,7 @@ namespace Eternal
 		struct MeshPayload : public Payload
 		{
 			MeshCollection*			LoadedMesh	= nullptr;
-			Mesh*					BoundingBox	= nullptr;
+			Mesh*					BoundingBoxMesh	= nullptr;
 			vector<MeshComponent*>	ComponentsToUpdate;
 		};
 

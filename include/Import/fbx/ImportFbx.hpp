@@ -2,7 +2,6 @@
 
 #include "fbxsdk.h"
 
-#include "Mesh/BoundingBox.hpp"
 #include "Resources/Payload.hpp"
 
 namespace Eternal
@@ -10,6 +9,11 @@ namespace Eternal
 	namespace Resources
 	{
 		struct MaterialDependency;
+	}
+
+	namespace Components
+	{
+		class AxisAlignedBoundingBox;
 	}
 
 	namespace Import
@@ -42,7 +46,7 @@ namespace Eternal
 
 			void _ImportTextures(_In_ FbxScene* InScene, _Inout_ ImportFbxPrivate::FbxTextureCache& InOutTextureCache, _Inout_ MeshPayload& InOutMeshPayload);
 			void _CreateTextureRequests(_In_ const MaterialDependency& InMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload);
-			void _ImportNode(_In_ FbxNode* InNode, _In_ const ImportFbxPrivate::FbxTextureCache& InTextureCache, _Inout_ ImportFbxPrivate::Mesh& InOutMesh, _Inout_ BoundingBox& InOutBoundingBox, _Inout_ MaterialDependency& InOutMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload);
+			void _ImportNode(_In_ FbxNode* InNode, _In_ const ImportFbxPrivate::FbxTextureCache& InTextureCache, _Inout_ ImportFbxPrivate::Mesh& InOutMesh, _Inout_ AxisAlignedBoundingBox& InOutBoundingBox, _Inout_ MaterialDependency& InOutMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload);
 
 			void _ImportPoses(_In_ FbxScene* InScene);
 			void _ImportSkeletal(_In_ FbxMesh* InMesh);

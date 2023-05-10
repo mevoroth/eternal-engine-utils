@@ -6,6 +6,7 @@
 #include "Transform/Transform.hpp"
 #include "Material/Material.hpp"
 #include "Mesh/GenericMesh.hpp"
+#include "Mesh/AxisAlignedBoundingBox.hpp"
 #include "File/FilePath.hpp"
 #include "Math/Math.hpp"
 #include "Log/Log.hpp"
@@ -393,7 +394,7 @@ namespace Eternal
 				ImportFbxPrivate::FbxTextureCache TextureCache;
 				ImportFbxPrivate::Mesh IntermediateMesh;
 
-				BoundingBox Box;
+				AxisAlignedBoundingBox Box;
 				Box.SetMin(Vector3(std::numeric_limits<float>::infinity()));
 				Box.SetMax(Vector3(-std::numeric_limits<float>::infinity()));
 
@@ -452,7 +453,7 @@ namespace Eternal
 					nullptr
 				);
 
-				OutMeshPayload.BoundingBox = BoundingBoxMesh;
+				OutMeshPayload.BoundingBoxMesh = BoundingBoxMesh;
 
 				MeshCache.SerializeMesh(SerializationMode::SERIALIZATION_MODE_WRITE, InFullFilePath, MaterialTextures, OutMeshPayload);
 			}
@@ -581,7 +582,7 @@ namespace Eternal
 			ImportFbx_Flatten_Split_Node<true>(InMesh, RootNodeContext, InOutMeshPayload);
 		}
 
-		void ImportFbx::_ImportNode(_In_ FbxNode* InNode, _In_ const ImportFbxPrivate::FbxTextureCache& InTextureCache, _Inout_ ImportFbxPrivate::Mesh& InOutMesh, _Inout_ BoundingBox& InOutBoundingBox, _Inout_ MaterialDependency& InOutMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload)
+		void ImportFbx::_ImportNode(_In_ FbxNode* InNode, _In_ const ImportFbxPrivate::FbxTextureCache& InTextureCache, _Inout_ ImportFbxPrivate::Mesh& InOutMesh, _Inout_ AxisAlignedBoundingBox& InOutBoundingBox, _Inout_ MaterialDependency& InOutMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload)
 		{
 			static constexpr int VERTICES_PER_TRIANGLE = 3;
 
