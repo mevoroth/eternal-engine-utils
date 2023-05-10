@@ -276,19 +276,19 @@ namespace Eternal
 			template<typename VectorType>
 			static void LeftHandedTransformVector(_Inout_ VectorType& InOutVector3)
 			{
-				//InOutVector3.x = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutVector3.x : InOutVector3.x;
+				InOutVector3.x = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutVector3.x : InOutVector3.x;
 			}
 
 			static void LeftHandedTransformUV(_Inout_ Vector2& InOutUV)
 			{
-				//if (ETERNAL_IMPORT_FBX_LEFT_HANDED)
-				//	InOutUV.y = 1.0f - InOutUV.y;
+				if (ETERNAL_IMPORT_FBX_LEFT_HANDED)
+					InOutUV.y = 1.0f - InOutUV.y;
 			}
 
 			static void LeftHandedTransformEulerRotation(_Inout_ Vector3& InOutRotation)
 			{
-				//InOutRotation.y = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutRotation.y : InOutRotation.y;
-				//InOutRotation.z = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutRotation.z : InOutRotation.z;
+				InOutRotation.y = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutRotation.y : InOutRotation.y;
+				InOutRotation.z = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutRotation.z : InOutRotation.z;
 			}
 
 			class Mesh
@@ -400,18 +400,15 @@ namespace Eternal
 				FbxScene* Scene = FbxScene::Create(_SdkManager, "scene");
 				_FbxImporter->Import(Scene);
 
-				//FbxAxisSystem EternalAxisSystem(FbxAxisSystem::eYAxis, FbxAxisSystem::eParityEven, FbxAxisSystem::eLeftHanded);
-				//FbxAxisSystem SceneAxisSystem = Scene->GetGlobalSettings().GetAxisSystem();
+				FbxAxisSystem EternalAxisSystem(FbxAxisSystem::eYAxis, FbxAxisSystem::eParityOdd, FbxAxisSystem::eRightHanded);
+				FbxAxisSystem SceneAxisSystem = Scene->GetGlobalSettings().GetAxisSystem();
 
-				//if (SceneAxisSystem != EternalAxisSystem)
-				//	EternalAxisSystem.ConvertScene(Scene);
+				if (SceneAxisSystem != EternalAxisSystem)
+					EternalAxisSystem.ConvertScene(Scene);
 
-				//FbxSystemUnit SceneSystemUnit = Scene->GetGlobalSettings().GetSystemUnit();
-				//if (SceneSystemUnit.GetScaleFactor() != 1.0)
-				//{
-				//	//The unit in this example is centimeter.
-				//	FbxSystemUnit::m.ConvertScene(Scene);
-				//}
+				FbxSystemUnit SceneSystemUnit = Scene->GetGlobalSettings().GetSystemUnit();
+				if (SceneSystemUnit.GetScaleFactor() != 1.0)
+					FbxSystemUnit::m.ConvertScene(Scene);
 
 				FbxGeometryConverter GeometryConverter(_SdkManager);
 				bool TriangulateSuccess = GeometryConverter.Triangulate(Scene, /*pReplace=*/ true);
