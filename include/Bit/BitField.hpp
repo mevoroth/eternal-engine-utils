@@ -103,12 +103,12 @@ namespace Eternal
 				InOutField[InIndex / InOutField.GetChunkBitCount()] |= (StorageType(1) << (InIndex % InOutField.GetChunkBitCount()));
 			}
 
-			bool IsSet(_In_ uint32_t InIndex, _In_ const FieldType& InOutField) const
+			bool IsSet(_In_ uint32_t InIndex, _In_ const FieldType& InField) const
 			{
-				ETERNAL_ASSERT(InIndex < InOutField.GetBitCount());
-				size_t Entry = InIndex / InOutField.GetChunkBitCount();
-				uint32_t FlagIndex = InIndex % InOutField.GetChunkBitCount();
-				return (InOutField[Entry] & (StorageType(1) << FlagIndex)) == StorageType(0);
+				ETERNAL_ASSERT(InIndex < InField.GetBitCount());
+				size_t Entry = InIndex / InField.GetChunkBitCount();
+				uint32_t FlagIndex = InIndex % InField.GetChunkBitCount();
+				return (InField[Entry] & (StorageType(1) << FlagIndex)) == StorageType(0);
 			}
 
 			bool Any(_In_ uint32_t InEntryIndex, _In_ const FieldType& InField) const
