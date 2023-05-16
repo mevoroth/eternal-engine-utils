@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 namespace Eternal
 {
@@ -36,6 +37,8 @@ namespace Eternal
 			void StartFrame();
 			void ExecuteTask(_In_ Task* InTask, _In_ const DependenciesType& Dependencies = DependenciesType());
 			void EndFrame();
+
+			void ParallelFor(_In_ const std::string& InName, _In_ uint32_t InCount, const std::function<void(_In_ uint32_t InIndex)>& InFunctor);
 
 		private:
 			class Scheduler

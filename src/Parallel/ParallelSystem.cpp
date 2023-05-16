@@ -7,6 +7,7 @@
 #include "Parallel/MutexFactory.hpp"
 #include "Parallel/MutexAutoLock.hpp"
 #include "Parallel/Sleep.hpp"
+#include "Memory/StackMemory.hpp"
 #include "Math/Math.hpp"
 
 namespace Eternal
@@ -14,6 +15,28 @@ namespace Eternal
 	namespace Parallel
 	{
 		using namespace Eternal::Math;
+		using namespace Eternal::Memory;
+
+		class ParallelForTask : public Task
+		{
+		public:
+			ParallelForTask(_In_ const TaskCreateInformation& InTaskCreateInformation, _In_ const std::function<void(_In_ uint32_t InIndex)>& InFunctor, _In_ uint32_t InIndex)
+				: Task(InTaskCreateInformation)
+				, _Functor(InFunctor)
+				, _Index(InIndex)
+			{
+			}
+
+			virtual void DoExecute() override
+			{
+				_Functor(_Index);
+			}
+
+		private:
+
+			const std::function<void(_In_ uint32_t InIndex)>& _Functor;
+			uint32_t _Index;
+		};
 
 		ParallelSystem::ParallelSystem(_In_ const ParallelSystemCreateInformation& InParallelSystemCreateInformation)
 			: _ParallelSystemCreateInformation(InParallelSystemCreateInformation)
@@ -100,6 +123,38 @@ namespace Eternal
 					Sleep(1);
 				}
 			}
+		}
+
+		void ParallelSystem::ParallelFor(_In_ const std::string& InName, _In_ uint32_t InCount, const std::function<void(_In_ uint32_t InIndex)>& InFunctor)
+		{
+			ETERNAL_ASSERT(InCount > 0);
+
+			StackAllocation<ParallelForTask> ParallelForTasks(alloca(sizeof(ParallelForTask) * (InCount - 1)), sizeof(ParallelForTask), InCount - 1);
+
+			for (uint32_t Index = 1; Index < InCount; ++Index)
+			{
+				TaskCreateInformation ParallelForCreateInformation(InName + " " + std::to_string(Index));
+				ParallelForTask* CurrentTask = new (ParallelForTasks.SubAllocate()) ParallelForTask(ParallelForCreateInformation, InFunctor, Index);
+				ExecuteTask(CurrentTask);
+			}
+
+			InFunctor(0);
+
+			bool AllJoined = false;
+
+			while (!AllJoined)
+			{
+				AllJoined = true;
+
+				for (uint32_t Index = 0, ParallelTasksCount = InCount - 1; Index < ParallelTasksCount; ++Index)
+					AllJoined &= ParallelForTasks[Index]->IsDone();
+
+				if (!AllJoined)
+					Sleep(1);
+			}
+
+			for (uint32_t Index = 0, ParallelTasksCount = InCount - 1; Index < ParallelTasksCount; ++Index)
+				ParallelForTasks[Index]->~ParallelForTask();
 		}
 
 		void ParallelSystem::_FlushPendingTasks()
