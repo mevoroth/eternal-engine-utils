@@ -110,6 +110,12 @@ namespace Eternal
 				uint32_t FlagIndex = InIndex % InOutField.GetChunkBitCount();
 				return (InOutField[Entry] & (StorageType(1) << FlagIndex)) == StorageType(0);
 			}
+
+			bool Any(_In_ uint32_t InEntryIndex, _In_ const FieldType& InField) const
+			{
+				ETERNAL_ASSERT(InEntryIndex < InField.GetSize());
+				return InField[InEntryIndex] != FieldType::EmptyChunk;
+			}
 		};
 
 		template<uint32_t Size = 1024, typename StorageType = uint64_t>
@@ -336,6 +342,17 @@ namespace Eternal
 			{
 				ETERNAL_ASSERT(Storage::GetSize() > 0);
 				return Routine::IsSet(InIndex, *this);
+			}
+
+			bool Any(_In_ uint32_t InIndex) const
+			{
+				ETERNAL_ASSERT(InIndex < GetSize());
+				return Routine::Any(InIndex, *this);
+			}
+
+			uint32_t GetSize() const
+			{
+				return Storage::GetSize();
 			}
 
 			void Reset()
