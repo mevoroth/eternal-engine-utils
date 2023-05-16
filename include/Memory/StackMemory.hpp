@@ -27,6 +27,12 @@ namespace Eternal
 				return reinterpret_cast<AllocationType*>(&_Memory[_ElementSize * _SubAllocationCount++]);
 			}
 
+			AllocationType* operator[](_In_ uint32_t ElementIndex)
+			{
+				ETERNAL_ASSERT(ElementIndex < _ElementsCount);
+				return reinterpret_cast<AllocationType*>(&_Memory[_ElementSize * ElementIndex]);
+			}
+
 		private:
 			uint8_t* _Memory				= nullptr;
 			size_t _ElementSize				= 0u;
