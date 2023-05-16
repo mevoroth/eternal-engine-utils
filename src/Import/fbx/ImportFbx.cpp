@@ -538,7 +538,7 @@ namespace Eternal
 
 				uint32_t FlattenedVerticesCount = InOutMesh->GetVerticesCount();
 				ETERNAL_ASSERT((InMesh.GetVertices().size() + FlattenedVerticesCount) < InOutMesh->GetIndicesMaxCount());
-				InOutMesh->AddMergeMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox());
+				InOutMesh->AddMergeMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox().TransformBy(CurrentNodeContext.WorldTransformMatrix));
 			}
 
 			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
@@ -566,7 +566,7 @@ namespace Eternal
 				if (IsMultipleMeshes)
 					InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
 				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
-				InOutMesh->AddMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox());
+				InOutMesh->AddMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox().TransformBy(CurrentNodeContext.WorldTransformMatrix));
 			}
 
 			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
