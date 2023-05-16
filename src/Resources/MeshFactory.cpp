@@ -96,7 +96,6 @@ namespace Eternal
 				{
 					GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutGenericMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMesh);
 
-					//CachedMeshFile->Serialize(InOutGenericMesh->GetGPUMesh().PerDrawInformations);
 					uint32_t PerDrawInformationCount = static_cast<uint32_t>(InOutGenericMesh->GetGPUMesh().PerDrawInformations.size());
 					CachedMeshFile->Serialize(PerDrawInformationCount);
 					InOutGenericMesh->GetGPUMesh().PerDrawInformations.resize(PerDrawInformationCount);
