@@ -529,7 +529,7 @@ namespace Eternal
 		{
 			MeshNodeContext CurrentNodeContext =
 			{
-				InMesh.GetLocalTransform().GetViewToWorld()* InMesh.GetTransform().GetViewToWorld()
+				InMesh.GetLocalTransform().GetLocalToWorld()* InMesh.GetTransform().GetLocalToWorld()
 			};
 
 			if (InMesh.IsValid())
@@ -558,7 +558,7 @@ namespace Eternal
 		{
 			MeshNodeContext CurrentNodeContext =
 			{
-				InMesh.GetLocalTransform().GetViewToWorld() * InMesh.GetTransform().GetViewToWorld()
+				InMesh.GetLocalTransform().GetLocalToWorld() * InMesh.GetTransform().GetLocalToWorld()
 			};
 
 			if (InMesh.IsValid())
