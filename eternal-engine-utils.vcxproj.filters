@@ -64,6 +64,9 @@
     <Filter Include="Import\dds">
       <UniqueIdentifier>{7e7d057c-ab7d-426f-ada9-5fe14a313c25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{5f3d856f-36fe-4248-9870-4b6834943803}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -251,6 +254,15 @@
     <ClInclude Include="include\Resources\MeshFactory.hpp">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="include\Types\Types.hpp">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\DXMathTypes.hpp">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\AxisAlignedBoundingBox.hpp">
+      <Filter>Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Time\Win\WinTimer.cpp">
@@ -375,6 +387,15 @@
     </ClCompile>
     <ClCompile Include="src\File\File.cpp">
       <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math\DXMath.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Types\DXMathTypes.cpp">
+      <Filter>Types</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Types\AxisAlignedBoundingBox.cpp">
+      <Filter>Types</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

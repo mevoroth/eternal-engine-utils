@@ -1,6 +1,9 @@
 #pragma once
 
-#define ETERNAL_USE_DXMATH_TYPES
+#ifndef ETERNAL_USE_DXMATH_TYPES
+#define ETERNAL_USE_DXMATH_TYPES	(1)
+#endif
+
 #define ETERNAL_USE_CFILE			(1)
 
 #ifndef ETERNAL_USE_STD_PARALLEL

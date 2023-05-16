@@ -73,6 +73,9 @@
     <ClInclude Include="include\Time\Timer.hpp" />
     <ClInclude Include="include\Time\TimeFactory.hpp" />
     <ClInclude Include="include\Time\Win\WinTimer.hpp" />
+    <ClInclude Include="include\Types\AxisAlignedBoundingBox.hpp" />
+    <ClInclude Include="include\Types\DXMathTypes.hpp" />
+    <ClInclude Include="include\Types\Types.hpp" />
     <ClInclude Include="include\UtilsSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +120,8 @@
     <ClCompile Include="src\Time\Timer.cpp" />
     <ClCompile Include="src\Time\TimeFactory.cpp" />
     <ClCompile Include="src\Time\Win\WinTimer.cpp" />
+    <ClCompile Include="src\Types\AxisAlignedBoundingBox.cpp" />
+    <ClCompile Include="src\Types\DXMathTypes.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23D5DF8E-B7C8-40C2-B797-8C06280D1F24}</ProjectGuid>

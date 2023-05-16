@@ -6,7 +6,7 @@
 #include "Transform/Transform.hpp"
 #include "Material/Material.hpp"
 #include "Mesh/GenericMesh.hpp"
-#include "Mesh/AxisAlignedBoundingBox.hpp"
+#include "Types/AxisAlignedBoundingBox.hpp"
 #include "File/FilePath.hpp"
 #include "Math/Math.hpp"
 #include "Log/Log.hpp"
@@ -24,6 +24,7 @@ namespace Eternal
 		using namespace Eternal::Math;
 		using namespace Eternal::Import::ImportFbxPrivate;
 		using namespace Eternal::Resources;
+		using namespace Eternal::Types;
 
 		namespace ImportFbxPrivate
 		{

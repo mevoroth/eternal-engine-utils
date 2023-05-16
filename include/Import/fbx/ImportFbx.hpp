@@ -11,7 +11,7 @@ namespace Eternal
 		struct MaterialDependency;
 	}
 
-	namespace Components
+	namespace Types
 	{
 		class AxisAlignedBoundingBox;
 	}
@@ -19,7 +19,7 @@ namespace Eternal
 	namespace Import
 	{
 		using namespace FBXSDK_NAMESPACE;
-		using namespace Eternal::Components;
+		using namespace Eternal::Types;
 		using namespace Eternal::Resources;
 
 		namespace ImportFbxPrivate
