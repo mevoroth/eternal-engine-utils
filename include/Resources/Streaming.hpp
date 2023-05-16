@@ -70,10 +70,10 @@ namespace Eternal
 
 			void AddRequest(_In_ StreamingRequest* InRequest);
 			
-			template<typename PayloadFunctor>
-			void Process(_In_ PayloadFunctor PayloadFunction)
+			template<typename PayloadFunction>
+			void Process(_In_ PayloadFunction PayloadFunctor)
 			{
-				PayloadFunction(*this);
+				PayloadFunctor(*this);
 			}
 
 			RequestQueueType AdditionalRequests;
@@ -103,12 +103,12 @@ namespace Eternal
 			void EnqueueRequest(_In_ StreamingRequest* InRequest);
 			void CommitRequests();
 			void GatherPayloads();
-			template<typename PayloadFunctor>
-			void ProcessGathered(_In_ const AssetType& InAssetType, _Inout_ PayloadQueueType& InOutDelayedDestroyed, _In_ PayloadFunctor InPayloadFunction)
+			template<typename PayloadFunction>
+			void ProcessGathered(_In_ const AssetType& InAssetType, _Inout_ PayloadQueueType& InOutDelayedDestroyed, _In_ PayloadFunction InPayloadFunctor)
 			{
 				vector<Payload*>& Payloads = _Gathered[static_cast<int32_t>(InAssetType)];
 				for (uint32_t PayloadIndex = 0; PayloadIndex < Payloads.size(); ++PayloadIndex)
-					Payloads[PayloadIndex]->Process(InPayloadFunction);
+					Payloads[PayloadIndex]->Process(InPayloadFunctor);
 				std::swap(InOutDelayedDestroyed[static_cast<int32_t>(InAssetType)], Payloads);
 			}
 			StreamingQueue& GetFinishedStreaming();
