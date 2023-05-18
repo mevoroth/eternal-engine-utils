@@ -11,14 +11,11 @@ namespace Eternal
 	{
 		enum class Format;
 		enum class ResourceDimension;
-	}
-	namespace GraphicData
-	{
 		class Texture;
 	}
+
 	namespace Resources
 	{
-		using namespace GraphicData;
 		using namespace Graphics;
 
 		struct RawTextureData
