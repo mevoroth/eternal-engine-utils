@@ -83,5 +83,11 @@ namespace Eternal
 		{
 			return (Y - A) / (B - A);
 		}
+
+		template<typename T>
+		T Log2(_In_ const T& X)
+		{
+			return log2(X);
+		}
 	}
 }
