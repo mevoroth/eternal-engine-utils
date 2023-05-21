@@ -6,8 +6,8 @@ namespace Eternal
 {
 	namespace Math
 	{
-		static constexpr double PI = 3.14159265358979323846;
-		static constexpr float DegreesToRadians = static_cast<float>(PI) / 180.0f;
+		static constexpr float PI = 3.14159265358979323846f;
+		static constexpr float DegreesToRadians = PI / 180.0f;
 
 		template<typename T>
 		constexpr T DivideRoundUp(_In_ T Dividend, _In_ T Divisor)
