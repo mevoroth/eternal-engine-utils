@@ -67,6 +67,9 @@
     <Filter Include="Types">
       <UniqueIdentifier>{5f3d856f-36fe-4248-9870-4b6834943803}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{a211a3ed-31ba-437e-ae9c-4736ca43549e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\UtilsSettings.hpp" />
@@ -250,7 +253,6 @@
     <ClInclude Include="include\DebugTools\MemoryProfiler.hpp">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Memory\StackMemory.hpp" />
     <ClInclude Include="include\Resources\MeshFactory.hpp">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -262,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="include\Types\AxisAlignedBoundingBox.hpp">
       <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Memory\StackMemory.hpp">
+      <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
