@@ -1,5 +1,4 @@
-#ifndef _X_INPUT_HPP_
-#define _X_INPUT_HPP_
+#pragma once
 
 #include "Input/Input.hpp"
 #define VC_EXTRALEAN
@@ -31,5 +30,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

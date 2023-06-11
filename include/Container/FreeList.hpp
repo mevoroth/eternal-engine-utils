@@ -1,5 +1,4 @@
-#ifndef _FREE_LIST_HPP_
-#define _FREE_LIST_HPP_
+#pragma once
 
 namespace Eternal
 {
@@ -43,5 +42,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

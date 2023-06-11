@@ -1,5 +1,4 @@
-#ifndef _CONSOLE_LOG_HPP_
-#define _CONSOLE_LOG_HPP_
+#pragma once
 
 #include "Log/Log.hpp"
 #include "Time/Timer.hpp"
@@ -18,5 +17,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

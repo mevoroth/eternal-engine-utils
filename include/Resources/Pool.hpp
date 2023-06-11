@@ -1,5 +1,4 @@
-#ifndef _POOL_HPP_
-#define _POOL_HPP_
+#pragma once
 
 #include "Bit/Bit.hpp"
 #include "Parallel/StdAtomicU64.hpp"
@@ -110,5 +109,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _MUTEX_HPP_
-#define _MUTEX_HPP_
+#pragma once
 
 namespace Eternal
 {
@@ -15,5 +14,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _STD_ATOMIC_S32_HPP_
-#define _STD_ATOMIC_S32_HPP_
+#pragma once
 
 #include <atomic>
 
@@ -14,29 +13,29 @@ namespace Eternal
 		class StdAtomicS32 : public AtomicS32
 		{
 		public:
-			StdAtomicS32(int Value = 0)
-				: _Value(Value)
+			StdAtomicS32(int InValue = 0)
+				: _Value(InValue)
 			{
 			}
 			inline virtual int Load() override
 			{
 				return _Value.load();
 			}
-			inline virtual void Store(int Value) override
+			inline virtual void Store(int InValue) override
 			{
-				_Value.store(Value);
+				_Value.store(InValue);
 			}
-			inline virtual void Add(_In_ int Value = 1) override
+			inline virtual void Add(_In_ int InValue = 1) override
 			{
-				_Value.fetch_add(Value);
+				_Value.fetch_add(InValue);
 			}
-			inline virtual void Sub(_In_ int Value = 1) override
+			inline virtual void Sub(_In_ int InValue = 1) override
 			{
-				_Value.fetch_sub(Value);
+				_Value.fetch_sub(InValue);
 			}
-			inline virtual bool CompareAndSwap(_In_ int OldValue, _In_ int NewValue) override
+			inline virtual bool CompareAndSwap(_In_ int InOldValue, _In_ int InNewValue) override
 			{
-				return atomic_compare_exchange_strong(&_Value, &OldValue, NewValue);
+				return atomic_compare_exchange_strong(&_Value, &InOldValue, InNewValue);
 			}
 
 		private:
@@ -44,5 +43,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _QUAD_TREE_HPP_
-#define _QUAD_TREE_HPP_
+#pragma once
 
 #include "Types/Types.hpp"
 
@@ -31,5 +30,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

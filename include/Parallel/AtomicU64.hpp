@@ -1,5 +1,4 @@
-#ifndef _ATOMIC_U64_HPP_
-#define _ATOMIC_U64_HPP_
+#pragma once
 
 namespace Eternal
 {
@@ -9,12 +8,10 @@ namespace Eternal
 		{
 		public:
 			inline virtual uint64_t Load() = 0;
-			inline virtual void Store(_In_ uint64_t Value) = 0;
-			inline virtual void Add(_In_ uint64_t Value = 1) = 0;
-			inline virtual void Sub(_In_ uint64_t Value = 1) = 0;
-			inline virtual bool CompareAndSwap(_In_ uint64_t OldValue, _In_ uint64_t NewValue) = 0;
+			inline virtual void Store(_In_ uint64_t InValue) = 0;
+			inline virtual void Add(_In_ uint64_t InValue = 1) = 0;
+			inline virtual void Sub(_In_ uint64_t InValue = 1) = 0;
+			inline virtual bool CompareAndSwap(_In_ uint64_t InOldValue, _In_ uint64_t InNewValue) = 0;
 		};
 	}
 }
-
-#endif

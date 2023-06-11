@@ -1,5 +1,4 @@
-#ifndef _BREADTH_FIRST_QUAD_TREE_HPP_
-#define _BREADTH_FIRST_QUAD_TREE_HPP_
+#pragma once
 
 #include "Types/Types.hpp"
 #include "Container/QuadTree.hpp"
@@ -101,5 +100,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

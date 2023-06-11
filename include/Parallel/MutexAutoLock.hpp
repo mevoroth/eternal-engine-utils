@@ -1,5 +1,4 @@
-#ifndef _MUTEX_AUTO_LOCK_HPP_
-#define _MUTEX_AUTO_LOCK_HPP_
+#pragma once
 
 #include "Mutex.hpp"
 
@@ -25,5 +24,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef _RING_BUFFER_HPP_
-#define _RING_BUFFER_HPP_
+#pragma once
 
 #include "Types/Types.hpp"
 
@@ -87,5 +86,3 @@ namespace Eternal
 		};
 	}
 }
-
-#endif
