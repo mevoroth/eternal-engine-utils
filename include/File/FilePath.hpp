@@ -26,7 +26,8 @@ namespace Eternal
 			static void Register(_In_ const string& InFolderPath, _In_ const FileType& InFileType);
 			static string Find(_In_ const string& InFileName, _In_ const FileType& InFileType);
 			static string FindOrCreate(_In_ const string& InFileName, _In_ const FileType& InFileType);
-
+			static void NormalizePath(_Inout_ string& InOutPath);
+			
 		private:
 			static vector<string> _FolderPaths[static_cast<int32_t>(FileType::FILE_TYPE_COUNT)];
 		};

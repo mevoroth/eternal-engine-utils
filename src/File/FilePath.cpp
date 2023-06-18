@@ -1,8 +1,9 @@
-	#include "File/FilePath.hpp"
+#include "File/FilePath.hpp"
 
 #include "Types/Types.hpp"
 #include "File/FileFactory.hpp"
-#include <stdlib.h>
+#include <cstdlib>
+#include <algorithm>
 
 namespace Eternal
 {
@@ -67,6 +68,11 @@ namespace Eternal
 			ETERNAL_ASSERT(static_cast<int32_t>(InFileType) < static_cast<int32_t>(FileType::FILE_TYPE_COUNT));
 			ETERNAL_ASSERT(InFolderPath.size() > 0);
 			_FolderPaths[static_cast<int32_t>(InFileType)].push_back(InFolderPath);
+		}
+
+		void FilePath::NormalizePath(_Inout_ string& InOutPath)
+		{
+			replace(InOutPath.begin(), InOutPath.end(), '/', '\\');
 		}
 	}
 }
