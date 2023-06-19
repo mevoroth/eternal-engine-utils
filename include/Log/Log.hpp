@@ -44,6 +44,7 @@ namespace Eternal
 			};
 
 			static const LogCategory Graphics;
+			static const LogCategory Shaders;
 			static const LogCategory Engine;
 			static const LogCategory Save;
 			static const LogCategory Import;
@@ -72,6 +73,7 @@ namespace Eternal
 	extern const LogSystem::Log::LogLevel& LogCritical;
 
 	extern const LogSystem::Log::LogCategory& LogGraphics;
+	extern const LogSystem::Log::LogCategory& LogShaders;
 	extern const LogSystem::Log::LogCategory& LogEngine;
 	extern const LogSystem::Log::LogCategory& LogSave;
 	extern const LogSystem::Log::LogCategory& LogImport;
