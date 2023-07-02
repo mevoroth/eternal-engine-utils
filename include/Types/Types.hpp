@@ -94,8 +94,11 @@ namespace Eternal
 		// MATH STUFF: MOVE THIS
 		extern void Transpose(_Inout_ Matrix4x4& A);
 		extern Matrix4x4 Inverse(_In_ const Matrix4x4& A);
+		extern float SquareLength(_In_ const Vector4& V);
 		extern float SquareLength(_In_ const Vector3& V);
+		extern float Length(_In_ const Vector4& V);
 		extern float Length(_In_ const Vector3& V);
+		extern Vector4 Normalize(_In_ const Vector4& V);
 		extern Vector3 Normalize(_In_ const Vector3& V);
 		extern float Dot(_In_ const Vector3& A, _In_ const Vector3& B);
 		extern float Dot(_In_ const Vector4& A, _In_ const Vector4& B);

@@ -88,7 +88,7 @@ namespace Eternal
 		template<typename T>
 		T Log2(_In_ const T& X)
 		{
-			return log2(X);
+			return static_cast<T>(log2(X));
 		}
 	}
 }

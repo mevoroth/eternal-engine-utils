@@ -361,25 +361,33 @@ namespace Eternal
 			return Result;
 		}
 
+		float SquareLength(_In_ const Vector4& V)
+		{
+			return Dot(V, V);
+		}
 		float SquareLength(_In_ const Vector3& V)
 		{
 			return Dot(V, V);
+		}
+		float Length(_In_ const Vector4& V)
+		{
+			return sqrt(SquareLength(V));
 		}
 		float Length(_In_ const Vector3& V)
 		{
 			return sqrt(SquareLength(V));
 		}
+		Vector4 Normalize(_In_ const Vector4& V)
+		{
+			float VectorLength = Length(V);
+			ETERNAL_ASSERT(VectorLength > 0.0f);
+			return V / VectorLength;
+		}
 		Vector3 Normalize(_In_ const Vector3& V)
 		{
 			float VectorLength = Length(V);
-
-			ETERNAL_ASSERT(VectorLength > 0.f);
-
-			return Vector3(
-				V.x / VectorLength,
-				V.y / VectorLength,
-				V.z / VectorLength
-			);
+			ETERNAL_ASSERT(VectorLength > 0.0f);
+			return V / VectorLength;
 		}
 		float Dot(_In_ const Vector3& A, _In_ const Vector3& B)
 		{
@@ -614,52 +622,19 @@ namespace Eternal
 
 		bool Frustum::Intersect(_In_ const AxisAlignedBoundingBox& InBoundingBox) const
 		{
-			const Vector3& BoxMin = InBoundingBox.GetMin();
-			const Vector3& BoxMax = InBoundingBox.GetMax();
+			const Vector3& BoxOrigin = InBoundingBox.GetOrigin();
+			const Vector3& BoxExtent = InBoundingBox.GetExtent();
 
 			for (uint32_t PlaneIndex = 0; PlaneIndex < FrustumPlanesCount; ++PlaneIndex)
 			{
-				uint32_t OutCount = 0;
-
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMin, 1.0f)) < 0.0f ? 1 : 0;
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMax.x, BoxMin.y, BoxMin.z, 1.0f)) < 0.0f ? 1 : 0;
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMin.x, BoxMax.y, BoxMin.z, 1.0f)) < 0.0f ? 1 : 0;
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMax.x, BoxMax.y, BoxMin.z, 1.0f)) < 0.0f ? 1 : 0;
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMin.x, BoxMin.y, BoxMax.z, 1.0f)) < 0.0f ? 1 : 0;
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMax.x, BoxMin.y, BoxMax.z, 1.0f)) < 0.0f ? 1 : 0;
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMin.x, BoxMax.y, BoxMax.z, 1.0f)) < 0.0f ? 1 : 0;
-				OutCount += FrustumPlanes[PlaneIndex].PointProject(Vector4(BoxMax, 1.0f)) < 0.0f ? 1 : 0;
-
-				if (OutCount == 8)
-					return false;
-			}
-
-			{
-				XMVECTOR OutCountMin = XMVectorZero();
-				XMVECTOR OutCountMax = XMVectorZero();
-				for (uint32_t FrustumVertexIndex = 0; FrustumVertexIndex < FrustumVerticesCount; ++FrustumVertexIndex)
-				{
-					XMVECTOR FrustumVertex = XMLoadFloat4A(&FrustumVertices[FrustumVertexIndex]);
-					{
-						XMVECTOR Result = XMVectorGreater(FrustumVertex, XMLoadFloat3(&BoxMax));
-						OutCountMax = XMVectorAdd(
-							OutCountMax,
-							XMVectorSelect(XMVectorZero(), XMVectorSplatOne(), Result)
-						);
-					}
-					{
-						XMVECTOR Result = XMVectorLess(FrustumVertex, XMLoadFloat3(&BoxMin));
-						OutCountMin = XMVectorAdd(
-							OutCountMin,
-							XMVectorSelect(XMVectorZero(), XMVectorSplatOne(), Result)
-						);
-					}
-				}
-				uint32_t OutsideMin, OutsideMax;
-				XMVectorEqualR(&OutsideMin, OutCountMin, XMVectorSet(8.0f, 8.0f, 8.0f, 8.0f));
-				XMVectorEqualR(&OutsideMax, OutCountMax, XMVectorSet(8.0f, 8.0f, 8.0f, 0.0f));
-
-				if (XMComparisonAnyTrue(OutsideMin) || XMComparisonAnyTrue(OutsideMax))
+				Vector4 AxisVertex(
+					FrustumPlanes[PlaneIndex].x < 0.0f ? -BoxExtent.x : BoxExtent.x,
+					FrustumPlanes[PlaneIndex].y < 0.0f ? -BoxExtent.y : BoxExtent.y,
+					FrustumPlanes[PlaneIndex].z < 0.0f ? -BoxExtent.z : BoxExtent.z,
+					0.0f
+				);
+				AxisVertex += Vector4(BoxOrigin, 1.0f);
+				if (Dot(AxisVertex, FrustumPlanes[PlaneIndex]) < 0.0f)
 					return false;
 			}
 
