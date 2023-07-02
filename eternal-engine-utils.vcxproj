@@ -123,6 +123,9 @@
     <ClCompile Include="src\Types\AxisAlignedBoundingBox.cpp" />
     <ClCompile Include="src\Types\DXMathTypes.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="eternal-engine-utils.natvis" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23D5DF8E-B7C8-40C2-B797-8C06280D1F24}</ProjectGuid>
     <RootNamespace>eternalengineutils</RootNamespace>

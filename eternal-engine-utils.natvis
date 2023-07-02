@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="Eternal::Types::Plane">
+		<DisplayString>.x={x} .y={y} .z={z} .w={w}</DisplayString>
+	</Type>
+	<Type Name="Eternal::Types::Vector4">
+		<DisplayString>.x={x} .y={y} .z={z} .w={w}</DisplayString>
+	</Type>
+	<Type Name="Eternal::Types::Float4">
+		<DisplayString>.x={x} .y={y} .z={z} .w={w}</DisplayString>
+	</Type>
+	<Type Name="Eternal::Types::Vector3">
+		<DisplayString>.x={x} .y={y} .z={z}</DisplayString>
+	</Type>
+	<Type Name="Eternal::Types::Float3">
+		<DisplayString>.x={x} .y={y} .z={z}</DisplayString>
+	</Type>
+	<Type Name="Eternal::Types::Vector2">
+		<DisplayString>.x={x} .y={y}</DisplayString>
+	</Type>
+	<Type Name="Eternal::Types::Float2">
+		<DisplayString>.x={x} .y={y}</DisplayString>
+	</Type>
+	<Type Name="Eternal::Types::Matrix4x4">
+		<DisplayString>
+			[{_11,g} {_12,g} {_13,g} {_14,g}]
+			[{_21,g} {_22,g} {_23,g} {_24,g}]
+			[{_31,g} {_32,g} {_33,g} {_34,g}]
+			[{_41,g} {_42,g} {_43,g} {_44,g}]
+		</DisplayString>
+		<Expand>
+			<Synthetic Name="[0]">
+				<DisplayString>[{_11,g} {_12,g} {_13,g} {_14,g}]</DisplayString>
+			</Synthetic>
+			<Synthetic Name="[1]">
+				<DisplayString>[{_21,g} {_22,g} {_23,g} {_24,g}]</DisplayString>
+			</Synthetic>
+			<Synthetic Name="[2]">
+				<DisplayString>[{_31,g} {_32,g} {_33,g} {_34,g}]</DisplayString>
+			</Synthetic>
+			<Synthetic Name="[2]">
+				<DisplayString>[{_41,g} {_42,g} {_43,g} {_44,g}]</DisplayString>
+			</Synthetic>
+		</Expand>
+	</Type>
+</AutoVisualizer>

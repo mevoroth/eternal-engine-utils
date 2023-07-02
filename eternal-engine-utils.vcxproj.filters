@@ -403,4 +403,7 @@
       <Filter>Types</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="eternal-engine-utils.natvis" />
+  </ItemGroup>
 </Project>
