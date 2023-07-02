@@ -10,7 +10,7 @@ namespace Eternal
 		class Input
 		{
 		public:
-			static constexpr float DefaultDeadZone = 0.1f;
+			static constexpr float DefaultDeadZone = 0.2f;
 
 			enum Key
 			{
