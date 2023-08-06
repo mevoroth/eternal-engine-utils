@@ -13,10 +13,10 @@ namespace Eternal
 			0.0f, 0.0f, 1.0f, 0.0f
 		);
 		Matrix4x4 Matrix4x4::Identity(
-			1.f, 0.f, 0.f, 0.f,
-			0.f, 1.f, 0.f, 0.f,
-			0.f, 0.f, 1.f, 0.f,
-			0.f, 0.f, 0.f, 1.f
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
 		);
 		Vector4 Vector4::ZeroPosition(0.0f, 0.0f, 0.0f, 1.0f);
 
