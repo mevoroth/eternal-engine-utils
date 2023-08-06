@@ -32,7 +32,7 @@ namespace Eternal
 		{
 		public:
 			ImportFbx();
-			MeshPayload Import(_In_ const std::string& InPath);
+			void Import(_In_ const std::string& InPath, _Out_ MeshPayload& OutMeshPayload);
 
 		private:
 			FbxManager*		_SdkManager;

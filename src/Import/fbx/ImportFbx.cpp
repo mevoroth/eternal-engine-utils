@@ -354,7 +354,7 @@ namespace Eternal
 
 			struct FbxTextureCache
 			{
-				map<string, MaterialDependencyEntry> TextureCache;
+				unordered_map<string, MaterialDependencyEntry> TextureCache;
 			};
 		}
 
@@ -370,9 +370,8 @@ namespace Eternal
 			LogWrite(LogWarning, LogImport, "[ImportFbx::ImportFbx]Pos.w = 1.f!");
 		}
 
-		MeshPayload ImportFbx::Import(_In_ const std::string& InPath)
+		void ImportFbx::Import(_In_ const std::string& InPath, _Out_ MeshPayload& OutMeshPayload)
 		{
-			MeshPayload OutMeshPayload;
 			MeshFactory MeshCache;
 			MaterialDependency MaterialTextures;
 
@@ -393,7 +392,7 @@ namespace Eternal
 						std::string ErrorMessage = "[ImportFbx::Import]";
 						ErrorMessage.append(Status.GetErrorString());
 						LogWrite(LogWarning, LogImport, ErrorMessage.c_str());
-						return OutMeshPayload;
+						return;
 					}
 				}
 
@@ -423,7 +422,7 @@ namespace Eternal
 				if (!TriangulateSuccess)
 				{
 					LogWrite(LogWarning, LogImport, "[ImportFbx::Import]Triangulate failed");
-					return OutMeshPayload;
+					return;
 				}
 
 				_ImportTextures(Scene, TextureCache, OutMeshPayload);
@@ -468,8 +467,6 @@ namespace Eternal
 
 			for (uint32_t MeshIndex = 0; MeshIndex < OutMeshPayload.LoadedMesh->Meshes.size(); ++MeshIndex)
 				OutMeshPayload.LoadedMesh->Meshes[MeshIndex]->SetName(InPath);
-
-			return OutMeshPayload;
 		}
 
 		void ImportFbx::_ImportTextures(_In_ FbxScene* InScene, _Inout_ ImportFbxPrivate::FbxTextureCache& InOutTextureCache, _Inout_ MeshPayload& InOutMeshPayload)
