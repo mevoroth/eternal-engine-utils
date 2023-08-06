@@ -1,9 +1,10 @@
 #pragma once
 
-#include <vector>
 #include "Resources/Streaming.hpp"
 #include "Resources/TextureFactory.hpp"
 #include "Material/Material.hpp"
+#include <vector>
+#include <unordered_map>
 
 namespace Eternal
 {
@@ -44,7 +45,7 @@ namespace Eternal
 
 		struct MeshPayload : public Payload
 		{
-			MeshCollection*			LoadedMesh	= nullptr;
+			MeshCollection*			LoadedMesh		= nullptr;
 			Mesh*					BoundingBoxMesh	= nullptr;
 			vector<MeshComponent*>	ComponentsToUpdate;
 		};
@@ -53,9 +54,7 @@ namespace Eternal
 		{
 			~TexturePayload();
 
-			RawTextureData TextureData;
-
-			MaterialUpdate MaterialToUpdate;
+			TextureKey Key;
 		};
 
 		//////////////////////////////////////////////////////////////////////////
@@ -70,8 +69,21 @@ namespace Eternal
 		struct TextureRequest : public StreamingRequest
 		{
 			TextureRequest(_In_ const string& InPath, _In_ const TextureKey& InKey, _In_ const string& InTextureName);
-
 			MaterialUpdate MaterialToUpdate;
+		};
+
+		//////////////////////////////////////////////////////////////////////////
+
+		struct MaterialUpdateBatch
+		{
+			RawTextureData TextureData;
+
+			vector<MaterialUpdate> Materials;
+		};
+
+		struct MaterialUpdateBatcher
+		{
+			unordered_map<TextureKey, MaterialUpdateBatch> MaterialUpdates;
 		};
 	}
 }

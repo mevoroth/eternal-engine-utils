@@ -13,10 +13,11 @@ namespace Eternal
 	{
 		using namespace Eternal::Import;
 
-		TextureLoader::TextureLoader(_In_ TextureFactory& InTextureFactory)
+		TextureLoader::TextureLoader(_In_ TextureFactory& InTextureFactory, _In_ MaterialUpdateBatcher& InMaterialUpdateBatcher)
 			: _ImportTga(new ImportTga())
 			, _ImportDds(new ImportDds())
 			, _Factory(InTextureFactory)
+			, _Batcher(InMaterialUpdateBatcher)
 		{
 		}
 
@@ -37,7 +38,15 @@ namespace Eternal
 			const TextureRequest* InTextureRequest	= static_cast<const TextureRequest*>(InRequest);
 
 			TexturePayload& OutPayloadIntermediate	= *static_cast<TexturePayload*>(OutPayload);
-			OutPayloadIntermediate.MaterialToUpdate	= std::move(InTextureRequest->MaterialToUpdate);
+			OutPayloadIntermediate.Key				= InTextureRequest->MaterialToUpdate.Key;
+
+			auto CurrentMaterialUpdateBatch = _Batcher.MaterialUpdates.find(InTextureRequest->MaterialToUpdate.Key);
+
+			if (CurrentMaterialUpdateBatch == _Batcher.MaterialUpdates.end())
+				CurrentMaterialUpdateBatch = _Batcher.MaterialUpdates.insert({ InTextureRequest->MaterialToUpdate.Key, MaterialUpdateBatch() }).first;
+
+			MaterialUpdateBatch& CurrentBatch = CurrentMaterialUpdateBatch->second;
+			CurrentBatch.Materials.push_back(std::move(InTextureRequest->MaterialToUpdate));
 
 			if (_Factory.TextureExists(InTextureRequest->MaterialToUpdate.Key))
 				return;
@@ -60,7 +69,7 @@ namespace Eternal
 				ImageData = _ImportTga->Import(InRequest->RequestPath, Width, Height);
 				Depth = 1;
 
-				OutPayloadIntermediate.TextureData.InitializeTextureData(
+				CurrentBatch.TextureData.InitializeTextureData(
 					ImageData,
 					Graphics::Format::FORMAT_BGRA8888_UNORM,
 					Graphics::ResourceDimension::RESOURCE_DIMENSION_TEXTURE_2D,
@@ -78,7 +87,7 @@ namespace Eternal
 
 				ImageData = _ImportDds->Import(InRequest->RequestPath, Format, Dimension, Width, Height, Depth);
 
-				OutPayloadIntermediate.TextureData.InitializeTextureData(
+				CurrentBatch.TextureData.InitializeTextureData(
 					ImageData,
 					Format,
 					Dimension,
@@ -91,6 +100,7 @@ namespace Eternal
 			} break;
 			}
 			LogWrite(LogInfo, LogImport, string("Loaded [") + InRequest->RequestPath + "]");
+			ETERNAL_ASSERT(CurrentBatch.TextureData.TextureData);
 		}
 
 		void TextureLoader::DestroyPayloadLoader()

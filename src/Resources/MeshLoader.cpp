@@ -22,10 +22,11 @@ namespace Eternal
 			ETERNAL_PROFILER(BASIC)();
 			const MeshRequest* InMeshRequest = static_cast<const MeshRequest*>(InRequest);
 
-			OutPayload = new MeshPayload();
-			*static_cast<MeshPayload*>(OutPayload) = std::move(_ImportFbx->Import(InRequest->RequestPath));
-			static_cast<MeshPayload*>(OutPayload)->ComponentsToUpdate = std::move(InMeshRequest->ComponentsToUpdate);
+			MeshPayload* NewMeshPayload = new MeshPayload();
+			_ImportFbx->Import(InRequest->RequestPath, *NewMeshPayload);
+			NewMeshPayload->ComponentsToUpdate = std::move(InMeshRequest->ComponentsToUpdate);
 			LogWrite(LogInfo, LogImport, string("Loaded [") + InRequest->RequestPath + "]");
+			OutPayload = NewMeshPayload;
 		}
 
 		void MeshLoader::DestroyPayloadLoader()

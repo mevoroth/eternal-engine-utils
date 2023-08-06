@@ -38,6 +38,8 @@ namespace Eternal
 		struct StreamingRequest;
 		struct Payload;
 		class TextureFactory;
+		struct MaterialUpdateBatcher;
+		struct StreamingInternal;
 
 		struct StreamingLoader
 		{
@@ -64,9 +66,13 @@ namespace Eternal
 		using RequestQueueType = array<vector<StreamingRequest*>, static_cast<int32_t>(AssetType::ASSET_TYPE_COUNT)>;
 		using PayloadQueueType = array<vector<Payload*>, static_cast<int32_t>(AssetType::ASSET_TYPE_COUNT)>;
 
+		template<typename QueueType>
+		void MergeStreamingQueues(_Inout_ QueueType& InOutQueue, _Inout_ QueueType& InQueueToMerge);
+		void MergeMaterialUpdateBatches(_Inout_ MaterialUpdateBatcher& InOutMaterialUpdateBatches, _Inout_ MaterialUpdateBatcher& InOutMaterialUpdateBatchesToMerge);
+
 		struct Payload
 		{
-			virtual ~Payload() {}
+			virtual ~Payload();
 
 			void AddRequest(_In_ StreamingRequest* InRequest);
 			
@@ -76,7 +82,18 @@ namespace Eternal
 				PayloadFunctor(*this);
 			}
 
+			void MarkProcessed()
+			{
+				Processed = true;
+			}
+
+			bool IsProcessed() const
+			{
+				return Processed;
+			}
+
 			RequestQueueType AdditionalRequests;
+			bool Processed = false;
 		};
 
 		struct StreamingQueue
@@ -92,7 +109,11 @@ namespace Eternal
 		class Streaming
 		{
 		public:
-			static constexpr uint32_t StreamingQueueCount = 2;
+			static constexpr uint32_t StreamingQueueCount								= 2;
+			static constexpr uint32_t StreamingBudgetPerFrame							= 4;
+			static constexpr uint32_t StreamingEstimatedPendingRequestsCount			= 8192;
+			static constexpr uint32_t StreamingEstimatedLoadedRequestsCount				= 64;
+			static constexpr uint32_t StreamingEstimatedPendingDestroyedRequestsCount	= 128;
 
 			Streaming(_In_ TextureFactory& InTextureFactory);
 			~Streaming();
@@ -100,33 +121,40 @@ namespace Eternal
 			void RegisterLoader(_In_ const AssetType& InAssetType, _In_ const StreamingLoader* InLoader);
 			const StreamingLoader* GetLoader(_In_ const AssetType& InAssetType);
 
-			void EnqueueRequest(_In_ StreamingRequest* InRequest);
-			void CommitRequests();
-			void GatherPayloads();
+			void EnqueueRequest_MainThread(_In_ StreamingRequest* InRequest);
+			void CommitEnqueued_StreamingThread();
+			void ProcessPending_StreamingThread();
+			void CommitRequests_MainThread();
+			void GatherPayloads_MainThread(_Inout_ MaterialUpdateBatcher& InOutMaterialUpdateBatches);
 			template<typename PayloadFunction>
-			void ProcessGathered(_In_ const AssetType& InAssetType, _Inout_ PayloadQueueType& InOutDelayedDestroyed, _In_ PayloadFunction InPayloadFunctor)
+			void ProcessGathered_MainThread(_In_ const AssetType& InAssetType, _Inout_ PayloadQueueType& InOutDelayedDestroyed, _In_ PayloadFunction InPayloadFunctor)
 			{
 				vector<Payload*>& Payloads = _Gathered[static_cast<int32_t>(InAssetType)];
 				for (uint32_t PayloadIndex = 0; PayloadIndex < Payloads.size(); ++PayloadIndex)
 					Payloads[PayloadIndex]->Process(InPayloadFunctor);
 				std::swap(InOutDelayedDestroyed[static_cast<int32_t>(InAssetType)], Payloads);
 			}
-			StreamingQueue& GetFinishedStreaming();
-			StreamingQueue& GetPendingStreaming();
-			void AdvanceStreaming();
+			StreamingQueue& GetFinishedStreaming_MainThread();
+			StreamingQueue& GetPendingStreaming_StreamingThread();
+			RequestQueueType& GetPending();
+			void AdvanceStreaming_StreamingThread();
 			void Shutdown() { _Running = false; }
 
 		private:
 
+			bool _ProcessQueues_StreamingThread(_In_ RequestQueueType& InStreamingRequests, _Inout_ PayloadQueueType& InOutStreamingPayloads, _Inout_ uint32_t& InOutTotalProcessedRequestsCount);
+
 			array<const StreamingLoader*, static_cast<int32_t>(AssetType::ASSET_TYPE_COUNT)> _Loaders;
 
 			RequestQueueType							_Enqueued;
+			RequestQueueType							_Pending;
 			PayloadQueueType							_Gathered;
 			array<StreamingQueue, StreamingQueueCount>	_StreamingQueues;
 			uint32_t									_StreamingIndex			= 0;
 			Mutex*										_QueueMutex				= nullptr;
 			Mutex*										_SleepMutex				= nullptr;
 			ConditionVariable*							_SleepConditionVariable	= nullptr;
+			StreamingInternal*							_StreamingInternal		= nullptr;
 			bool										_Running				= true;
 		};
 	}
