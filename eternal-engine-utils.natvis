@@ -43,4 +43,22 @@
 			</Synthetic>
 		</Expand>
 	</Type>
+	<Type Name="Eternal::Types::Matrix3x4">
+		<DisplayString>
+			[{_11,g} {_12,g} {_13,g} {_14,g}]
+			[{_21,g} {_22,g} {_23,g} {_24,g}]
+			[{_31,g} {_32,g} {_33,g} {_34,g}]
+		</DisplayString>
+		<Expand>
+			<Synthetic Name="[0]">
+				<DisplayString>[{_11,g} {_12,g} {_13,g} {_14,g}]</DisplayString>
+			</Synthetic>
+			<Synthetic Name="[1]">
+				<DisplayString>[{_21,g} {_22,g} {_23,g} {_24,g}]</DisplayString>
+			</Synthetic>
+			<Synthetic Name="[2]">
+				<DisplayString>[{_31,g} {_32,g} {_33,g} {_34,g}]</DisplayString>
+			</Synthetic>
+		</Expand>
+	</Type>
 </AutoVisualizer>

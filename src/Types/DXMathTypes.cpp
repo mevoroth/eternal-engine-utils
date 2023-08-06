@@ -7,6 +7,11 @@ namespace Eternal
 {
 	namespace Types
 	{
+		Matrix3x4 Matrix3x4::Identity(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f
+		);
 		Matrix4x4 Matrix4x4::Identity(
 			1.f, 0.f, 0.f, 0.f,
 			0.f, 1.f, 0.f, 0.f,

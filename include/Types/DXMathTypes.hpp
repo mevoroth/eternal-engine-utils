@@ -72,6 +72,13 @@ namespace Eternal
 			}
 		};
 
+		struct Matrix3x4 : public XMFLOAT3X4A
+		{
+			static Matrix3x4 Identity;
+
+			using XMFLOAT3X4A::XMFLOAT3X4A;
+		};
+
 		struct Matrix4x4 : public XMFLOAT4X4A
 		{
 			static Matrix4x4 Identity;
