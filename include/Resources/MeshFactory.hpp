@@ -2,7 +2,7 @@
 
 #include "Material/Material.hpp"
 #include <string>
-#include <map>
+#include <unordered_map>
 
 namespace Eternal
 {
@@ -33,7 +33,7 @@ namespace Eternal
 
 		struct MaterialDependency 
 		{
-			map<Components::Material*, MaterialTextures> Textures;
+			unordered_map<Components::Material*, MaterialTextures> Textures;
 		};
 
 		class MeshFactory

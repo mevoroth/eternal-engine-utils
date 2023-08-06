@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <string>
 
 using namespace std;
@@ -48,7 +48,7 @@ namespace Eternal
 		};
 
 		using TextureKey = string;
-		using TextureCacheStorage = map<TextureKey, TextureCache>;
+		using TextureCacheStorage = unordered_map<TextureKey, TextureCache>;
 
 		class TextureFactory
 		{
