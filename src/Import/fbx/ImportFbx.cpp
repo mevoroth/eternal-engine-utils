@@ -88,8 +88,8 @@ namespace Eternal
 			template<MissingTexturePolicy Policy, TextureKeyPathBuilderFunction TextureKeyPathBuilderFunctor = TextureKeyPathBuilderDefault>
 			static void ReadTextureDependencyFromFbxFileTexture(_In_ const FbxFileTexture* FileTexture, _In_ const FbxTextureCache& InTextureCache, _In_ TextureType InTextureType, _In_ Components::Material* InMaterial, _Inout_ MaterialDependency& InOutMaterialDependency)
 			{
-				char FileName[255];
-				char TexturePath[1024];
+				char FileName[255] = {};
+				char TexturePath[1024] = {};
 				string TextureFullPath;
 
 				uint32_t PathLength = static_cast<uint32_t>(strlen(FileTexture->GetName()));
@@ -372,6 +372,8 @@ namespace Eternal
 
 		void ImportFbx::Import(_In_ const std::string& InPath, _Out_ MeshPayload& OutMeshPayload)
 		{
+			OutMeshPayload = MeshPayload();
+
 			MeshFactory MeshCache;
 			MaterialDependency MaterialTextures;
 
@@ -479,8 +481,8 @@ namespace Eternal
 
 				if (InOutTextureCache.TextureCache.find(FileTexture->GetName()) == InOutTextureCache.TextureCache.end())
 				{
-					char FileName[255];
-					char TexturePath[1024];
+					char FileName[255] = {};
+					char TexturePath[1024] = {};
 					string TextureFullPath = TextureKeyPathFullPathBuilder<TextureKeyPathBuilderDefault>(FileTexture, FileName, TexturePath);
 
 					if (!TextureFullPath.empty())

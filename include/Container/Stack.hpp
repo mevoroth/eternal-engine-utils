@@ -8,8 +8,8 @@ namespace Eternal
 		class Stack
 		{
 		private:
-			TypeT _Elements[SIZE];
-			int _Count = 0;
+			TypeT _Elements[SIZE]	= {};
+			int _Count				= 0;
 		public:
 			Stack();
 			~Stack();

@@ -4,7 +4,7 @@ namespace Eternal
 {
 	namespace Parallel
 	{
-		void StdThread::Create(ThreadFunction InFunction, void* InFunctionParameters)
+		void StdThread::Create(_In_ ThreadFunction InFunction, _In_ void* InFunctionParameters)
 		{
 			_Thread = thread(InFunction, InFunctionParameters);
 		}

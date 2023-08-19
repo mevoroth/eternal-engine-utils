@@ -11,7 +11,7 @@ namespace Eternal
 	{
 		using namespace Eternal::LogSystem;
 
-		Input* CreateInput(const InputType& InInputType)
+		Input* CreateInput(_In_ const InputType& InInputType)
 		{
 			switch (InInputType)
 			{

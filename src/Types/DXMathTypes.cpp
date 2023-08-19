@@ -57,13 +57,13 @@ namespace Eternal
 			return ReturnMatrix;
 		}
 
-		Matrix4x4& operator*=(_In_ Matrix4x4& A, const _In_ Matrix4x4& B)
+		Matrix4x4& operator*=(_In_ Matrix4x4& A, _In_ const _In_ Matrix4x4& B)
 		{
 			XMStoreFloat4x4(&A, XMMatrixMultiply(XMLoadFloat4x4(&A), XMLoadFloat4x4(&B)));
 			return A;
 		}
 
-		Quaternion& operator*=(_In_ Quaternion& A, const Quaternion& B)
+		Quaternion& operator*=(_In_ Quaternion& A, _In_ const Quaternion& B)
 		{
 			XMStoreFloat4(&A, XMQuaternionMultiply(XMLoadFloat4A(&A), XMLoadFloat4A(&B)));
 			return A;
