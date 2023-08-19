@@ -156,7 +156,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;D:\Software\FBXSDK\2020.2\include;$(SolutionDir)eternal-engine-extern\optick\src;$(SolutionDir)eternal-engine-extern\DirectXTex;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)eternal-engine-components\include;$(SolutionDir)eternal-engine-graphics\include;$(SolutionDir)eternal-engine-extern\libtga;$(SolutionDir)eternal-engine-extern\json;$(SolutionDir)eternal-engine-utils\include;E:\Code\FBXSDK\2020.3.4\include;$(SolutionDir)eternal-engine-extern\optick\src;$(SolutionDir)eternal-engine-extern\DirectXTex;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
