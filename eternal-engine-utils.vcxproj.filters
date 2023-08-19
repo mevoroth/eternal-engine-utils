@@ -393,9 +393,6 @@
     <ClCompile Include="src\File\File.cpp">
       <Filter>File</Filter>
     </ClCompile>
-    <ClCompile Include="src\Math\DXMath.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="src\Types\DXMathTypes.cpp">
       <Filter>Types</Filter>
     </ClCompile>
