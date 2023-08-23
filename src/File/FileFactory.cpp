@@ -24,7 +24,7 @@ namespace Eternal
 			InFile = nullptr;
 		}
 
-		bool FileExists(const std::string& InFileName)
+		bool FileExists(_In_ const std::string& InFileName)
 		{
 #ifdef ETERNAL_USE_CFILE
 			return CFile::Exists(InFileName);

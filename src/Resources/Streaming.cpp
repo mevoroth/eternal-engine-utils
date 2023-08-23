@@ -17,10 +17,14 @@ namespace Eternal
 		static constexpr uint32_t QUEUE_INDICES[] =
 		{
 			~0u,
+			~0u,
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_LEVEL),
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_TEXTURE),
-			static_cast<uint32_t>(AssetType::ASSET_TYPE_MESH)
+			static_cast<uint32_t>(AssetType::ASSET_TYPE_MESH),
+			~0u
 		};
+
+		ETERNAL_STATIC_ASSERT(ETERNAL_ARRAYSIZE(QUEUE_INDICES) == static_cast<uint32_t>(FileType::FILE_TYPE_COUNT), "Mismatch between QUEUE_INDICES and FileType");
 
 		static const uint32_t ConvertFileTypeToQueueIndex(_In_ const FileType& InFileType)
 		{
@@ -121,10 +125,6 @@ namespace Eternal
 
 		void Streaming::EnqueueRequest_MainThread(_In_ StreamingRequest* InRequest)
 		{
-			if (InRequest->RequestType == FileSystem::FileType::FILE_TYPE_TEXTURES)
-			{
-				ETERNAL_ASSERT(((TextureRequest*)InRequest)->MaterialToUpdate.Key.size() > 0);
-			}
 			_Enqueued[ConvertFileTypeToQueueIndex(InRequest->RequestType)].push_back(InRequest);
 		}
 

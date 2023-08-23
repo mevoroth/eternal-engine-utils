@@ -25,7 +25,7 @@ namespace Eternal
 
 		private:
 			std::string _FileName;
-			std::FILE* _File;
+			std::FILE* _File = nullptr;
 
 		};
 	}

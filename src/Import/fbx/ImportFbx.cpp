@@ -372,8 +372,6 @@ namespace Eternal
 
 		void ImportFbx::Import(_In_ const std::string& InPath, _Out_ MeshPayload& OutMeshPayload)
 		{
-			OutMeshPayload = MeshPayload();
-
 			MeshFactory MeshCache;
 			MaterialDependency MaterialTextures;
 
