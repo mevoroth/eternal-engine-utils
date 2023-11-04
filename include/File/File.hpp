@@ -71,8 +71,8 @@ namespace Eternal
 
 			bool IsOpenedForReadExclusive() const { return _OpenMode == OpenMode::READ; }
 			bool IsOpenedForWriteExclusive() const { return _OpenMode == OpenMode::WRITE; }
-			bool IsOpenedForRead() const { return (static_cast<uint32_t>(_OpenMode) & static_cast<uint32_t>(OpenMode::READ)) != 0; }
-			bool IsOpenedForWrite() const { return (static_cast<uint32_t>(_OpenMode) & static_cast<uint32_t>(OpenMode::WRITE)) != 0; }
+			bool IsOpenedForRead() const { return (static_cast<uint32_t>(_OpenMode) & static_cast<uint32_t>(OpenMode::READ)) != static_cast<uint32_t>(OpenMode::NOT_OPENED); }
+			bool IsOpenedForWrite() const { return (static_cast<uint32_t>(_OpenMode) & static_cast<uint32_t>(OpenMode::WRITE)) != static_cast<uint32_t>(OpenMode::NOT_OPENED); }
 
 		private:
 			OpenMode _OpenMode = OpenMode::NOT_OPENED;
