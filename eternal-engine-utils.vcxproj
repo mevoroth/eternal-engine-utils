@@ -169,7 +169,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)eternal-engine-shaders\ShadersReflection;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)eternal-engine-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ETERNAL_DEBUG=1;IMGUI_USER_CONFIG="Imgui/ImguiConfig.hpp";FBXSDK_SHARED;ETERNAL_USE_STD_PARALLEL=1;ETERNAL_PROFILER_USE_VERBOSE=0;NOMINMAX=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>sal.h;Types/HLSLReflection.hpp;UtilsSettings.hpp;optick.h</ForcedIncludeFiles>
       <MinimalRebuild>false</MinimalRebuild>
