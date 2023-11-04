@@ -70,7 +70,12 @@ namespace Eternal
 					if (_HasAllDedicatedCore())
 					{
 						for (int32_t DedicatedWorkerIndex = 0; DedicatedWorkerIndex < _DedicatedWorkersCount; ++DedicatedWorkerIndex)
+						{
+							while (!_Workers[_GenericWorkersCount + DedicatedWorkerIndex]->IsWaiting())
+								Sleep(1);
+
 							_Workers[_GenericWorkersCount + DedicatedWorkerIndex]->EnqueueTask(InParallelSystemCreateInformation.DedicatedTasks[DedicatedWorkerIndex]);
+						}
 					}
 				}
 				else

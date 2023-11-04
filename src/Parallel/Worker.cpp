@@ -17,6 +17,7 @@ namespace Eternal
 	{
 		Worker::WorkerArguments::WorkerArguments()
 			: WorkerRunning(CreateAtomicS32(1))
+			, WorkerWaiting(CreateAtomicS32())
 			, WorkerExecuting(CreateAtomicS32())
 			, WorkerDone(CreateAtomicS32())
 			, WorkerConditionVariableMutex(CreateMutex())
@@ -30,6 +31,7 @@ namespace Eternal
 			DestroyMutex(WorkerConditionVariableMutex);
 			DestroyAtomicS32(WorkerDone);
 			DestroyAtomicS32(WorkerExecuting);
+			DestroyAtomicS32(WorkerWaiting);
 			DestroyAtomicS32(WorkerRunning);
 		}
 
@@ -44,7 +46,9 @@ namespace Eternal
 			{
 				//OPTICK_FRAME(Arguments.Name.c_str());
 				Arguments.WorkerConditionVariableMutex->Lock();
+				Arguments.WorkerWaiting->Store(1);
 				Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
+				Arguments.WorkerWaiting->Store(0);
 				Arguments.WorkerConditionVariableMutex->Unlock();
 
 				if (Arguments.WorkerTask)
@@ -74,7 +78,9 @@ namespace Eternal
 				if (!Arguments.WorkerTask)
 				{
 					Arguments.WorkerConditionVariableMutex->Lock();
+					Arguments.WorkerWaiting->Store(1);
 					Arguments.WorkerConditionVariable->Wait(*Arguments.WorkerConditionVariableMutex);
+					Arguments.WorkerWaiting->Store(0);
 					Arguments.WorkerConditionVariableMutex->Unlock();
 				}
 
@@ -109,6 +115,11 @@ namespace Eternal
 			return _WorkerArguments.WorkerDone->Load() == 1;
 		}
 
+		bool Worker::IsWaiting() const
+		{
+			return _WorkerArguments.WorkerWaiting->Load() == 1;
+		}
+
 		void Worker::Shutdown()
 		{
 			_WorkerArguments.WorkerRunning->Store(0);
@@ -116,8 +127,9 @@ namespace Eternal
 
 		void Worker::WakeWorker()
 		{
-			_WorkerArguments.WorkerConditionVariableMutex->Unlock();
+			_WorkerArguments.WorkerConditionVariableMutex->Lock();
 			_WorkerArguments.WorkerConditionVariable->NotifyOne();
+			_WorkerArguments.WorkerConditionVariableMutex->Unlock();
 		}
 
 		bool Worker::EnqueueTask(_In_ Task* InTask)

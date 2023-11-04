@@ -218,8 +218,9 @@ namespace Eternal
 				StreamingQueue& Queue = GetFinishedStreaming_MainThread();
 				MergeStreamingQueues(Queue.PendingRequests, _Enqueued);
 			}
-			_SleepMutex->Unlock();
+			_SleepMutex->Lock();
 			_SleepConditionVariable->NotifyOne();
+			_SleepMutex->Unlock();
 		}
 
 		StreamingQueue::StreamingQueue()
