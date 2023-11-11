@@ -247,6 +247,9 @@ namespace Eternal
 			uint32_t Size = 0;
 		};
 
+		template<typename StorageType> constexpr StorageType BitFieldVector<StorageType>::FullChunk;
+		template<typename StorageType> constexpr StorageType BitFieldVector<StorageType>::EmptyChunk;
+
 		template<const uint32_t Size = 1024, typename StorageType = uint64_t>
 		class StaticHandlePool
 			: public PoolRoutine<BitFieldArray<Size, StorageType>, StorageType>

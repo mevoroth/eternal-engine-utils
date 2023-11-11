@@ -1,5 +1,7 @@
 #pragma once
 
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Input/Input.hpp"
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
@@ -30,3 +32,5 @@ namespace Eternal
 		};
 	}
 }
+
+#endif

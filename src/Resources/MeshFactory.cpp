@@ -41,13 +41,14 @@ namespace Eternal
 			char FileName[255];
 			char Extension[8];
 
-			_splitpath_s(
-				InKey.c_str(),
-				nullptr, 0,
-				nullptr, 0,
-				FileName, 255,
-				Extension, 8
-			);
+			ETERNAL_BREAK();
+			//_splitpath_s(
+			//	InKey.c_str(),
+			//	nullptr, 0,
+			//	nullptr, 0,
+			//	FileName, 255,
+			//	Extension, 8
+			//);
 
 			char CachedMeshFilePath[1024];
 			sprintf_s(CachedMeshFilePath, "%s%scache", FileName, Extension);

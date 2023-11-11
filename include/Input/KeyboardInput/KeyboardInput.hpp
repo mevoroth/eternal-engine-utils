@@ -6,7 +6,7 @@ namespace Eternal
 {
 	namespace InputSystem
 	{
-		class WinInput : public Input
+		class KeyboardInput : public Input
 		{
 		public:
 			enum KeyState
@@ -15,7 +15,7 @@ namespace Eternal
 				UP = 1
 			};
 
-			WinInput();
+			KeyboardInput();
 			virtual void Update() override;
 			virtual void NotifyKeyPressed(_In_ const Key& InKeyName) override;
 			virtual void NotifyKeyReleased(_In_ const Key& InKeyName) override;
@@ -24,8 +24,8 @@ namespace Eternal
 		private:
 			struct KeyRecord
 			{
-				KeyState State;
 				Key KeyName;
+				KeyState State;
 				KeyRecord(const Key& InKeyName, const KeyState& InState)
 					: KeyName(InKeyName)
 					, State(InState)

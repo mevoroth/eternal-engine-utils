@@ -27,24 +27,25 @@ namespace Eternal
 		{
 			File::Open(InOpenMode);
 
-			char* Flags;
-
-			switch (InOpenMode)
+			const char* Flags = [&InOpenMode]()
 			{
-			case OpenMode::READ:
-				Flags = "rb";
-				break;
-			case OpenMode::WRITE:
-				Flags = "wb";
-				break;
-			case OpenMode::READ_WRITE:
-				Flags = "r+b";
-				break;
+				switch (InOpenMode)
+				{
+				case OpenMode::READ:
+					return "rb";
 
-			default:
-				ETERNAL_BREAK();
-				return;
-			}
+				case OpenMode::WRITE:
+					return "wb";
+
+				case OpenMode::READ_WRITE:
+					return "r+b";
+
+				default:
+					ETERNAL_BREAK();
+					return "";
+				}
+			}();
+
 			errno_t Err = fopen_s(&_File, _FileName.c_str(), Flags);
 			ETERNAL_ASSERT(!Err);
 			ETERNAL_ASSERT(_File);

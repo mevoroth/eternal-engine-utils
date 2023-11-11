@@ -1,7 +1,7 @@
 #include "Input/InputFactory.hpp"
 
 #include "Log/Log.hpp"
-#include "Input/WinInput/WinInput.hpp"
+#include "Input/KeyboardInput/KeyboardInput.hpp"
 #include "Input/XInput/XInput.hpp"
 #include "Input/MultiInput/MultiInput.hpp"
 
@@ -15,13 +15,15 @@ namespace Eternal
 		{
 			switch (InInputType)
 			{
-			case InputType::INPUT_TYPE_WIN:
-				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating Windows Keyboard input");
-				return new WinInput();
+			case InputType::INPUT_TYPE_KEYBOARD:
+				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating Keyboard input");
+				return new KeyboardInput();
 
+			#if ETERNAL_PLATFORM_WINDOWS
 			case InputType::INPUT_TYPE_XINPUT:
 				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating Xbox Pad input");
 				return new XInput();
+			#endif
 
 			case InputType::INPUT_TYPE_MULTI:	// Must be created with CreateMultiInput
 			default:

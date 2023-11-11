@@ -1,4 +1,6 @@
-#include "Log/ConsoleLog/ConsoleLog.hpp"
+#if ETERNAL_PLATFORM_WINDOWS
+
+#include "Log/ConsoleLog/WindowsConsoleLog.hpp"
 
 #define VC_EXTRALEAN
 #define WIN32_EXTRA_LEAN
@@ -9,12 +11,12 @@ namespace Eternal
 {
 	namespace LogSystem
 	{
-		ConsoleLog::ConsoleLog()
+		WindowsConsoleLog::WindowsConsoleLog()
 			: Log()
 		{
 		}
 
-		void ConsoleLog::Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage)
+		void WindowsConsoleLog::Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage)
 		{
 			char HumanReadableTime[24];
 			Eternal::Time::Timer::ToHumanReadable(GetElaspedTime(), HumanReadableTime);
@@ -27,3 +29,5 @@ namespace Eternal
 		}
 	}
 }
+
+#endif

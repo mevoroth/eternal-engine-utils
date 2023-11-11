@@ -1,8 +1,10 @@
 #include "Log/LogFactory.hpp"
 
-#include "Log/FileLog/FileLog.hpp"
-#include "Log/ConsoleLog/ConsoleLog.hpp"
 #include "Log/MultiChannelLog/MultiChannelLog.hpp"
+#include "Log/FileLog/FileLog.hpp"
+#if ETERNAL_PLATFORM_WINDOWS
+#include "Log/ConsoleLog/WindowsConsoleLog.hpp"
+#endif
 
 namespace Eternal
 {
@@ -16,7 +18,9 @@ namespace Eternal
 				return new FileLog(InSession);
 
 			case LogType::LOG_TYPE_CONSOLE:
-				return new ConsoleLog();
+				#if ETERNAL_PLATFORM_WINDOWS
+				return new WindowsConsoleLog();
+				#endif
 
 			case LogType::LOG_TYPE_MULTI_CHANNEL:
 				ETERNAL_BREAK(); // Multi Channel Log must be created with CreateMultiChannelLog()

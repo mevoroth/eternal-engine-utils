@@ -10,7 +10,7 @@ namespace Eternal
 
 		enum class InputType
 		{
-			INPUT_TYPE_WIN,
+			INPUT_TYPE_KEYBOARD,
 			INPUT_TYPE_XINPUT,
 			INPUT_TYPE_MULTI
 		};

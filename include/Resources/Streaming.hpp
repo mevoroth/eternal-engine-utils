@@ -72,7 +72,7 @@ namespace Eternal
 
 		struct Payload
 		{
-			virtual ~Payload();
+			virtual ~Payload() { ETERNAL_ASSERT(IsProcessed()); }
 
 			void AddRequest(_In_ StreamingRequest* InRequest);
 			

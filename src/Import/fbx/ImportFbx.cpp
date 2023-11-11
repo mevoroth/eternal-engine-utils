@@ -28,6 +28,7 @@ namespace Eternal
 
 		namespace ImportFbxPrivate
 		{
+#if ETERNAL_PLATFORM_WINDOWS
 			static constexpr const char* DiffuseTextureName	= "3dsMax|Parameters|base_color_map";
 			static constexpr const char* NormalTextureName	= "3dsMax|Parameters|bump_map";
 
@@ -291,6 +292,7 @@ namespace Eternal
 				InOutRotation.y = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutRotation.y : InOutRotation.y;
 				InOutRotation.z = ETERNAL_IMPORT_FBX_LEFT_HANDED ? -InOutRotation.z : InOutRotation.z;
 			}
+#endif
 
 			class Mesh
 			{
@@ -360,6 +362,7 @@ namespace Eternal
 
 		ImportFbx::ImportFbx()
 		{
+#if ETERNAL_PLATFORM_WINDOWS
 			_SdkManager = FbxManager::Create();
 			_Settings = FbxIOSettings::Create(_SdkManager, IOSROOT);
 
@@ -368,6 +371,7 @@ namespace Eternal
 
 			LogWrite(LogWarning, LogImport, "[ImportFbx::ImportFbx]UV.y has been inversed!");
 			LogWrite(LogWarning, LogImport, "[ImportFbx::ImportFbx]Pos.w = 1.f!");
+#endif
 		}
 
 		void ImportFbx::Import(_In_ const std::string& InPath, _Out_ MeshPayload& OutMeshPayload)
@@ -377,11 +381,14 @@ namespace Eternal
 
 			std::string InFullFilePath = FilePath::Find(InPath, FileType::FILE_TYPE_MESHES);
 
+#if ETERNAL_PLATFORM_WINDOWS
 			if (MeshCache.CachedMeshIsValid(InFullFilePath))
+#endif
 			{
 				OutMeshPayload.LoadedMesh = new MeshCollection();
 				MeshCache.SerializeMesh(SerializationMode::SERIALIZATION_MODE_READ, InFullFilePath, MaterialTextures, OutMeshPayload);
 			}
+#if ETERNAL_PLATFORM_WINDOWS
 			else
 			{
 				if (_FbxImporter->Initialize(InFullFilePath.c_str(), -1, _Settings))
@@ -462,6 +469,7 @@ namespace Eternal
 
 				MeshCache.SerializeMesh(SerializationMode::SERIALIZATION_MODE_WRITE, InFullFilePath, MaterialTextures, OutMeshPayload);
 			}
+#endif
 
 			_CreateTextureRequests(MaterialTextures, OutMeshPayload);
 
@@ -469,6 +477,28 @@ namespace Eternal
 				OutMeshPayload.LoadedMesh->Meshes[MeshIndex]->SetName(InPath);
 		}
 
+		void ImportFbx::_CreateTextureRequests(_In_ const MaterialDependency& InMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload)
+		{
+			for (auto TextureDependencyIterator = InMaterialDependency.Textures.begin(); TextureDependencyIterator != InMaterialDependency.Textures.end(); ++TextureDependencyIterator)
+			{
+				//TextureDependencyIterator->first->
+				const MaterialTextures& Textures = TextureDependencyIterator->second;
+				for (uint32_t TextureIndex = 0; TextureIndex < static_cast<uint32_t>(TextureType::TEXTURE_TYPE_COUNT); ++TextureIndex)
+				{
+					const MaterialDependencyEntry& CurrentEntry = Textures.Textures[TextureIndex];
+					TextureRequest* NewTextureRequest = new TextureRequest(
+						CurrentEntry.TextureFullPath,
+						CurrentEntry.TextureKey,
+						CurrentEntry.TexturePath
+					);
+					NewTextureRequest->MaterialToUpdate.MaterialToUpdate	= TextureDependencyIterator->first;
+					NewTextureRequest->MaterialToUpdate.Slot				= static_cast<TextureType>(TextureIndex);
+					InOutMeshPayload.AddRequest(NewTextureRequest);
+				}
+			}
+		}
+
+#if ETERNAL_PLATFORM_WINDOWS
 		void ImportFbx::_ImportTextures(_In_ FbxScene* InScene, _Inout_ ImportFbxPrivate::FbxTextureCache& InOutTextureCache, _Inout_ MeshPayload& InOutMeshPayload)
 		{
 			const int TextureCount = InScene->GetTextureCount();
@@ -493,27 +523,6 @@ namespace Eternal
 				//LogWrite(LogWarning, LogImport, FileTexture->GetName());
 				//LogWrite(LogWarning, LogImport, FileTexture->GetFileName());
 				//CreateTextureRequestFromFbxFileTexture<MissingTexturePolicy::MISSING_TEXTURE_POLICY_NOTHING>(FileTexture, InOutMeshPayload);
-			}
-		}
-
-		void ImportFbx::_CreateTextureRequests(_In_ const MaterialDependency& InMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload)
-		{
-			for (auto TextureDependencyIterator = InMaterialDependency.Textures.begin(); TextureDependencyIterator != InMaterialDependency.Textures.end(); ++TextureDependencyIterator)
-			{
-				//TextureDependencyIterator->first->
-				const MaterialTextures& Textures = TextureDependencyIterator->second;
-				for (uint32_t TextureIndex = 0; TextureIndex < static_cast<uint32_t>(TextureType::TEXTURE_TYPE_COUNT); ++TextureIndex)
-				{
-					const MaterialDependencyEntry& CurrentEntry = Textures.Textures[TextureIndex];
-					TextureRequest* NewTextureRequest = new TextureRequest(
-						CurrentEntry.TextureFullPath,
-						CurrentEntry.TextureKey,
-						CurrentEntry.TexturePath
-					);
-					NewTextureRequest->MaterialToUpdate.MaterialToUpdate	= TextureDependencyIterator->first;
-					NewTextureRequest->MaterialToUpdate.Slot				= static_cast<TextureType>(TextureIndex);
-					InOutMeshPayload.AddRequest(NewTextureRequest);
-				}
 			}
 		}
 
@@ -1063,5 +1072,6 @@ namespace Eternal
 			//	}
 			//}
 		}
+#endif
 	}
 }

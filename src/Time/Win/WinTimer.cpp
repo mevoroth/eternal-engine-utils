@@ -1,3 +1,5 @@
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Time/Win/WinTimer.hpp"
 
 #define VC_EXTRALEAN
@@ -72,3 +74,5 @@ void WinTimer::Update()
 	_DeltaTimeMicroSeconds = _PreviousTimeMicroSeconds - PreviousTimeMicroSeconds;
 	_DeltaTimeSeconds = (double)_DeltaTimeMicroSeconds / 1000000.0;
 }
+
+#endif

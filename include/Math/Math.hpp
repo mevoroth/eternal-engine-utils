@@ -7,6 +7,9 @@ namespace Eternal
 	namespace Math
 	{
 		static constexpr float PI				= 3.14159265358979323846f;
+		static constexpr float PI_2				= PI * 2.0f;
+		static constexpr float PI_2_RCP			= 1.0f / PI_2;
+		static constexpr float PI_DIV_2			= PI / 2.0f;
 		static constexpr float DegreesToRadians	= PI / 180.0f;
 		static constexpr float M_TO_KM			= 1.0f / 1000.0f;
 

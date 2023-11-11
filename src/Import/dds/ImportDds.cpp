@@ -1,5 +1,7 @@
 #include "Import/dds/ImportDds.hpp"
+#if ETERNAL_PLATFORM_WINDOWS
 #include "DirectXTex/DirectXTex.h"
+#endif
 #include "File/FileFactory.hpp"
 #include "Graphics/Format.hpp"
 #include "Graphics/Resource.hpp"
@@ -10,6 +12,7 @@ namespace Eternal
 	{
 		using namespace Eternal::Graphics;
 
+#if ETERNAL_PLATFORM_WINDOWS
 		static Format ConvertDDSFormatToFormat(_In_ const DXGI_FORMAT& DDSFormat)
 		{
 			switch (DDSFormat)
@@ -64,9 +67,11 @@ namespace Eternal
 				return Format::FORMAT_UNKNOWN;
 			}
 		}
+#endif
 
 		uint8_t* ImportDds::Import(_In_ const string& InPath, _Out_ Format& OutFormat, _Out_ ResourceDimension& OutResourceDimension, _Out_ uint32_t& OutWidth, _Out_ uint32_t& OutHeight, _Out_ uint32_t& OutDepth)
 		{
+#if ETERNAL_PLATFORM_WINDOWS
 			using namespace DirectX;
 			using namespace Eternal::FileSystem;
 
@@ -112,6 +117,9 @@ namespace Eternal
 			uint8_t* ImageBytes = new uint8_t[DdsImagePayload.GetPixelsSize()];
 			memcpy(ImageBytes, DdsImagePayload.GetPixels(), DdsImagePayload.GetPixelsSize());
 			return ImageBytes;
+#endif
+			ETERNAL_BREAK();
+			return nullptr;
 		}
 	}
 }

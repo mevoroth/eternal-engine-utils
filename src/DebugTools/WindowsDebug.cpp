@@ -1,3 +1,5 @@
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "DebugTools/Debug.hpp"
 
 #define WIN32_LEAN_AND_MEAN
@@ -22,3 +24,5 @@ namespace Eternal
 		}
 	}
 }
+
+#endif

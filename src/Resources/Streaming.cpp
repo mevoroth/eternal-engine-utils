@@ -32,16 +32,16 @@ namespace Eternal
 		}
 
 		template<typename QueueType>
-		void MergeStreamingQueues<QueueType>(_In_ QueueType& InOutQueue, _Inout_ QueueType& InOutQueueToMerge)
+		void MergeStreamingQueues(_In_ QueueType& InOutQueue, _Inout_ QueueType& InOutQueueToMerge)
 		{
-			for (uint32_t QueueType = 0; QueueType < InOutQueue.size(); ++QueueType)
+			for (uint32_t QueueTypeIndex = 0; QueueTypeIndex < InOutQueue.size(); ++QueueTypeIndex)
 			{
-				InOutQueue[QueueType].insert(
-					InOutQueue[QueueType].end(),
-					InOutQueueToMerge[QueueType].begin(),
-					InOutQueueToMerge[QueueType].end()
+				InOutQueue[QueueTypeIndex].insert(
+					InOutQueue[QueueTypeIndex].end(),
+					InOutQueueToMerge[QueueTypeIndex].begin(),
+					InOutQueueToMerge[QueueTypeIndex].end()
 				);
-				InOutQueueToMerge[QueueType].clear();
+				InOutQueueToMerge[QueueTypeIndex].clear();
 			}
 		}
 
@@ -72,10 +72,10 @@ namespace Eternal
 
 		//////////////////////////////////////////////////////////////////////////
 		// Payload
-		Payload::~Payload()
-		{
-			ETERNAL_ASSERT(IsProcessed());
-		}
+		//Payload::~Payload()
+		//{
+		//	ETERNAL_ASSERT(IsProcessed());
+		//}
 
 		//////////////////////////////////////////////////////////////////////////
 		// StreamingInternal
@@ -260,7 +260,7 @@ namespace Eternal
 					{
 						Requests.erase(Requests.end() - QueueProcessedRequestsCount, Requests.end());
 						QueueProcessedRequestsCount = 0u;
-						MergeStreamingQueues<RequestQueueType>(InStreamingRequests, LastPayload->AdditionalRequests);
+						MergeStreamingQueues(InStreamingRequests, LastPayload->AdditionalRequests);
 					}
 
 					delete Requests[0];

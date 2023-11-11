@@ -1,3 +1,5 @@
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Input/XInput/XInput.hpp"
 
 #include <string>
@@ -103,3 +105,5 @@ namespace Eternal
 		}
 	}
 }
+
+#endif

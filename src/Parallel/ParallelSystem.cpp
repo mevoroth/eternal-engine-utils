@@ -40,8 +40,8 @@ namespace Eternal
 
 		ParallelSystem::ParallelSystem(_In_ const ParallelSystemCreateInformation& InParallelSystemCreateInformation)
 			: _ParallelSystemCreateInformation(InParallelSystemCreateInformation)
-			, _CPUCount(static_cast<int32_t>(CpuCoreCount()))
 			, _Scheduler(InParallelSystemCreateInformation.FrameCount)
+			, _CPUCount(static_cast<int32_t>(CpuCoreCount()))
 			
 		{
 			_UsedCPUCount = Max(_CPUCount - 1, 0);

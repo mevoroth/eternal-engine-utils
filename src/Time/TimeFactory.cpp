@@ -8,8 +8,10 @@ namespace Eternal
 	{
 		Timer* CreateTimer(_In_ const TimeType& InTimeType)
 		{
+		#if ETERNAL_PLATFORM_WINDOWS
 			if (InTimeType == TimeType::TIME_TYPE_WIN)
 				return new WinTimer();
+		#endif
 			ETERNAL_BREAK();
 			return nullptr;
 		}

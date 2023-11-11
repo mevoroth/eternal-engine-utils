@@ -10,8 +10,8 @@ namespace Eternal
 		static constexpr int IsTaskDone			= 0;
 
 		Task::Task(_In_ const TaskCreateInformation& InTaskCreateInformation)
-			: _IsExecuting(CreateAtomicS32())
-			, _TaskCreateInformation(InTaskCreateInformation)
+			: _TaskCreateInformation(InTaskCreateInformation)
+			,  _IsExecuting(CreateAtomicS32())
 		{
 		}
 
