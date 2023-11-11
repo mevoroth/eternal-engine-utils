@@ -1,0 +1,3 @@
+[submodule "UtilsPrivate"]
+	path = UtilsPrivate
+	url = git@github.com:mevoroth/eternal-engine-utils-private.git
