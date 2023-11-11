@@ -5,6 +5,10 @@
 #include "Input/XInput/XInput.hpp"
 #include "Input/MultiInput/MultiInput.hpp"
 
+#if ETERNAL_USE_PRIVATE
+#include "Input/ScePadInput/ScePadInputFactoryPrivate.hpp"
+#endif
+
 namespace Eternal
 {
 	namespace InputSystem
@@ -24,6 +28,16 @@ namespace Eternal
 				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating Xbox Pad input");
 				return new XInput();
 			#endif
+
+			case InputType::INPUT_TYPE_SCE_PAD:
+				#if ETERNAL_PLATFORM_WINDOWS
+				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating PS Pad input (Windows)");
+				ETERNAL_BREAK();
+				return nullptr;
+				#endif
+				#if ETERNAL_USE_PRIVATE
+				return CreateScePadInputPrivate();
+				#endif
 
 			case InputType::INPUT_TYPE_MULTI:	// Must be created with CreateMultiInput
 			default:

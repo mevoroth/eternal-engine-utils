@@ -5,6 +5,9 @@
 #if ETERNAL_PLATFORM_WINDOWS
 #include "Log/ConsoleLog/WindowsConsoleLog.hpp"
 #endif
+#if ETERNAL_USE_PRIVATE
+#include "Log/ConsoleLog/ConsoleLogFactoryPrivate.hpp"
+#endif
 
 namespace Eternal
 {
@@ -20,6 +23,9 @@ namespace Eternal
 			case LogType::LOG_TYPE_CONSOLE:
 				#if ETERNAL_PLATFORM_WINDOWS
 				return new WindowsConsoleLog();
+				#endif
+				#if ETERNAL_USE_PRIVATE
+				return CreateConsoleLogPrivate();
 				#endif
 
 			case LogType::LOG_TYPE_MULTI_CHANNEL:

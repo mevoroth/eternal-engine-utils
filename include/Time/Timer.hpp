@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Time/Timer.hpp"
+
 namespace Eternal
 {
 	namespace Time
@@ -10,9 +12,9 @@ namespace Eternal
 		
 		class Timer
 		{
-		private:
-			static Timer* _Inst;
 		public:
+			static constexpr int TIMER_STACK_SIZE = 1024;
+
 			Timer();
 			virtual ~Timer() {}
 			static Timer* Get();
@@ -21,9 +23,17 @@ namespace Eternal
 			virtual void Begin() = 0;
 			virtual TimeMicroSecondsT End() = 0;
 			virtual TimeMicroSecondsT GetTimeMicroSeconds() const = 0;
-			virtual TimeMicroSecondsT GetDeltaTimeMicroSeconds() const = 0;
-			virtual TimeSecondsT GetDeltaTimeSeconds() const = 0;
+			TimeMicroSecondsT GetDeltaTimeMicroSeconds() const { return _DeltaTimeMicroSeconds; }
+			TimeSecondsT GetDeltaTimeSeconds() const { return _DeltaTimeSeconds; }
 			virtual void Update() = 0;
+
+		protected:
+			TimeMicroSecondsT	_PreviousTimeMicroSeconds = 0ull;
+			TimeMicroSecondsT	_DeltaTimeMicroSeconds = 0ull;
+			TimeSecondsT		_DeltaTimeSeconds = 0.0;
+
+		private:
+			static Timer*		_Instance;
 		};
 	}
 }

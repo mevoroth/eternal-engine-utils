@@ -1,6 +1,7 @@
 #include "Time/TimeFactory.hpp"
 
-#include "Time/Win/WinTimer.hpp"
+#include "Time/Windows/WindowsTimer.hpp"
+#include "Time/TimeFactoryPrivate.hpp"
 
 namespace Eternal
 {
@@ -9,9 +10,14 @@ namespace Eternal
 		Timer* CreateTimer(_In_ const TimeType& InTimeType)
 		{
 		#if ETERNAL_PLATFORM_WINDOWS
-			if (InTimeType == TimeType::TIME_TYPE_WIN)
-				return new WinTimer();
+			if (InTimeType == TimeType::TIME_TYPE_WINDOWS)
+				return new WindowsTimer();
 		#endif
+
+		#if ETERNAL_USE_PRIVATE
+			return CreateTimerPrivate(InTimeType);
+		#endif
+
 			ETERNAL_BREAK();
 			return nullptr;
 		}
