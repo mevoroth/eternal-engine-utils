@@ -1,7 +1,9 @@
 #include "Time/TimeFactory.hpp"
 
 #include "Time/Windows/WindowsTimer.hpp"
+#if ETERNAL_USE_PRIVATE
 #include "Time/TimeFactoryPrivate.hpp"
+#endif
 
 namespace Eternal
 {
