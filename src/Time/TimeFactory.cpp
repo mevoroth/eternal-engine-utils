@@ -11,14 +11,14 @@ namespace Eternal
 	{
 		Timer* CreateTimer(_In_ const TimeType& InTimeType)
 		{
-		#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS
 			if (InTimeType == TimeType::TIME_TYPE_WINDOWS)
 				return new WindowsTimer();
-		#endif
+#endif
 
-		#if ETERNAL_USE_PRIVATE
+#if ETERNAL_USE_PRIVATE
 			return CreateTimerPrivate(InTimeType);
-		#endif
+#endif
 
 			ETERNAL_BREAK();
 			return nullptr;

@@ -21,12 +21,12 @@ namespace Eternal
 				return new FileLog(InSession);
 
 			case LogType::LOG_TYPE_CONSOLE:
-				#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS
 				return new WindowsConsoleLog();
-				#endif
-				#if ETERNAL_USE_PRIVATE
+#endif
+#if ETERNAL_USE_PRIVATE
 				return CreateConsoleLogPrivate();
-				#endif
+#endif
 
 			case LogType::LOG_TYPE_MULTI_CHANNEL:
 				ETERNAL_BREAK(); // Multi Channel Log must be created with CreateMultiChannelLog()
