@@ -3,7 +3,7 @@
 #include "Log/MultiChannelLog/MultiChannelLog.hpp"
 #include "Log/FileLog/FileLog.hpp"
 #if ETERNAL_PLATFORM_WINDOWS
-#include "Log/ConsoleLog/WindowsConsoleLog.hpp"
+#include "Log/ConsoleLog/Windows/WindowsConsoleLog.hpp"
 #endif
 #if ETERNAL_USE_PRIVATE
 #include "Log/ConsoleLog/ConsoleLogFactoryPrivate.hpp"

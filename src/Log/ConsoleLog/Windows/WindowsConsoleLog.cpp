@@ -1,6 +1,6 @@
 #if ETERNAL_PLATFORM_WINDOWS
 
-#include "Log/ConsoleLog/WindowsConsoleLog.hpp"
+#include "Log/ConsoleLog/Windows/WindowsConsoleLog.hpp"
 
 #define VC_EXTRALEAN
 #define WIN32_EXTRA_LEAN
