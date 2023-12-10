@@ -68,6 +68,14 @@ namespace Eternal
 				InOutValue.resize(Length);
 				Serialize(const_cast<uint8_t*>(reinterpret_cast<const uint8_t*>(InOutValue.data())), Length);
 			}
+			void Serialize(_Inout_ std::vector<std::string>& InOutValue)
+			{
+				uint32_t Count = static_cast<uint32_t>(InOutValue.size());
+				Serialize(Count);
+				InOutValue.resize(Count);
+				for (uint32_t ElementIndex = 0; ElementIndex < Count; ++ElementIndex)
+					Serialize(InOutValue[ElementIndex]);
+			}
 
 			bool IsOpenedForReadExclusive() const { return _OpenMode == OpenMode::READ; }
 			bool IsOpenedForWriteExclusive() const { return _OpenMode == OpenMode::WRITE; }
