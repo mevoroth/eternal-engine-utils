@@ -12,6 +12,7 @@ namespace Eternal
 		const Log::LogCategory Log::Graphics("Graphics");
 		const Log::LogCategory Log::Shaders("Shaders");
 		const Log::LogCategory Log::Engine("Engine");
+		const Log::LogCategory Log::Memory("Memory");
 		const Log::LogCategory Log::Save("Save");
 		const Log::LogCategory Log::Import("Import");
 		const Log::LogCategory Log::Components("Components");
@@ -57,6 +58,7 @@ namespace Eternal
 	const LogSystem::Log::LogCategory& LogGraphics		= LogSystem::Log::Graphics;
 	const LogSystem::Log::LogCategory& LogShaders		= LogSystem::Log::Shaders;
 	const LogSystem::Log::LogCategory& LogEngine		= LogSystem::Log::Engine;
+	const LogSystem::Log::LogCategory& LogMemory		= LogSystem::Log::Memory;
 	const LogSystem::Log::LogCategory& LogSave			= LogSystem::Log::Save;
 	const LogSystem::Log::LogCategory& LogImport		= LogSystem::Log::Import;
 	const LogSystem::Log::LogCategory& LogComponents	= LogSystem::Log::Components;

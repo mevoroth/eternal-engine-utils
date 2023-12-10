@@ -3,10 +3,10 @@
 #include "Time/Timer.hpp"
 #include <string>
 
-using namespace std;
-
 namespace Eternal
 {
+	using namespace std;
+
 	namespace Time
 	{
 		using TimeMicroSecondsT	= uint64_t;
@@ -46,6 +46,7 @@ namespace Eternal
 			static const LogCategory Graphics;
 			static const LogCategory Shaders;
 			static const LogCategory Engine;
+			static const LogCategory Memory;
 			static const LogCategory Save;
 			static const LogCategory Import;
 			static const LogCategory Components;
@@ -75,6 +76,7 @@ namespace Eternal
 	extern const LogSystem::Log::LogCategory& LogGraphics;
 	extern const LogSystem::Log::LogCategory& LogShaders;
 	extern const LogSystem::Log::LogCategory& LogEngine;
+	extern const LogSystem::Log::LogCategory& LogMemory;
 	extern const LogSystem::Log::LogCategory& LogSave;
 	extern const LogSystem::Log::LogCategory& LogImport;
 	extern const LogSystem::Log::LogCategory& LogComponents;
