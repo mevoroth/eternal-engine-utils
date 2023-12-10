@@ -47,19 +47,21 @@ namespace Eternal
 				InOutValue.resize(Count);
 				Serialize(reinterpret_cast<uint8_t*>(InOutValue.data()), sizeof(Type) * Count);
 			}
-			template<typename Type, typename PerElementConstructorFunction, typename PerElementSerializeFunction>
-			void Serialize(_Inout_ std::vector<Type*>& InOutValue, _In_ const PerElementConstructorFunction& InPerElementConstructorFunctor, _In_ const PerElementSerializeFunction& InPerElementSerializeFunctor)
+			template<typename Type, typename ElementConstructorFunction, typename ElementSerializeFunction>
+			void Serialize(_Inout_ Type*& InOutValue, _In_ const ElementConstructorFunction& InElementConstructorFunctor, _In_ const ElementSerializeFunction& InElementSerializeFunctor)
+			{
+				if (IsOpenedForReadExclusive())
+					InOutValue = InElementConstructorFunctor();
+				InElementSerializeFunctor(InOutValue);
+			}
+			template<typename Type, typename ElementConstructorFunction, typename ElementSerializeFunction>
+			void Serialize(_Inout_ std::vector<Type*>& InOutValue, _In_ const ElementConstructorFunction& InElementConstructorFunctor, _In_ const ElementSerializeFunction& InElementSerializeFunctor)
 			{
 				uint32_t Count = static_cast<uint32_t>(InOutValue.size());
 				Serialize(Count);
 				InOutValue.resize(Count);
 				for (uint32_t ElementIndex = 0; ElementIndex < Count; ++ElementIndex)
-				{
-					if (IsOpenedForReadExclusive())
-						InOutValue[ElementIndex] = InPerElementConstructorFunctor();
-
-					InPerElementSerializeFunctor(InOutValue[ElementIndex]);
-				}
+					Serialize(InOutValue[ElementIndex], InElementConstructorFunctor, InElementSerializeFunctor);
 			}
 			void Serialize(_Inout_ std::string& InOutValue)
 			{
