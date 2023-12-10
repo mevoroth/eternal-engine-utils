@@ -4,6 +4,7 @@
 #include "File/FileFactory.hpp"
 #include <cstdlib>
 #include <algorithm>
+#include <filesystem>
 
 namespace Eternal
 {
@@ -73,6 +74,11 @@ namespace Eternal
 		void FilePath::NormalizePath(_Inout_ string& InOutPath)
 		{
 			replace(InOutPath.begin(), InOutPath.end(), '/', '\\');
+		}
+
+		string FilePath::AbsolutePath(_In_ const string& InFileName)
+		{
+			return filesystem::absolute(InFileName).generic_string();
 		}
 	}
 }
