@@ -174,10 +174,10 @@ namespace Eternal
 
 			constexpr Matrix4x4(_In_ const Matrix4x4& InM)
 				: Matrix4x4(
-					InM._11, InM._12, InM._13, InM._13,
-					InM._21, InM._22, InM._23, InM._23,
-					InM._31, InM._32, InM._33, InM._33,
-					InM._41, InM._42, InM._43, InM._43
+					InM._11, InM._12, InM._13, InM._14,
+					InM._21, InM._22, InM._23, InM._24,
+					InM._31, InM._32, InM._33, InM._34,
+					InM._41, InM._42, InM._43, InM._44
 				)
 			{
 			}
