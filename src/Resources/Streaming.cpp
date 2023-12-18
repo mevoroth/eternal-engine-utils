@@ -18,10 +18,10 @@ namespace Eternal
 		{
 			~0u,
 			~0u,
-			~0u,
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_LEVEL),
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_TEXTURE),
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_MESH),
+			~0u,
 			~0u
 		};
 
