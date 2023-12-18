@@ -340,6 +340,38 @@ namespace Eternal
 			return Result;
 		}
 
+		//////////////////////////////////////////////////////////////////////////
+
+		TranslationMatrix::TranslationMatrix(_In_ const Vector3& InTranslation)
+		{
+			XMStoreFloat4x4(this, XMMatrixTranslationFromVector(XMLoadFloat3(&InTranslation)));
+		}
+
+		TranslationMatrix::TranslationMatrix(_In_ float InX, _In_ float InY, _In_ float InZ)
+			: TranslationMatrix(Vector3(InX, InY, InZ))
+		{
+		}
+
+		RotationMatrix::RotationMatrix(_In_ const Quaternion& InQuaternion)
+		{
+			XMStoreFloat4x4(this, XMMatrixRotationQuaternion(XMLoadFloat4(InQuaternion)));
+		}
+
+		ScaleMatrix::ScaleMatrix(_In_ float InUniformScale)
+			: ScaleMatrix(Vector3(InUniformScale))
+		{
+		}
+
+		ScaleMatrix::ScaleMatrix(_In_ const Vector3& InScale)
+		{
+			XMStoreFloat4x4(this, XMMatrixScalingFromVector(XMLoadFloat3(&InScale)));
+		}
+
+		ScaleMatrix::ScaleMatrix(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ)
+			: ScaleMatrix(Vector3(InScaleX, InScaleY, InScaleZ))
+		{
+		}
+
 		PerspectiveLHMatrix::PerspectiveLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InYFOV, _In_ float InScreenRatio)
 			: Matrix4x4()
 		{

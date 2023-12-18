@@ -33,10 +33,22 @@ namespace Eternal
 
 		Matrix4x4 operator*(_In_ const Matrix4x4& A, _In_ const Matrix4x4& B)
 		{
-			ETERNAL_BREAK();
-			Matrix4x4 ReturnMatrix = Matrix4x4::Identity;
-			//XMStoreFloat4x4A(&ReturnMatrix, XMMatrixMultiply(XMLoadFloat4x4A(&A), XMLoadFloat4x4A(&B)));
-			return ReturnMatrix;
+			Vector4 Row0(A._11, A._12, A._13, A._14);
+			Vector4 Row1(A._21, A._22, A._23, A._24);
+			Vector4 Row2(A._31, A._32, A._33, A._34);
+			Vector4 Row3(A._41, A._42, A._43, A._44);
+
+			Vector4 Col0(B._11, B._21, B._31, B._41);
+			Vector4 Col1(B._12, B._22, B._32, B._42);
+			Vector4 Col2(B._13, B._23, B._33, B._43);
+			Vector4 Col3(B._14, B._24, B._34, B._44);
+
+			return Matrix4x4(
+				Dot(Row0, Col0), Dot(Row0, Col1), Dot(Row0, Col2), Dot(Row0, Col3),
+				Dot(Row1, Col0), Dot(Row1, Col1), Dot(Row1, Col2), Dot(Row1, Col3),
+				Dot(Row2, Col0), Dot(Row2, Col1), Dot(Row2, Col2), Dot(Row2, Col3),
+				Dot(Row3, Col0), Dot(Row3, Col1), Dot(Row3, Col2), Dot(Row3, Col3)
+			);
 		}
 
 		Matrix4x4& operator*=(_In_ Matrix4x4& A, _In_ const _In_ Matrix4x4& B)
@@ -229,12 +241,16 @@ namespace Eternal
 		}
 		Vector4 operator*(_In_ const Matrix4x4& A, _In_ const Vector4& B)
 		{
-			ETERNAL_BREAK();
+			Vector4 Col0(A._11, A._21, A._31, A._41);
+			Vector4 Col1(A._12, A._22, A._32, A._42);
+			Vector4 Col2(A._13, A._23, A._33, A._43);
+			Vector4 Col3(A._14, A._24, A._34, A._44);
+
 			return Vector4(
-				Dot(Vector4(A.m[0]), B),
-				Dot(Vector4(A.m[1]), B),
-				Dot(Vector4(A.m[2]), B),
-				Dot(Vector4(A.m[3]), B)
+				Dot(Col0, B),
+				Dot(Col1, B),
+				Dot(Col2, B),
+				Dot(Col3, B)
 			);
 		}
 
@@ -424,6 +440,79 @@ namespace Eternal
 			std::swap(A._24, A._42);
 			std::swap(A._34, A._43);
 		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		TranslationMatrix::TranslationMatrix(_In_ const Vector3& InTranslation)
+			: TranslationMatrix(InTranslation.x, InTranslation.y, InTranslation.z)
+		{
+		}
+
+		TranslationMatrix::TranslationMatrix(_In_ float InX, _In_ float InY, _In_ float InZ)
+			: Matrix4x4(
+				1.0f,	0.0f,	0.0f,	0.0f,
+				0.0f,	1.0f,	0.0f,	0.0f,
+				0.0f,	0.0f,	1.0f,	0.0f,
+				InX,	InY,	InZ,	1.0f
+			)
+		{
+		}
+
+		RotationMatrix::RotationMatrix(_In_ const Quaternion& InQuaternion)
+			: Matrix4x4()
+		{
+			float RX = InQuaternion.x;
+			float RXSquared = RX * RX;
+
+			float RY = InQuaternion.y;
+			float RYSquared = RY * RY;
+
+			float RZ = InQuaternion.z;
+			float RZSquared = RZ * RZ;
+
+			float RW = InQuaternion.w;
+
+			m[0][0] = 1.0f - 2.0f * RYSquared	- 2.0f * RZSquared;
+			m[0][1] = 2.0f * RX * RY			+ 2.0f * RZ * RW;
+			m[0][2] = 2.0f * RX * RZ			- 2.0f * RY * RW;
+			m[0][3] = 0.0f;
+
+			m[1][0] = 2.0f * RX * RY			- 2.0f * RZ * RW;
+			m[1][1] = 1.0f						- 2.0f * RXSquared	- 2.0f * RZSquared;
+			m[1][2] = 2.0f * RY * RZ			+ 2.0f * RX * RW;
+			m[1][3] = 0.0f;
+
+			m[2][0] = 2.0f * RX * RZ			+ 2.0f * RY * RW;
+			m[2][1] = 2.0f * RY * RZ			- 2.0f * RX * RW;
+			m[2][2] = 1.0f						- 2.0f * RXSquared	- 2.0f * RYSquared;
+			m[2][3] = 0.0f;
+
+			m[3][0] = 0.0f;
+			m[3][1] = 0.0f;
+			m[3][2] = 0.0f;
+			m[3][3] = 1.0f;
+		}
+
+		ScaleMatrix::ScaleMatrix(_In_ float InUniformScale)
+			: ScaleMatrix(InUniformScale, InUniformScale, InUniformScale)
+		{
+		}
+		
+		ScaleMatrix::ScaleMatrix(_In_ const Vector3& InScale)
+			: ScaleMatrix(InScale.x, InScale.y, InScale.z)
+		{
+		}
+
+		ScaleMatrix::ScaleMatrix(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ)
+			: Matrix4x4(
+				InScaleX,	0.0f,		0.0f,		0.0f,
+				0.0f,		InScaleY,	0.0f,		0.0f,
+				0.0f,		0.0f,		InScaleZ,	0.0f,
+				0.0f,		0.0f,		0.0f,		1.0f
+			)
+		{
+		}
+
 		PerspectiveLHMatrix::PerspectiveLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InYFOV, _In_ float InScreenRatio)
 			: Matrix4x4()
 		{

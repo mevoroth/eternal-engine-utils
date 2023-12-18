@@ -18,6 +18,8 @@ namespace Eternal
 		typedef char				s8;
 		typedef unsigned char		u8;
 
+		struct Quaternion;
+
 		struct Color8888
 		{
 			uint8_t R = 0;
@@ -34,6 +36,24 @@ namespace Eternal
 				: Packed(InPacked)
 			{
 			}
+		};
+
+		struct TranslationMatrix : public Matrix4x4
+		{
+			TranslationMatrix(_In_ const Vector3& InTranslation);
+			TranslationMatrix(_In_ float InX, _In_ float InY, _In_ float InZ);
+		};
+
+		struct RotationMatrix : public Matrix4x4
+		{
+			RotationMatrix(_In_ const Quaternion& InQuaternion);
+		};
+
+		struct ScaleMatrix : public Matrix4x4
+		{
+			ScaleMatrix(_In_ float InUniformScale);
+			ScaleMatrix(_In_ const Vector3& InScale);
+			ScaleMatrix(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ);
 		};
 
 		struct PerspectiveLHMatrix : public Matrix4x4
