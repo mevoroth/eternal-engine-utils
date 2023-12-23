@@ -53,15 +53,19 @@ namespace Eternal
 
 		Matrix4x4& operator*=(_In_ Matrix4x4& A, _In_ const _In_ Matrix4x4& B)
 		{
-			ETERNAL_BREAK();
-			//XMStoreFloat4x4(&A, XMMatrixMultiply(XMLoadFloat4x4(&A), XMLoadFloat4x4(&B)));
+			A = A * B;
 			return A;
 		}
 
 		Quaternion& operator*=(_In_ Quaternion& A, _In_ const Quaternion& B)
 		{
-			ETERNAL_BREAK();
-			//XMStoreFloat4(&A, XMQuaternionMultiply(XMLoadFloat4A(&A), XMLoadFloat4A(&B)));
+			A = A * B;
+			return A;
+		}
+
+		Quaternion& operator*=(_In_ Quaternion& A, _In_ const Euler& B)
+		{
+			A *= ToQuaternion(B);
 			return A;
 		}
 
@@ -135,6 +139,15 @@ namespace Eternal
 			return Vector2(
 				A.x * B.x,
 				A.y * B.y
+			);
+		}
+		Quaternion operator*(_In_ const Quaternion& A, _In_ const Quaternion& B)
+		{
+			return Quaternion(
+				(B.w * A.x) + (B.x * A.w) + (B.y * A.z) - (B.z * A.y),
+				(B.w * A.y) - (B.x * A.z) + (B.y * A.w) + (B.z * A.x),
+				(B.w * A.z) + (B.x * A.y) - (B.y * A.x) + (B.z * A.w),
+				(B.w * A.w) - (B.x * A.x) - (B.y * A.y) - (B.z * A.z)
 			);
 		}
 		Vector4& operator+=(_Inout_ Vector4& A, _In_ const Vector4& B)
@@ -266,6 +279,10 @@ namespace Eternal
 			return A.x == B.x
 				&& A.y == B.y
 				&& A.z == B.z;
+		}
+		bool operator!=(_In_ const Vector3& A, _In_ const Vector3& B)
+		{
+			return !(A == B);
 		}
 		Vector3 operator<(_In_ const Vector3& A, _In_ const Vector3& B)
 		{
@@ -414,6 +431,18 @@ namespace Eternal
 			);
 		}
 
+		static inline bool IsInfinite(float InF)
+		{
+			return ((*(const uint32_t*)&(InF) & 0x7FFFFFFF) == 0x7F800000);
+		}
+
+		bool IsInfinite(_In_ const Vector3& A)
+		{
+			return IsInfinite(A.x)
+				|| IsInfinite(A.y)
+				|| IsInfinite(A.z);
+		}
+
 		float Dot(_In_ const Vector3& A, _In_ const Vector3& B)
 		{
 			return A.x * B.x + A.y * B.y + A.z * B.z;
@@ -439,6 +468,32 @@ namespace Eternal
 			std::swap(A._23, A._32);
 			std::swap(A._24, A._42);
 			std::swap(A._34, A._43);
+		}
+
+		Quaternion ToQuaternion(_In_ const Euler& R)
+		{
+			const float Pitch	= R.x;
+			const float Yaw		= R.y;
+			const float Roll	= R.z;
+
+			const float HalfPitch = Pitch * 0.5f;
+			const float CosHalfPitch = cosf(HalfPitch);
+			const float SinHalfPitch = sinf(HalfPitch);
+
+			const float HalfYaw = Yaw * 0.5f;
+			const float CosHalfYaw = cosf(HalfYaw);
+			const float SinHalfYaw = sinf(HalfYaw);
+
+			const float HalfRoll = Roll * 0.5f;
+			const float CosHalfRoll = cosf(HalfRoll);
+			const float SinHalfRoll = sinf(HalfRoll);
+
+			return Quaternion(
+				CosHalfRoll * SinHalfPitch * CosHalfYaw + SinHalfRoll * CosHalfPitch * SinHalfYaw,
+				CosHalfRoll * CosHalfPitch * SinHalfYaw - SinHalfRoll * SinHalfPitch * CosHalfYaw,
+				SinHalfRoll * CosHalfPitch * CosHalfYaw - CosHalfRoll * SinHalfPitch * SinHalfYaw,
+				CosHalfRoll * CosHalfPitch * CosHalfYaw + SinHalfRoll * SinHalfPitch * SinHalfYaw
+			);
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -513,14 +568,7 @@ namespace Eternal
 		{
 		}
 
-		PerspectiveLHMatrix::PerspectiveLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InYFOV, _In_ float InScreenRatio)
-			: Matrix4x4()
-		{
-			ETERNAL_BREAK();
-			//XMStoreFloat4x4A(this, XMMatrixPerspectiveFovLH(InYFOV, InScreenRatio, InNear, InFar));
-		}
-
-		inline bool ScalarNearEqual
+		static inline bool ScalarNearEqual
 		(
 			_In_ float InS1,
 			_In_ float InS2,
@@ -531,7 +579,7 @@ namespace Eternal
 			return (fabsf(Delta) <= InEpsilon);
 		}
 
-		inline void ScalarSinCos
+		static inline void ScalarSinCos
 		(
 			float* OutSin,
 			float* OutCos,
@@ -580,7 +628,35 @@ namespace Eternal
 			*OutCos = Sign * P;
 		}
 
-		inline Matrix4x4 MatrixInversePerspectiveFovLH
+		static inline Matrix4x4 MatrixPerspectiveFovLH(_In_ float InNear, _In_ float InFar, _In_ float InYFOV, _In_ float InScreenRatio)
+		{
+			ETERNAL_ASSERT(InNear > 0.f && InFar > 0.f);
+			ETERNAL_ASSERT(!ScalarNearEqual(InYFOV, 0.0f, 0.00001f * 2.0f));
+			ETERNAL_ASSERT(!ScalarNearEqual(InScreenRatio, 0.0f, 0.00001f));
+			ETERNAL_ASSERT(!ScalarNearEqual(InFar, InNear, 0.00001f));
+
+			float SinFov;
+			float CosFov;
+			ScalarSinCos(&SinFov, &CosFov, 0.5f * InYFOV);
+
+			float Height = CosFov / SinFov;
+			float Width = Height / InScreenRatio;
+			float RangeRatio = InFar / (InFar - InNear);
+
+			return Matrix4x4(
+				Width,	0.0f,	0.0f,					0.0f,
+				0.0f,	Height,	0.0f,					0.0f,
+				0.0f,	0.0f,	RangeRatio,				1.0f,
+				0.0f,	0.0f,	-RangeRatio * InNear,	0.0f
+			);
+		}
+
+		PerspectiveLHMatrix::PerspectiveLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InYFOV, _In_ float InScreenRatio)
+			: Matrix4x4(MatrixPerspectiveFovLH(InNear, InFar, InYFOV, InScreenRatio))
+		{
+		}
+
+		static inline Matrix4x4 MatrixInversePerspectiveFovLH
 		(
 			_In_ float InNear,
 			_In_ float InFar,
@@ -611,9 +687,8 @@ namespace Eternal
 		}
 
 		InversePerspectiveLHMatrix::InversePerspectiveLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InYFOV, _In_ float InScreenRatio)
-			: Matrix4x4()
+			: Matrix4x4(MatrixInversePerspectiveFovLH(InNear, InFar, InYFOV, InScreenRatio))
 		{
-			*static_cast<Matrix4x4*>(this) = MatrixInversePerspectiveFovLH(InNear, InFar, InYFOV, InScreenRatio);
 		}
 
 		ReverseZPerspectiveLHMatrix::ReverseZPerspectiveLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InYFOV, _In_ float InScreenRatio)
@@ -626,7 +701,7 @@ namespace Eternal
 		{
 		}
 
-		inline Matrix4x4 MatrixOrthographicOffCenterLH
+		static inline Matrix4x4 MatrixOrthographicOffCenterLH
 		(
 			float ViewLeft,
 			float ViewRight,
@@ -653,13 +728,12 @@ namespace Eternal
 		}
 
 		OrthographicLHMatrix::OrthographicLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InWidth, _In_ float InHeight)
-			: Matrix4x4()
-		{
-			*static_cast<Matrix4x4*>(this) = MatrixOrthographicOffCenterLH(
+			: Matrix4x4(MatrixOrthographicOffCenterLH(
 				0.0f,	InWidth,
 				0.0f,	InHeight,
 				InNear,	InFar
-			);
+			))
+		{
 		}
 
 		static inline Matrix4x4 MatrixInverseOrthographicOffCenterLH
@@ -688,12 +762,11 @@ namespace Eternal
 		}
 
 		InverseOrthographicLHMatrix::InverseOrthographicLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InWidth, _In_ float InHeight)
-			: Matrix4x4()
-		{
-			*static_cast<Matrix4x4*>(this) = MatrixInverseOrthographicOffCenterLH(
+			: Matrix4x4(MatrixInverseOrthographicOffCenterLH(
 				InNear,		InFar,
 				InWidth,	InHeight
-			);
+			))
+		{
 		}
 
 		ReverseZOrthographicLHMatrix::ReverseZOrthographicLHMatrix(_In_ float InNear, _In_ float InFar, _In_ float InWidth, _In_ float InHeight)
@@ -706,15 +779,37 @@ namespace Eternal
 		{
 		}
 
-		LookToLHMatrix::LookToLHMatrix(_In_ const Vector3& InPosition, _In_ const Vector3& InForward, _In_ const Vector3& InUp)
-			: Matrix4x4()
+		static inline Matrix4x4 MatrixLookToLH(_In_ const Vector3& InPosition, _In_ const Vector3& InForward, _In_ const Vector3& InUp)
 		{
-			ETERNAL_BREAK();
-			//XMStoreFloat4x4A(this, XMMatrixLookToLH(
-			//	XMLoadFloat3(&InPosition),
-			//	XMLoadFloat3(&InForward),
-			//	XMLoadFloat3(&InUp)
-			//));
+			ETERNAL_ASSERT(InForward != Vector3::Zero);
+			ETERNAL_ASSERT(!IsInfinite(InForward));
+			ETERNAL_ASSERT(InUp != Vector3::Zero);
+			ETERNAL_ASSERT(!IsInfinite(InUp));
+
+			Vector3 NormalizedForward = Normalize(InForward);
+
+			Vector3 NormalizedRight = Cross(InUp, NormalizedForward);
+			NormalizedRight = Normalize(NormalizedRight);
+
+			Vector3 NormalizedUp = Cross(NormalizedForward, NormalizedRight);
+
+			Vector3 NegativePosition = -InPosition;
+
+			float RightDotNegativePosition		= Dot(NormalizedRight, NegativePosition);
+			float UpDotNegativePosition			= Dot(NormalizedUp, NegativePosition);
+			float ForwardDotNegativePosition	= Dot(NormalizedForward, NegativePosition);
+
+			return Matrix4x4(
+				NormalizedRight.x,			NormalizedUp.x,				NormalizedForward.x,		0.0f,
+				NormalizedRight.y,			NormalizedUp.y,				NormalizedForward.y,		0.0f,
+				NormalizedRight.z,			NormalizedUp.z,				NormalizedForward.z,		0.0f,
+				RightDotNegativePosition,	UpDotNegativePosition,		ForwardDotNegativePosition,	1.0f
+			);
+		}
+
+		LookToLHMatrix::LookToLHMatrix(_In_ const Vector3& InPosition, _In_ const Vector3& InForward, _In_ const Vector3& InUp)
+			: Matrix4x4(MatrixLookToLH(InPosition, InForward, InUp))
+		{
 		}
 	}
 }

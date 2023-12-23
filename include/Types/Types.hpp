@@ -152,6 +152,11 @@ namespace Eternal
 			float PointProject(_In_ const Vector4& InPoint) const;
 		};
 
+		struct Euler : public Vector3
+		{
+			using Vector3::Vector3;
+		};
+
 		struct Quaternion : public Vector4
 		{
 			static Quaternion QuaternionIdentity;
@@ -173,6 +178,7 @@ namespace Eternal
 		extern Matrix4x4 operator*(_In_ const Matrix4x4& A, _In_ const Matrix4x4& B);
 		extern Matrix4x4& operator*=(_In_ Matrix4x4& A, _In_ const Matrix4x4& B);
 		extern Quaternion& operator*=(_In_ Quaternion& A, _In_ const Quaternion& B);
+		extern Quaternion& operator*=(_In_ Quaternion& A, _In_ const Euler& B);
 		extern Vector4 operator+(_In_ const Vector4& A, _In_ const Vector4& B);
 		extern Vector3 operator+(_In_ const Vector3& A, _In_ const Vector3& B);
 		extern Vector2 operator+(_In_ const Vector2& A, _In_ const Vector2& B);
@@ -182,6 +188,8 @@ namespace Eternal
 		extern Vector4 operator*(_In_ const Vector4& A, _In_ const Vector4& B);
 		extern Vector3 operator*(_In_ const Vector3& A, _In_ const Vector3& B);
 		extern Vector2 operator*(_In_ const Vector2& A, _In_ const Vector2& B);
+		extern Quaternion operator*(_In_ const Quaternion& A, _In_ const Quaternion& B);
+		extern Quaternion operator*(_In_ const Quaternion& A, _In_ const Euler& B);
 		extern Vector4 operator*(_In_ const Matrix4x4& A, _In_ const Vector4& B);
 		extern Vector4& operator+=(_Inout_ Vector4& A, _In_ const Vector4& B);
 		extern Vector3& operator+=(_Inout_ Vector3& A, _In_ const Vector3& B);
@@ -210,6 +218,7 @@ namespace Eternal
 
 		extern bool operator==(_In_ const Vector4& A, _In_ const Vector4& B);
 		extern bool operator==(_In_ const Vector3& A, _In_ const Vector3& B);
+		extern bool operator!=(_In_ const Vector3& A, _In_ const Vector3& B);
 		extern Vector3 operator<(_In_ const Vector3& A, _In_ const Vector3& B);
 		extern Vector3 operator>(_In_ const Vector3& A, _In_ const Vector3& B);
 		extern Vector3 operator<=(_In_ const Vector3& A, _In_ const Vector3& B);
@@ -227,6 +236,8 @@ namespace Eternal
 		extern Vector3 Abs(_In_ const Vector3& A);
 		extern Vector2 Abs(_In_ const Vector2& A);
 
+		extern bool IsInfinite(_In_ const Vector3& A);
+
 		// MATH STUFF: MOVE THIS
 		extern void Transpose(_Inout_ Matrix4x4& A);
 		extern Matrix4x4 Inverse(_In_ const Matrix4x4& A);
@@ -239,5 +250,6 @@ namespace Eternal
 		extern float Dot(_In_ const Vector3& A, _In_ const Vector3& B);
 		extern float Dot(_In_ const Vector4& A, _In_ const Vector4& B);
 		extern Vector3 Cross(_In_ const Vector3& A, const Vector3& B);
+		extern Quaternion ToQuaternion(_In_ const Euler& R);
 	}
 }

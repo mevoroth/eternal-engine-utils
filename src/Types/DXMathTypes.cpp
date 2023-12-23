@@ -27,6 +27,12 @@ namespace Eternal
 			return A;
 		}
 
+		Quaternion& operator*=(_In_ Quaternion& A, _In_ const Euler& B)
+		{
+			XMStoreFloat4(&A, XMQuaternionMultiply(XMLoadFloat4A(&A), XMQuaternionRotationRollPitchYaw(B.x, B.y, B.z)));
+			return A;
+		}
+
 		Vector4 operator+(_In_ const Vector4& A, _In_ const Vector4& B)
 		{
 			Vector4 Result;
@@ -79,6 +85,12 @@ namespace Eternal
 		{
 			Vector2 Result;
 			XMStoreFloat2(&Result, XMVectorMultiply(XMLoadFloat2(&A), XMLoadFloat2(&B)));
+			return Result;
+		}
+		Quaternion operator*(_In_ const Quaternion& A, _In_ const Quaternion& B)
+		{
+			Quaternion Result;
+			XMStoreFloat4(&Result, XMQuaternionMultiply(XMLoadFloat4(&A), XMLoadFloat4(&B)));
 			return Result;
 		}
 		Vector4& operator+=(_Inout_ Vector4& A, _In_ const Vector4& B)
@@ -328,6 +340,12 @@ namespace Eternal
 				A.x * B.y - A.y * B.x
 			);
 		}
+		Quaternion ToQuaternion(_In_ const Euler& R)
+		{
+			Quaternion Result;
+			XMStoreFloat4(&Result, XMQuaternionRotationRollPitchYaw(R.x, R.y, R.z));
+			return Result;
+		}
 
 		void Transpose(_Inout_ Matrix4x4& A)
 		{
@@ -354,7 +372,7 @@ namespace Eternal
 
 		RotationMatrix::RotationMatrix(_In_ const Quaternion& InQuaternion)
 		{
-			XMStoreFloat4x4(this, XMMatrixRotationQuaternion(XMLoadFloat4(InQuaternion)));
+			XMStoreFloat4x4(this, XMMatrixRotationQuaternion(XMLoadFloat4(&InQuaternion)));
 		}
 
 		ScaleMatrix::ScaleMatrix(_In_ float InUniformScale)

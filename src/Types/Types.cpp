@@ -46,6 +46,10 @@ namespace Eternal
 
 		//////////////////////////////////////////////////////////////////////////
 
+		Quaternion operator*(_In_ const Quaternion& A, _In_ const Euler& B)
+		{
+			return A * ToQuaternion(B);
+		}
 		Vector4 operator*(_In_ float A, _In_ const Vector4& B)
 		{
 			return B * A;
