@@ -38,20 +38,16 @@ namespace Eternal
 
 		static std::string MeshFactory_KeyToCachedMeshFilePath(_In_ const MeshKey& InKey)
 		{
-			char FileName[255];
-			char Extension[8];
+			string Dummy;
+			string FileName;
+			string Extension;
 
-			ETERNAL_BREAK();
-			//_splitpath_s(
-			//	InKey.c_str(),
-			//	nullptr, 0,
-			//	nullptr, 0,
-			//	FileName, 255,
-			//	Extension, 8
-			//);
+			FilePath::SplitPath(InKey, Dummy, FileName, Extension);
+
+			(void)Dummy;
 
 			char CachedMeshFilePath[1024];
-			sprintf_s(CachedMeshFilePath, "%s%scache", FileName, Extension);
+			sprintf_s(CachedMeshFilePath, "%s%scache", FileName.c_str(), Extension.c_str());
 
 			return CachedMeshFilePath;
 		}
