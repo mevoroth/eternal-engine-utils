@@ -30,6 +30,7 @@ namespace Eternal
 			static string FindOrCreate(_In_ const string& InFileName, _In_ const FileType& InFileType);
 			static void NormalizePath(_Inout_ string& InOutPath);
 			static string AbsolutePath(_In_ const string& InFileName);
+			static void SplitPath(_In_ const string& InFilePath, _Out_ string& OutDirectory, _Out_ string& OutFileName, _Out_ string& OutExtension);
 
 		private:
 			static vector<string> _FolderPaths[static_cast<int32_t>(FileType::FILE_TYPE_COUNT)];
