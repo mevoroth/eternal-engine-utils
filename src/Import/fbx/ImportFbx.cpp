@@ -132,7 +132,7 @@ namespace Eternal
 					{
 						Textures.TextureFullPath	= FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES);
 						Textures.TextureKey			= "black";
-						Textures.TexturePath		= "black";
+						Textures.TexturePath		= "black.tga";
 					}
 				}
 
@@ -169,87 +169,90 @@ namespace Eternal
 			{
 				//TextureRequest* NewTextureRequest = nullptr;
 				bool HasFoundTexture = false;
-				const FbxProperty Property = InFbxMaterial->FindPropertyHierarchical(InPropertyName);
-				if (Property.IsValid())
+				if (InFbxMaterial)
 				{
-					if (Property.GetSrcObjectCount<FbxFileTexture>() > 0)
+					const FbxProperty Property = InFbxMaterial->FindPropertyHierarchical(InPropertyName);
+					if (Property.IsValid())
 					{
-						const FbxFileTexture* FileTexture = Property.GetSrcObject<FbxFileTexture>();
-
-						ReadTextureDependencyFromFbxFileTexture<MissingTexturePolicy::MISSING_TEXTURE_POLICY_DEFAULT_TO_BLACK, TextureKeyPathBuilderFunctor>(
-							FileTexture,
-							InTextureCache,
-							InTextureType,
-							InMaterial,
-							InOutMaterialDependency
-						);
-						HasFoundTexture = true;
-
-						//if (NewTextureRequest->MaterialToUpdate.Key == "black")
+						if (Property.GetSrcObjectCount<FbxFileTexture>() > 0)
 						{
-							//int SrcObjectCount = Property.GetSrcObjectCount();
-							//for (int SrcObjectIndex = 0; SrcObjectIndex < SrcObjectCount; ++SrcObjectIndex)
-							//{
-							//	FbxObject* FbxObj = Property.GetSrcObject(SrcObjectIndex);
-							//	LogWrite(LogWarning, LogImport, std::string("Property: ") + FbxObj->GetName());
-							//}
+							const FbxFileTexture* FileTexture = Property.GetSrcObject<FbxFileTexture>();
 
-							//FbxProperty Property = InFbxMaterial->GetFirstProperty();
-							//for (; Property.IsValid(); Property = InFbxMaterial->GetNextProperty(Property))
-							//{
-							//	if (Property.IsValid())
-							//	{
-							//		FbxTexture* lTexture = NULL;
+							ReadTextureDependencyFromFbxFileTexture<MissingTexturePolicy::MISSING_TEXTURE_POLICY_DEFAULT_TO_BLACK, TextureKeyPathBuilderFunctor>(
+								FileTexture,
+								InTextureCache,
+								InTextureType,
+								InMaterial,
+								InOutMaterialDependency
+							);
+							HasFoundTexture = true;
 
-							//		//Here we have to check if it's layered textures, or just textures:
-							//		int LayeredTextureCount = Property.GetSrcObjectCount<FbxLayeredTexture>();
-							//		FbxString PropertyName = Property.GetName();
+							//if (NewTextureRequest->MaterialToUpdate.Key == "black")
+							{
+								//int SrcObjectCount = Property.GetSrcObjectCount();
+								//for (int SrcObjectIndex = 0; SrcObjectIndex < SrcObjectCount; ++SrcObjectIndex)
+								//{
+								//	FbxObject* FbxObj = Property.GetSrcObject(SrcObjectIndex);
+								//	LogWrite(LogWarning, LogImport, std::string("Property: ") + FbxObj->GetName());
+								//}
 
-							//		FbxProperty FindProperty = InFbxMaterial->FindProperty(Property.GetNameAsCStr(), false);
+								//FbxProperty Property = InFbxMaterial->GetFirstProperty();
+								//for (; Property.IsValid(); Property = InFbxMaterial->GetNextProperty(Property))
+								//{
+								//	if (Property.IsValid())
+								//	{
+								//		FbxTexture* lTexture = NULL;
 
-							//		if (FindProperty.IsValid())
-							//		{
-							//			LogWrite(LogWarning, LogImport, "VALID");
-							//		}
+								//		//Here we have to check if it's layered textures, or just textures:
+								//		int LayeredTextureCount = Property.GetSrcObjectCount<FbxLayeredTexture>();
+								//		FbxString PropertyName = Property.GetName();
 
-							//		LogWrite(LogWarning, LogImport, Property.GetHierarchicalName().Buffer());
+								//		FbxProperty FindProperty = InFbxMaterial->FindProperty(Property.GetNameAsCStr(), false);
 
-							//		if (LayeredTextureCount > 0)
-							//		{
-							//			for (int LayerIndex = 0; LayerIndex < LayeredTextureCount; ++LayerIndex)
-							//			{
-							//				FbxLayeredTexture* lLayeredTexture = Property.GetSrcObject<FbxLayeredTexture>(LayerIndex);
-							//				int NbTextures = lLayeredTexture->GetSrcObjectCount<FbxTexture>();
-							//				for (int TexIndex = 0; TexIndex < NbTextures; ++TexIndex)
-							//				{
-							//					FbxFileTexture* Texture = lLayeredTexture->GetSrcObject<FbxFileTexture>(TexIndex);
-							//					if (Texture)
-							//					{
-							//						LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + std::string(" ") + Texture->GetName());
-							//					}
-							//				}
-							//				if (NbTextures == 0)
-							//					LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + " EMPTY");
-							//			}
-							//		}
-							//		else
-							//		{
-							//			//no layered texture simply get on the property
-							//			int NbTextures = Property.GetSrcObjectCount<FbxTexture>();
-							//			for (int TexIndex = 0; TexIndex < NbTextures; ++TexIndex)
-							//			{
+								//		if (FindProperty.IsValid())
+								//		{
+								//			LogWrite(LogWarning, LogImport, "VALID");
+								//		}
 
-							//				FbxFileTexture* Texture = Property.GetSrcObject<FbxFileTexture>(TexIndex);
-							//				if (Texture)
-							//				{
-							//					LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + std::string(" ") + Texture->GetName());
-							//				}
-							//			}
-							//			if (NbTextures == 0)
-							//				LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + " EMPTY");
-							//		}
-							//	}
-							//}
+								//		LogWrite(LogWarning, LogImport, Property.GetHierarchicalName().Buffer());
+
+								//		if (LayeredTextureCount > 0)
+								//		{
+								//			for (int LayerIndex = 0; LayerIndex < LayeredTextureCount; ++LayerIndex)
+								//			{
+								//				FbxLayeredTexture* lLayeredTexture = Property.GetSrcObject<FbxLayeredTexture>(LayerIndex);
+								//				int NbTextures = lLayeredTexture->GetSrcObjectCount<FbxTexture>();
+								//				for (int TexIndex = 0; TexIndex < NbTextures; ++TexIndex)
+								//				{
+								//					FbxFileTexture* Texture = lLayeredTexture->GetSrcObject<FbxFileTexture>(TexIndex);
+								//					if (Texture)
+								//					{
+								//						LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + std::string(" ") + Texture->GetName());
+								//					}
+								//				}
+								//				if (NbTextures == 0)
+								//					LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + " EMPTY");
+								//			}
+								//		}
+								//		else
+								//		{
+								//			//no layered texture simply get on the property
+								//			int NbTextures = Property.GetSrcObjectCount<FbxTexture>();
+								//			for (int TexIndex = 0; TexIndex < NbTextures; ++TexIndex)
+								//			{
+
+								//				FbxFileTexture* Texture = Property.GetSrcObject<FbxFileTexture>(TexIndex);
+								//				if (Texture)
+								//				{
+								//					LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + std::string(" ") + Texture->GetName());
+								//				}
+								//			}
+								//			if (NbTextures == 0)
+								//				LogWrite(LogWarning, LogImport, std::string(PropertyName.Buffer()) + " EMPTY");
+								//		}
+								//	}
+								//}
+							}
 						}
 					}
 				}
@@ -263,7 +266,7 @@ namespace Eternal
 					MaterialDependencyEntry& Textures = TextureDependencyEntry->second.Textures[static_cast<uint32_t>(InTextureType)];
 					Textures.TextureFullPath	= FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES);
 					Textures.TextureKey			= "black";
-					Textures.TexturePath		= "black";
+					Textures.TexturePath		= "black.tga";
 				}
 
 				//if (!NewTextureRequest)
@@ -379,9 +382,11 @@ namespace Eternal
 			MeshFactory MeshCache;
 			MaterialDependency MaterialTextures;
 
+#if !ETERNAL_PLATFORM_WINDOWS
+			std::string InFullFilePath = FilePath::FindOrCreate(InPath, FileType::FILE_TYPE_MESHES);
+#else
 			std::string InFullFilePath = FilePath::Find(InPath, FileType::FILE_TYPE_MESHES);
 
-#if ETERNAL_PLATFORM_WINDOWS
 			if (MeshCache.CachedMeshIsValid(InFullFilePath))
 #endif
 			{
@@ -481,13 +486,12 @@ namespace Eternal
 		{
 			for (auto TextureDependencyIterator = InMaterialDependency.Textures.begin(); TextureDependencyIterator != InMaterialDependency.Textures.end(); ++TextureDependencyIterator)
 			{
-				//TextureDependencyIterator->first->
 				const MaterialTextures& Textures = TextureDependencyIterator->second;
 				for (uint32_t TextureIndex = 0; TextureIndex < static_cast<uint32_t>(TextureType::TEXTURE_TYPE_COUNT); ++TextureIndex)
 				{
 					const MaterialDependencyEntry& CurrentEntry = Textures.Textures[TextureIndex];
 					TextureRequest* NewTextureRequest = new TextureRequest(
-						CurrentEntry.TextureFullPath,
+						FilePath::Find(CurrentEntry.TexturePath, FileType::FILE_TYPE_TEXTURES),
 						CurrentEntry.TextureKey,
 						CurrentEntry.TexturePath
 					);
@@ -613,7 +617,7 @@ namespace Eternal
 			LeftHandedTransformVector(GlobalTranslationTransformed);
 			InOutMesh.GetTransform().Translate(GlobalTranslationTransformed);
 
-			Vector3 GlobalRotationRadians(
+			Euler GlobalRotationRadians(
 				static_cast<float>(GlobalRotation[0] * DegreesToRadians),
 				static_cast<float>(GlobalRotation[1] * DegreesToRadians),
 				static_cast<float>(GlobalRotation[2] * DegreesToRadians)
@@ -643,7 +647,7 @@ namespace Eternal
 				LeftHandedTransformVector(LocalTranslationTransformed);
 				InOutMesh.GetLocalTransform().Translate(LocalTranslationTransformed);
 
-				Vector3 LocalRotationRadians(
+				Euler LocalRotationRadians(
 					static_cast<float>(LocalRotation[0] * DegreesToRadians),
 					static_cast<float>(LocalRotation[1] * DegreesToRadians),
 					static_cast<float>(LocalRotation[2] * DegreesToRadians)
