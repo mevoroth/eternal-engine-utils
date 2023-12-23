@@ -27,7 +27,7 @@ namespace Eternal
 			virtual void Open(_In_ const OpenMode& InOpenMode);
 			virtual void Close() = 0;
 			virtual void Read(_In_ uint8_t* InBlock, _In_ uint64_t InSize) = 0;
-			virtual void Write(_In_ uint8_t* InBlock, _In_ uint64_t InSize) = 0;
+			virtual void Write(_In_ const uint8_t* InBlock, _In_ uint64_t InSize) = 0;
 			virtual void Serialize(_Inout_ uint8_t* InOutBlock, _In_ uint64_t InSize) = 0;
 			virtual void Seek(_In_ uint64_t InOffset, _In_ const Origin& InOrigin) = 0;
 			virtual uint64_t Tell() const = 0;

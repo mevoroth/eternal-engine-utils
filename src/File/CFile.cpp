@@ -61,7 +61,7 @@ namespace Eternal
 			fread(InBlock, InSize, 1, _File);
 		}
 
-		void CFile::Write(_In_ uint8_t* InBlock, _In_ uint64_t InSize)
+		void CFile::Write(_In_ const uint8_t* InBlock, _In_ uint64_t InSize)
 		{
 			fwrite(InBlock, InSize, 1, _File);
 		}
