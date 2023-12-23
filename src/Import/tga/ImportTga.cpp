@@ -1,6 +1,7 @@
 #include "Import/tga/ImportTga.hpp"
 
 #include "File/FileFactory.hpp"
+#include "File/FilePath.hpp"
 #include "File/File.hpp"
 #include "include/Tga.h"
 
