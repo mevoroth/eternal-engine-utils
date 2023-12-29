@@ -45,7 +45,7 @@ namespace Eternal
 			return FilePath_FindOrFallback(
 				InFileName,
 				InFileType,
-				[](_In_ const vector<string>& InFolderPaths, _In_ const string& InFileName) -> string { return string(); }
+				[](_In_ const vector<string>& InFolderPaths, _In_ const string& InFileName) -> string { (void)InFolderPaths; (void)InFileName; return string(); }
 			);
 		}
 

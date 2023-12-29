@@ -18,9 +18,13 @@ namespace Eternal
 		public:
 			XInput();
 			virtual void Update() override;
-			virtual void NotifyKeyPressed(_In_ const Key& InKeyName) override {}
-			virtual void NotifyKeyReleased(_In_ const Key& InKeyName) override {}
-			virtual void NotifyAxis(_In_ const Axis& InAxisName, _In_ float InAxisValue) override {};
+			virtual void NotifyKeyPressed(_In_ const Key& InKeyName) override { (void)InKeyName; }
+			virtual void NotifyKeyReleased(_In_ const Key& InKeyName) override { (void)InKeyName; }
+			virtual void NotifyAxis(_In_ const Axis& InAxisName, _In_ float InAxisValue) override
+			{
+				(void)InAxisName;
+				(void)InAxisValue;
+			}
 
 		private:
 			void _Pad();
