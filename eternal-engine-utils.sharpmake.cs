@@ -1,11 +1,11 @@
 ﻿using Sharpmake;
 
-[module: Sharpmake.Include(@"..\eternal-engine\eternal-engine.sharpmake.cs")]
+[module: Sharpmake.Include(@"..\eternal-engine\eternal-engine-project.sharpmake.cs")]
 
 namespace EternalEngine
 {
 	[Sharpmake.Generate]
-	public class EternalEngineUtilsProject : EternalEngineProject
+	public class EternalEngineUtilsProject : EternalEngineBaseProject
 	{
 		public EternalEngineUtilsProject()
 			: base(
