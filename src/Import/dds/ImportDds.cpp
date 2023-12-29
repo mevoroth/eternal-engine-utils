@@ -71,6 +71,12 @@ namespace Eternal
 
 		uint8_t* ImportDds::Import(_In_ const string& InPath, _Out_ Format& OutFormat, _Out_ ResourceDimension& OutResourceDimension, _Out_ uint32_t& OutWidth, _Out_ uint32_t& OutHeight, _Out_ uint32_t& OutDepth)
 		{
+			(void)InPath;
+			(void)OutFormat;
+			(void)OutResourceDimension;
+			(void)OutWidth;
+			(void)OutHeight;
+			(void)OutDepth;
 #if ETERNAL_PLATFORM_WINDOWS
 			using namespace DirectX;
 			using namespace Eternal::FileSystem;
