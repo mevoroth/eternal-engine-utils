@@ -2,6 +2,7 @@
 
 #include "Log/Log.hpp"
 #include "Input/KeyboardInput/KeyboardInput.hpp"
+#include "Input/MouseInput/MouseInput.hpp"
 #include "Input/XInput/XInput.hpp"
 #include "Input/MultiInput/MultiInput.hpp"
 
@@ -20,18 +21,18 @@ namespace Eternal
 			switch (InInputType)
 			{
 			case InputType::INPUT_TYPE_KEYBOARD:
-				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating Keyboard input");
+				LogWrite(LogInfo, LogEngine, "[InputSystem::CreateInput]Creating Keyboard input");
 				return new KeyboardInput();
 
 			#if ETERNAL_PLATFORM_WINDOWS
 			case InputType::INPUT_TYPE_XINPUT:
-				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating Xbox Pad input");
+				LogWrite(LogInfo, LogEngine, "[InputSystem::CreateInput]Creating Xbox Pad input");
 				return new XInput();
 			#endif
 
 			case InputType::INPUT_TYPE_SCE_PAD:
 				#if ETERNAL_PLATFORM_WINDOWS
-				LogWrite(LogInfo, LogEngine, "[Input::CreateInput]Creating PS Pad input (Windows)");
+				LogWrite(LogInfo, LogEngine, "[InputSystem::CreateInput]Creating PS Pad input (Windows)");
 				ETERNAL_BREAK();
 				return nullptr;
 				#endif
@@ -39,11 +40,20 @@ namespace Eternal
 				return CreateScePadInputPrivate();
 				#endif
 
+			case InputType::INPUT_TYPE_MOUSE:
+				#if ETERNAL_PLATFORM_WINDOWS
+				LogWrite(LogInfo, LogEngine, "[InputSystem::CreateInput]Creating Mouse input");
+				return new MouseInput();
+				#endif
+				#if ETERNAL_USE_PRIVATE
+				return CreateMousePrivate();
+				#endif
+
 			case InputType::INPUT_TYPE_MULTI:	// Must be created with CreateMultiInput
 			default:
-				ETERNAL_BREAK();
 				break;
 			}
+			ETERNAL_BREAK();
 			return nullptr;
 		}
 

@@ -29,19 +29,24 @@ namespace Eternal
 
 		void KeyboardInput::NotifyKeyPressed(_In_ const Key& InKeyName)
 		{
+			if (InKeyName >= MOUSE0 && InKeyName <= MOUSE6)
+				return;
+
 			// Probably need mutex
 			_KeyRecords.push_back(KeyRecord(InKeyName, DOWN));
 		}
 
 		void KeyboardInput::NotifyKeyReleased(_In_ const Key& InKeyName)
 		{
+			if (InKeyName >= MOUSE0 && InKeyName <= MOUSE6)
+				return;
+
 			// Probably need mutex
 			_KeyRecords.push_back(KeyRecord(InKeyName, UP));
 		}
 
 		void KeyboardInput::NotifyAxis(_In_ const Axis& InAxisName, _In_ float InAxisValue)
 		{
-			_Axis[InAxisName] = InAxisValue;
 		}
 	}
 }
