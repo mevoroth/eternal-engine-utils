@@ -23,7 +23,6 @@ namespace Eternal
 		{
 			string TextureKey;
 			string TexturePath;
-			string TextureFullPath;
 		};
 
 		struct MaterialTextures

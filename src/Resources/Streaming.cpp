@@ -6,6 +6,7 @@
 #include "Parallel/MutexAutoLock.hpp"
 #include "Parallel/ConditionVariable.hpp"
 #include "Parallel/ConditionVariableFactory.hpp"
+#include "Import/mat/ImportMat.hpp"
 #include "File/FilePath.hpp"
 
 #include "Resources/Payload.hpp"
@@ -21,6 +22,7 @@ namespace Eternal
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_LEVEL),
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_TEXTURE),
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_MESH),
+			~0u,
 			~0u,
 			~0u
 		};
@@ -93,8 +95,9 @@ namespace Eternal
 			, _SleepMutex(CreateMutex())
 			, _SleepConditionVariable(CreateConditionVariable())
 			, _StreamingInternal(new StreamingInternal())
+			, _ImportMat(new ImportMat())
 		{
-			RegisterLoader(AssetType::ASSET_TYPE_MESH, new MeshLoader());
+			RegisterLoader(AssetType::ASSET_TYPE_MESH, new MeshLoader(_ImportMat));
 			RegisterLoader(AssetType::ASSET_TYPE_TEXTURE, new TextureLoader(InTextureFactory, _StreamingInternal->MaterialUpdateBatcher_StreamingThread));
 		}
 

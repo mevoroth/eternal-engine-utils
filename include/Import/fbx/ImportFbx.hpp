@@ -32,10 +32,12 @@ namespace Eternal
 			struct FbxTextureCache;
 		}
 
+		class ImportMat;
+
 		class ImportFbx
 		{
 		public:
-			ImportFbx();
+			ImportFbx(_In_ ImportMat* InImportMat);
 			void Import(_In_ const std::string& InPath, _Out_ MeshPayload& OutMeshPayload);
 
 		private:
@@ -59,6 +61,8 @@ namespace Eternal
 #endif
 
 			void _CreateTextureRequests(_In_ const MaterialDependency& InMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload);
+
+			ImportMat* _ImportMat = nullptr;
 		};
 	}
 }

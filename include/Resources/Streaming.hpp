@@ -19,6 +19,10 @@ namespace Eternal
 	{
 		class MeshComponent;
 	}
+	namespace Import
+	{
+		class ImportMat;
+	}
 
 	namespace Resources
 	{
@@ -26,6 +30,7 @@ namespace Eternal
 		using namespace Eternal::Parallel;
 		using namespace Eternal::FileSystem;
 		using namespace Eternal::Core;
+		using namespace Eternal::Import;
 
 		enum class AssetType
 		{
@@ -155,6 +160,7 @@ namespace Eternal
 			Mutex*										_SleepMutex				= nullptr;
 			ConditionVariable*							_SleepConditionVariable	= nullptr;
 			StreamingInternal*							_StreamingInternal		= nullptr;
+			ImportMat*									_ImportMat				= nullptr;
 			bool										_Running				= true;
 		};
 	}

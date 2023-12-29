@@ -6,8 +6,8 @@ namespace Eternal
 {
 	namespace Resources
 	{
-		MeshLoader::MeshLoader()
-			: _ImportFbx(new ImportFbx())
+		MeshLoader::MeshLoader(_In_ ImportMat* InImportMat)
+			: _ImportFbx(new ImportFbx(InImportMat))
 		{
 		}
 

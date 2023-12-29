@@ -121,7 +121,6 @@ namespace Eternal
 						{
 							CachedMeshFile->Serialize(CurrentMaterialTextures.Textures[TextureIndex].TextureKey);
 							CachedMeshFile->Serialize(CurrentMaterialTextures.Textures[TextureIndex].TexturePath);
-							CachedMeshFile->Serialize(CurrentMaterialTextures.Textures[TextureIndex].TextureFullPath);
 						}
 					}
 

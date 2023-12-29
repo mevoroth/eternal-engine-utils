@@ -11,6 +11,7 @@
 #include "Math/Math.hpp"
 #include "Log/Log.hpp"
 #include "Resources/MeshFactory.hpp"
+#include "Import/mat/ImportMat.hpp"
 
 #define ETERNAL_IMPORT_FBX_LEFT_HANDED	(1)
 
@@ -107,12 +108,12 @@ namespace Eternal
 				{
 					memcpy(FileName, TextureCacheEntry->second.TextureKey.c_str(), TextureCacheEntry->second.TextureKey.length() + 1);
 					memcpy(TexturePath, TextureCacheEntry->second.TexturePath.c_str(), TextureCacheEntry->second.TexturePath.length() + 1);
-					TextureFullPath	= TextureCacheEntry->second.TextureFullPath;
+					//TextureFullPath	= TextureCacheEntry->second.TextureFullPath;
 				}
-				else
-				{
-					TextureFullPath = TextureKeyPathFullPathBuilder<TextureKeyPathBuilderFunctor>(FileTexture, FileName, TexturePath);
-				}
+				//else
+				//{
+				//	TextureFullPath = TextureKeyPathFullPathBuilder<TextureKeyPathBuilderFunctor>(FileTexture, FileName, TexturePath);
+				//}
 
 				auto TextureDependencyEntry = InOutMaterialDependency.Textures.find(InMaterial);
 				if (TextureDependencyEntry == InOutMaterialDependency.Textures.end())
@@ -120,21 +121,23 @@ namespace Eternal
 
 				MaterialDependencyEntry& Textures = TextureDependencyEntry->second.Textures[static_cast<uint32_t>(InTextureType)];
 
-				if (TextureFullPath.size() > 0)
-				{
-					Textures.TextureFullPath	= TextureFullPath;
-					Textures.TextureKey			= FileName;
-					Textures.TexturePath		= TexturePath;
-				}
-				else
-				{
-					if (Policy == MissingTexturePolicy::MISSING_TEXTURE_POLICY_DEFAULT_TO_BLACK)
-					{
-						Textures.TextureFullPath	= FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES);
-						Textures.TextureKey			= "black";
-						Textures.TexturePath		= "black.tga";
-					}
-				}
+				Textures.TextureKey		= FileName;
+				Textures.TexturePath	= TexturePath;
+				//if (TextureFullPath.size() > 0)
+				//{
+				//	Textures.TextureFullPath	= TextureFullPath;
+				//	Textures.TextureKey			= FileName;
+				//	Textures.TexturePath		= TexturePath;
+				//}
+				//else
+				//{
+				//	if (Policy == MissingTexturePolicy::MISSING_TEXTURE_POLICY_DEFAULT_TO_BLACK)
+				//	{
+				//		Textures.TextureFullPath	= FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES);
+				//		Textures.TextureKey			= "black";
+				//		Textures.TexturePath		= "black.tga";
+				//	}
+				//}
 
 				//TextureRequest* NewTextureRequest = nullptr;
 				//if (TextureFullPath.size() > 0)
@@ -168,6 +171,10 @@ namespace Eternal
 			)
 			{
 				//TextureRequest* NewTextureRequest = nullptr;
+
+				if (!InOutMaterialDependency.Textures.find(InMaterial)->second.Textures[static_cast<uint32_t>(InTextureType)].TexturePath.empty())
+					return;
+
 				bool HasFoundTexture = false;
 				if (InFbxMaterial)
 				{
@@ -264,7 +271,7 @@ namespace Eternal
 						TextureDependencyEntry = InOutMaterialDependency.Textures.emplace(InMaterial, MaterialTextures()).first;
 
 					MaterialDependencyEntry& Textures = TextureDependencyEntry->second.Textures[static_cast<uint32_t>(InTextureType)];
-					Textures.TextureFullPath	= FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES);
+					//Textures.TextureFullPath	= FilePath::Find("black.tga", FileType::FILE_TYPE_TEXTURES);
 					Textures.TextureKey			= "black";
 					Textures.TexturePath		= "black.tga";
 				}
@@ -363,7 +370,8 @@ namespace Eternal
 			};
 		}
 
-		ImportFbx::ImportFbx()
+		ImportFbx::ImportFbx(_In_ ImportMat* InImportMat)
+			: _ImportMat(InImportMat)
 		{
 #if ETERNAL_PLATFORM_WINDOWS
 			_SdkManager = FbxManager::Create();
@@ -519,7 +527,7 @@ namespace Eternal
 
 					if (!TextureFullPath.empty())
 					{
-						MaterialDependencyEntry NewTextureCacheEntry = { FileName, TexturePath, TextureFullPath };
+						MaterialDependencyEntry NewTextureCacheEntry = { FileName, TexturePath };
 						InOutTextureCache.TextureCache.emplace(FileTexture->GetName(), NewTextureCacheEntry);
 					}
 				}
@@ -980,9 +988,9 @@ namespace Eternal
 
 							if (IsValidSubMesh)
 							{
-								Components::Material* MeshMaterial = new Components::Material();
-								
 								const FbxSurfaceMaterial* InFbxMaterial = InNode->GetMaterial(SubMeshIndex);
+
+								Components::Material* MeshMaterial = _ImportMat->Import(InFbxMaterial ? InFbxMaterial->GetName() : std::string(), InOutMaterialDependency);
 
 								CreateTextureRequestFromMaterialProperty(InFbxMaterial, ImportFbxPrivate::DiffuseTextureName,	TextureType::TEXTURE_TYPE_DIFFUSE,						MeshMaterial);
 								CreateTextureRequestFromMaterialProperty(InFbxMaterial, ImportFbxPrivate::NormalTextureName,	TextureType::TEXTURE_TYPE_NORMAL,						MeshMaterial);
