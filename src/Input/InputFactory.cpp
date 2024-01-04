@@ -8,6 +8,7 @@
 
 #if ETERNAL_USE_PRIVATE
 #include "Input/ScePadInput/ScePadInputFactoryPrivate.hpp"
+#include "Input/MouseInput/MouseInputFactoryPrivate.hpp"
 #endif
 
 namespace Eternal
