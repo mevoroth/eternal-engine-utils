@@ -485,6 +485,7 @@ namespace Eternal
 #endif
 
 			_CreateTextureRequests(MaterialTextures, OutMeshPayload);
+			_CreateRenderBuckets(OutMeshPayload);
 
 			OutMeshPayload.LoadedMesh->Meshes->SetName(InPath);
 		}
@@ -506,6 +507,19 @@ namespace Eternal
 					NewTextureRequest->MaterialToUpdate.Slot				= static_cast<TextureType>(TextureIndex);
 					InOutMeshPayload.AddRequest(NewTextureRequest);
 				}
+			}
+		}
+
+		void ImportFbx::_CreateRenderBuckets(_Inout_ MeshPayload& InOutMeshPayload)
+		{
+			InOutMeshPayload.LoadedMesh->RenderBuckets[0].reserve(InOutMeshPayload.LoadedMesh->Meshes->GetGPUMesh().PerDrawInformations.size());
+
+			const vector<GPUMesh::PerDrawInformation>& PerDrawInformations = InOutMeshPayload.LoadedMesh->Meshes->GetGPUMesh().PerDrawInformations;
+			ETERNAL_ASSERT(PerDrawInformations.size() < UINT16_MAX);
+			for (uint16_t PerDrawInformationIndex = 0; PerDrawInformationIndex < PerDrawInformations.size(); ++PerDrawInformationIndex)
+			{
+				uint32_t RenderBucketIndex = static_cast<uint32_t>(PerDrawInformations[PerDrawInformationIndex].PerDrawMaterial->GetMaterialType());
+				InOutMeshPayload.LoadedMesh->RenderBuckets[RenderBucketIndex].push_back(PerDrawInformationIndex);
 			}
 		}
 

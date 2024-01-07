@@ -61,6 +61,7 @@ namespace Eternal
 #endif
 
 			void _CreateTextureRequests(_In_ const MaterialDependency& InMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload);
+			void _CreateRenderBuckets(_Inout_ MeshPayload& InOutMeshPayload);
 
 			ImportMat* _ImportMat = nullptr;
 		};
