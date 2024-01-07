@@ -486,8 +486,7 @@ namespace Eternal
 
 			_CreateTextureRequests(MaterialTextures, OutMeshPayload);
 
-			for (uint32_t MeshIndex = 0; MeshIndex < OutMeshPayload.LoadedMesh->Meshes.size(); ++MeshIndex)
-				OutMeshPayload.LoadedMesh->Meshes[MeshIndex]->SetName(InPath);
+			OutMeshPayload.LoadedMesh->Meshes->SetName(InPath);
 		}
 
 		void ImportFbx::_CreateTextureRequests(_In_ const MaterialDependency& InMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload)
@@ -543,35 +542,35 @@ namespace Eternal
 			Matrix4x4 WorldTransformMatrix = Matrix4x4::Identity;
 		};
 
-		static void ImportFbx_Flatten_Combine_Node(_In_ const ImportFbxPrivate::Mesh& InMesh, _In_ const MeshNodeContext& InMeshNodeContext, _Inout_ MeshPayload& InOutMeshPayload)
-		{
-			MeshNodeContext CurrentNodeContext =
-			{
-				InMesh.GetLocalTransform().GetLocalToWorld()* InMesh.GetTransform().GetLocalToWorld()
-			};
+		//static void ImportFbx_Flatten_Combine_Node(_In_ const ImportFbxPrivate::Mesh& InMesh, _In_ const MeshNodeContext& InMeshNodeContext, _Inout_ MeshPayload& InOutMeshPayload)
+		//{
+		//	MeshNodeContext CurrentNodeContext =
+		//	{
+		//		InMesh.GetLocalTransform().GetLocalToWorld()* InMesh.GetTransform().GetLocalToWorld()
+		//	};
 
-			if (InMesh.IsValid())
-			{
-				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
+		//	if (InMesh.IsValid())
+		//	{
+		//		GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
 
-				uint32_t FlattenedVerticesCount = InOutMesh->GetVerticesCount();
-				ETERNAL_ASSERT((InMesh.GetVertices().size() + FlattenedVerticesCount) < InOutMesh->GetIndicesMaxCount());
-				InOutMesh->AddMergeMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox().TransformBy(CurrentNodeContext.WorldTransformMatrix));
-			}
+		//		uint32_t FlattenedVerticesCount = InOutMesh->GetVerticesCount();
+		//		ETERNAL_ASSERT((InMesh.GetVertices().size() + FlattenedVerticesCount) < InOutMesh->GetIndicesMaxCount());
+		//		InOutMesh->AddMergeMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox().TransformBy(CurrentNodeContext.WorldTransformMatrix));
+		//	}
 
-			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
-				ImportFbx_Flatten_Combine_Node(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
-		}
+		//	for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
+		//		ImportFbx_Flatten_Combine_Node(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
+		//}
 
-		void ImportFbx::_Flatten_Combine(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
-		{
-			MeshNodeContext RootNodeContext;
-			InOutMeshPayload.LoadedMesh = new MeshCollection();
-			InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
-			ImportFbx_Flatten_Combine_Node(InMesh, RootNodeContext, InOutMeshPayload);
-		}
+		//void ImportFbx::_Flatten_Combine(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
+		//{
+		//	MeshNodeContext RootNodeContext;
+		//	InOutMeshPayload.LoadedMesh = new MeshCollection();
+		//	InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
+		//	ImportFbx_Flatten_Combine_Node(InMesh, RootNodeContext, InOutMeshPayload);
+		//}
 
-		template<bool IsMultipleMeshes = false>
+		//template<bool IsMultipleMeshes = false>
 		static void ImportFbx_Flatten_Split_Node(_In_ const ImportFbxPrivate::Mesh& InMesh, _In_ const MeshNodeContext& InMeshNodeContext, _Inout_ MeshPayload& InOutMeshPayload)
 		{
 			MeshNodeContext CurrentNodeContext =
@@ -581,30 +580,30 @@ namespace Eternal
 
 			if (InMesh.IsValid())
 			{
-				if (IsMultipleMeshes)
-					InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
-				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes.back());
+				//if (IsMultipleMeshes)
+				//	InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
+				GenericMesh<PositionNormalTangentBinormalUVVertex>* InOutMesh = static_cast<GenericMesh<PositionNormalTangentBinormalUVVertex>*>(InOutMeshPayload.LoadedMesh->Meshes);
 				InOutMesh->AddMesh(InMesh.GetIndices(), InMesh.GetVertices(), CurrentNodeContext.WorldTransformMatrix, InMesh.GetMaterial(), InMesh.GetBoundingBox().TransformBy(CurrentNodeContext.WorldTransformMatrix));
 			}
 
 			for (uint32_t SubMeshIndex = 0; SubMeshIndex < InMesh.GetSubMeshesCount(); ++SubMeshIndex)
-				ImportFbx_Flatten_Split_Node<IsMultipleMeshes>(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
+				ImportFbx_Flatten_Split_Node/*<IsMultipleMeshes>*/(InMesh.GetSubMesh(SubMeshIndex), CurrentNodeContext, InOutMeshPayload);
 		}
 
 		void ImportFbx::_Flatten_Split_SingleMesh(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
 		{
 			MeshNodeContext RootNodeContext;
 			InOutMeshPayload.LoadedMesh = new MeshCollection();
-			InOutMeshPayload.LoadedMesh->Meshes.push_back(new GenericMesh<PositionNormalTangentBinormalUVVertex>());
+			InOutMeshPayload.LoadedMesh->Meshes = new GenericMesh<PositionNormalTangentBinormalUVVertex>();
 			ImportFbx_Flatten_Split_Node(InMesh, RootNodeContext, InOutMeshPayload);
 		}
 
-		void ImportFbx::_Flatten_Split_MultipleMeshes(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
-		{
-			MeshNodeContext RootNodeContext;
-			InOutMeshPayload.LoadedMesh = new MeshCollection();
-			ImportFbx_Flatten_Split_Node<true>(InMesh, RootNodeContext, InOutMeshPayload);
-		}
+		//void ImportFbx::_Flatten_Split_MultipleMeshes(_In_ const ImportFbxPrivate::Mesh& InMesh, _Inout_ MeshPayload& InOutMeshPayload)
+		//{
+		//	MeshNodeContext RootNodeContext;
+		//	InOutMeshPayload.LoadedMesh = new MeshCollection();
+		//	ImportFbx_Flatten_Split_Node<true>(InMesh, RootNodeContext, InOutMeshPayload);
+		//}
 
 		void ImportFbx::_ImportNode(_In_ FbxNode* InNode, _In_ const ImportFbxPrivate::FbxTextureCache& InTextureCache, _Inout_ ImportFbxPrivate::Mesh& InOutMesh, _Inout_ AxisAlignedBoundingBox& InOutBoundingBox, _Inout_ MaterialDependency& InOutMaterialDependency, _Inout_ MeshPayload& InOutMeshPayload)
 		{
