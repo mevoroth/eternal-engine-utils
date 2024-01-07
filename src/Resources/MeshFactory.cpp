@@ -105,12 +105,14 @@ namespace Eternal
 						CachedMeshFile->Serialize(CurrentPerDrawInformation.IndicesOffset);
 						CachedMeshFile->Serialize(CurrentPerDrawInformation.IndicesCount);
 						CachedMeshFile->Serialize(CurrentPerDrawInformation.VerticesOffset);
-
-						if (!CurrentPerDrawInformation.PerDrawMaterial)
-						{
-							ETERNAL_ASSERT(InSerializationMode == SerializationMode::SERIALIZATION_MODE_READ);
-							CurrentPerDrawInformation.PerDrawMaterial = new Material();
-						}
+						CachedMeshFile->Serialize(
+							CurrentPerDrawInformation.PerDrawMaterial,
+							[]() -> Material* { return new Material(); },
+							[&CachedMeshFile](_Inout_ Material* InOutMaterial)
+							{
+								CachedMeshFile->Serialize(InOutMaterial->GetMaterialType());
+							}
+						);
 
 						auto TexturesDependency = InOutMaterialDependency.Textures.find(CurrentPerDrawInformation.PerDrawMaterial);
 						if (TexturesDependency == InOutMaterialDependency.Textures.end())

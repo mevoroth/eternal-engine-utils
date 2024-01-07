@@ -3,6 +3,7 @@
 #include "File/FilePath.hpp"
 #include "File/File.hpp"
 #include "File/FileFactory.hpp"
+#include "Log/Log.hpp"
 #include "rapidjson/document.h"
 
 namespace Eternal
@@ -54,6 +55,13 @@ namespace Eternal
 						Textures.TexturePath	= "black.tga";
 					}
 				}
+
+				auto& JsonMaterialTypeEntry = JsonMaterial["material_type"];
+				OutMaterial->SetMaterialType(static_cast<MaterialType>(JsonMaterialTypeEntry.GetInt()));
+			}
+			else
+			{
+				LogWrite(LogWarning, LogImport, string("[ImportMat::Import] Couldn't import: ") + string(InPath) + ".mat");
 			}
 
 			return OutMaterial;
