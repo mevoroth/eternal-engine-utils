@@ -25,13 +25,13 @@ namespace Eternal
 			{
 				_Value.store(InValue);
 			}
-			inline virtual void Add(_In_ int InValue = 1) override
+			inline virtual int Add(_In_ int InValue = 1) override
 			{
-				_Value.fetch_add(InValue);
+				return _Value.fetch_add(InValue);
 			}
-			inline virtual void Sub(_In_ int InValue = 1) override
+			inline virtual int Sub(_In_ int InValue = 1) override
 			{
-				_Value.fetch_sub(InValue);
+				return _Value.fetch_sub(InValue);
 			}
 			inline virtual bool CompareAndSwap(_In_ int InOldValue, _In_ int InNewValue) override
 			{
