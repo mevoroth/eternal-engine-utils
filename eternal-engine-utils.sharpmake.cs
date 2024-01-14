@@ -26,19 +26,13 @@ namespace EternalEngine
 			InConfiguration.IncludePaths.AddRange(new string[] {
 				@"$(SolutionDir)eternal-engine-components\include",
 				@"$(SolutionDir)eternal-engine-graphics\include",
+				@"$(SolutionDir)eternal-engine-graphics\GraphicsPrivate\include",
 				@"$(SolutionDir)eternal-engine-extern\libtga",
 				@"$(SolutionDir)eternal-engine-extern\rapidjson\include",
 				@"$(SolutionDir)eternal-engine-extern\DirectXTex",
 				@"$(SolutionDir)eternal-engine-shaders",
 				EternalEngineSettings.FBXSDKPath + @"\include",
 			});
-
-			if (!ExtensionMethods.IsPC(InTarget.Platform))
-			{
-				InConfiguration.IncludePaths.AddRange(new string[] {
-					@"$(SolutionDir)eternal-engine-graphics\GraphicsPrivate\include",
-				});
-			}
 
 			// Defines
 			InConfiguration.Defines.AddRange(new string[] {
