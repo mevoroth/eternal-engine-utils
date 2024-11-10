@@ -74,7 +74,7 @@ namespace Eternal
 			return Vector4(
 				A.x + B.x,
 				A.y + B.y,
-				A.x + B.z,
+				A.z + B.z,
 				A.w + B.w
 			);
 		}
@@ -83,7 +83,7 @@ namespace Eternal
 			return Vector3(
 				A.x + B.x,
 				A.y + B.y,
-				A.x + B.z
+				A.z + B.z
 			);
 		}
 		Vector2 operator+(_In_ const Vector2& A, _In_ const Vector2& B)
