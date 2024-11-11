@@ -2,9 +2,6 @@
 
 #include "Log/ConsoleLog/Windows/WindowsConsoleLog.hpp"
 
-#define VC_EXTRALEAN
-#define WIN32_EXTRA_LEAN
-#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 namespace Eternal
