@@ -96,8 +96,8 @@ namespace Eternal
 
 			TexMetadata DdsTextureMetaData;
 			ScratchImage DdsImagePayload;
-			HRESULT hr = LoadFromDDSMemory(DdsFileContent.Content, DdsFileContent.Size, DDS_FLAGS_NONE, &DdsTextureMetaData, DdsImagePayload);
-			ETERNAL_ASSERT(hr == S_OK);
+			HRESULT HResult = LoadFromDDSMemory(DdsFileContent.Content, DdsFileContent.Size, DDS_FLAGS_NONE, &DdsTextureMetaData, DdsImagePayload);
+			ETERNAL_ASSERT(HResult == S_OK);
 
 			OutFormat	= ConvertDDSFormatToFormat(DdsTextureMetaData.format);
 			OutWidth	= static_cast<uint32_t>(DdsTextureMetaData.width);
