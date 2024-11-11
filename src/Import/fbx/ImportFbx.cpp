@@ -906,9 +906,6 @@ namespace Eternal
 								MaterialIndex = MaterialIndices->GetAt(PolygonIndex);
 							}
 
-							const int IndexOffset = FbxSubMeshes[MaterialIndex].IndexOffset +
-								FbxSubMeshes[MaterialIndex].TriangleCount * VERTICES_PER_TRIANGLE;
-
 							int PolygonSize = InFbxMesh->GetPolygonSize(PolygonIndex);
 
 							if (VerticesCount[MaterialIndex] + PolygonSize * VERTICES_PER_TRIANGLE >= std::numeric_limits<uint16_t>::max())

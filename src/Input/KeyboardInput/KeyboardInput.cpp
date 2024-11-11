@@ -47,6 +47,8 @@ namespace Eternal
 
 		void KeyboardInput::NotifyAxis(_In_ const Axis& InAxisName, _In_ float InAxisValue)
 		{
+			(void)InAxisName;
+			(void)InAxisValue;
 		}
 	}
 }
