@@ -1,5 +1,5 @@
 #include "Import/dds/ImportDds.hpp"
-#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 #include "DirectXTex/DirectXTex.h"
 #endif
 #include "File/FileFactory.hpp"
@@ -12,10 +12,10 @@ namespace Eternal
 	{
 		using namespace Eternal::Graphics;
 
-#if ETERNAL_PLATFORM_WINDOWS
-		static Format ConvertDDSFormatToFormat(_In_ const DXGI_FORMAT& DDSFormat)
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
+		static Format ConvertDDSFormatToFormat(_In_ const DXGI_FORMAT& InDDSFormat)
 		{
-			switch (DDSFormat)
+			switch (InDDSFormat)
 			{
 			case DXGI_FORMAT_R8G8B8A8_UNORM:
 				return Format::FORMAT_RGBA8888_UNORM;
@@ -77,7 +77,7 @@ namespace Eternal
 			(void)OutWidth;
 			(void)OutHeight;
 			(void)OutDepth;
-#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 			using namespace DirectX;
 			using namespace Eternal::FileSystem;
 

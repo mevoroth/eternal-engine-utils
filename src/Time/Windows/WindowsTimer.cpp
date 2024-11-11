@@ -1,4 +1,4 @@
-#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 
 #include "Time/Windows/WindowsTimer.hpp"
 
