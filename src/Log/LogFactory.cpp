@@ -2,7 +2,7 @@
 
 #include "Log/MultiChannelLog/MultiChannelLog.hpp"
 #include "Log/FileLog/FileLog.hpp"
-#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 #include "Log/ConsoleLog/Windows/WindowsConsoleLog.hpp"
 #endif
 #if ETERNAL_USE_PRIVATE
@@ -21,7 +21,7 @@ namespace Eternal
 				return new FileLog(InSession);
 
 			case LogType::LOG_TYPE_CONSOLE:
-#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 				return new WindowsConsoleLog();
 #endif
 #if ETERNAL_USE_PRIVATE

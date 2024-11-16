@@ -25,7 +25,7 @@ namespace Eternal
 				LogWrite(LogInfo, LogEngine, "[InputSystem::CreateInput]Creating Keyboard input");
 				return new KeyboardInput();
 
-			#if ETERNAL_PLATFORM_WINDOWS
+			#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 			case InputType::INPUT_TYPE_XINPUT:
 				LogWrite(LogInfo, LogEngine, "[InputSystem::CreateInput]Creating Xbox Pad input");
 				return new XInput();

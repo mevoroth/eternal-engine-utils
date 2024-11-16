@@ -11,7 +11,7 @@ namespace Eternal
 	{
 		Timer* CreateTimer(_In_ const TimeType& InTimeType)
 		{
-#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 			if (InTimeType == TimeType::TIME_TYPE_WINDOWS)
 				return new WindowsTimer();
 #endif

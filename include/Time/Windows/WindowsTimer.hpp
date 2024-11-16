@@ -1,10 +1,7 @@
 #pragma once
 
-#if ETERNAL_PLATFORM_WINDOWS
+#if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 
-#define WIN32_LEAN_AND_MEAN
-#define VC_EXTRALEAN
-#define WIN32_EXTRA_LEAN
 #include <Windows.h>
 
 #include "Time/Timer.hpp"

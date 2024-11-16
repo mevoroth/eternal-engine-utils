@@ -1,7 +1,11 @@
 #pragma once
 
 #ifdef ETERNAL_DEBUG
-#define ETERNAL_BREAK()	__debugbreak()
+#define ETERNAL_BREAK()	\
+	do	\
+	{	\
+		__debugbreak();	\
+	} while (false)
 #else
 #define ETERNAL_BREAK()
 #endif
@@ -20,6 +24,8 @@
 
 #define ETERNAL_ARRAYSIZE(Array)				(sizeof(Array)/sizeof(Array[0]))
 #define ETERNAL_OFFSETOF(Structure, Member)		((unsigned long long)&(((Structure*)nullptr)->Member))
+#define __ETERNAL_STRINGIFY_INTERNAL(Macro)		#Macro
+#define ETERNAL_STRINGIFY(Macro)				__ETERNAL_STRINGIFY_INTERNAL(Macro)
 
 //////////////////////////////////////////////////////////////////////////
 // Profiling
