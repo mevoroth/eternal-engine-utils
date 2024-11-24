@@ -93,5 +93,7 @@ namespace Eternal
 		{
 			return static_cast<T>(log2(InX));
 		}
+
+		int Log2Fast(_In_ uint32_t InX);
 	}
 }
