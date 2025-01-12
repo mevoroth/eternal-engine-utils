@@ -1,22 +1,26 @@
 #include "Input/Input.hpp"
+#include "Input/InputDefines.hpp"
 #include "Math/Math.hpp"
+#include "Types/Enums.hpp"
 
 namespace Eternal
 {
 	namespace InputSystem
 	{
+		using namespace Eternal::Types;
+
 		Input::Input()
 		{
-			_States = new uint8_t[KEY_COUNT];
-			for (int i = 0; i < KEY_COUNT; ++i)
+			_States = new uint8_t[ToUInt(InputKey::KEY_COUNT)];
+			for (uint32_t Key = 0; Key < ToUInt(InputKey::KEY_COUNT); ++Key)
 			{
-				_States[i] = 0;
+				_States[Key] = 0;
 			}
 
-			_Axis = new float[AXIS_COUNT];
-			for (int i = 0; i < AXIS_COUNT; ++i)
+			_Axis = new float[ToUInt(InputAxis::AXIS_COUNT)];
+			for (uint32_t Axis = 0; Axis < ToUInt(InputAxis::AXIS_COUNT); ++Axis)
 			{
-				_Axis[i] = 0.f;
+				_Axis[Axis] = 0.0f;
 			}
 		}
 
@@ -28,32 +32,32 @@ namespace Eternal
 			_Axis = nullptr;
 		}
 
-		bool Input::IsDown(_In_ const Key& InKeyName)
+		bool Input::IsDown(_In_ const InputKey& InKeyName)
 		{
-			return _States[InKeyName] == INPUT_PREVIOUS_STATE;
+			return _States[ToUInt(InKeyName)] == INPUT_PREVIOUS_STATE;
 		}
 
-		bool Input::IsUp(_In_ const Key& InKeyName)
+		bool Input::IsUp(_In_ const InputKey& InKeyName)
 		{
-			return _States[InKeyName] == INPUT_CURRENT_STATE;
+			return _States[ToUInt(InKeyName)] == INPUT_CURRENT_STATE;
 		}
 
-		bool Input::IsPressed(_In_ const Key& InKeyName)
+		bool Input::IsPressed(_In_ const InputKey& InKeyName)
 		{
-			return (_States[InKeyName] & INPUT_CURRENT_STATE) != 0;
+			return (_States[ToUInt(InKeyName)] & INPUT_CURRENT_STATE) != 0;
 		}
 
-		bool Input::IsReleased(_In_ const Key& InKeyName)
+		bool Input::IsReleased(_In_ const InputKey& InKeyName)
 		{
-			return (_States[InKeyName] & INPUT_CURRENT_STATE) != 0;
+			return (_States[ToUInt(InKeyName)] & INPUT_CURRENT_STATE) != 0;
 		}
 
-		float Input::GetAxis(_In_ const Axis& InAxisName) const
+		float Input::GetAxis(_In_ const InputAxis& InAxisName) const
 		{
-			return _Axis[InAxisName];
+			return _Axis[ToUInt(InAxisName)];
 		}
 
-		float Input::GetAxisWithDeadZone(_In_ const Axis& InAxisName, _In_ float InDeadZone) const
+		float Input::GetAxisWithDeadZone(_In_ const InputAxis& InAxisName, _In_ float InDeadZone) const
 		{
 			float AxisValue = GetAxis(InAxisName);
 			float AbsAxisValue = Math::Abs(AxisValue);
