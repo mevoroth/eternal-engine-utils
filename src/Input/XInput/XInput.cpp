@@ -57,7 +57,7 @@ namespace Eternal
 				{
 					for (uint32_t StateIndex = ToUInt(InputKey::KEY_JOY0_UP) + User * 24, StateCount = User + 24; StateIndex < StateCount; ++StateIndex)
 					{
-						_States[StateIndex] = (_States[StateIndex] << 1) & (INPUT_CURRENT_STATE | INPUT_PREVIOUS_STATE);
+						_States[StateIndex] = (_States[StateIndex] << 1) & (InputCurrentState | InputPreviousState);
 					}
 					if (State.dwPacketNumber != _Changed[User])
 					{

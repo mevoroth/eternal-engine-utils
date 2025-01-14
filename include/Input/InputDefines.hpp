@@ -4,8 +4,9 @@ namespace Eternal
 {
 	namespace InputSystem
 	{
-		static constexpr uint32_t INPUT_CURRENT_STATE	= 0x1;
-		static constexpr uint32_t INPUT_PREVIOUS_STATE	= 0x2;
+		static constexpr uint32_t	InputCurrentState	= 0x1;
+		static constexpr uint32_t	InputPreviousState	= 0x2;
+		static constexpr float		DefaultDeadZone		= 0.2f;
 
 		enum class InputKey
 		{
@@ -284,13 +285,27 @@ namespace Eternal
 			AXIS_JOY3_ZM,
 			AXIS_JOY3_ZP,
 
-			AXIS_COUNT
+			AXIS_COUNT,
+			AXIS_INVALID = AXIS_COUNT
 		};
 
 		enum class KeyState
 		{
-			KEYSTATE_DOWN = 0,
-			KEYSTATE_UP = 1
+			KEYSTATE_DOWN	= 0,
+			KEYSTATE_UP		= 1
+		};
+
+		enum class KeyEvent
+		{
+			KEYEVENT_UP,
+			KEYEVENT_DOWN,
+			KEYEVENT_PRESSED
+		};
+
+		enum class AxisFilter
+		{
+			AXISFILTER_RAW,
+			AXISFILTER_DEADZONE
 		};
 
 		struct KeyRecord

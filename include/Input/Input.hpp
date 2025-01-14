@@ -1,16 +1,22 @@
 #pragma once
 
+#include <array>
+#include "Input/InputDefines.hpp"
+#include "Types/Enums.hpp"
+
 namespace Eternal
 {
 	namespace InputSystem
 	{
+		using namespace std;
+		using namespace Eternal::Types;
+
 		enum class InputKey;
 		enum class InputAxis;
 
 		class Input
 		{
 		public:
-			static constexpr float DefaultDeadZone = 0.2f;
 
 			Input();
 			virtual ~Input();
@@ -46,8 +52,8 @@ namespace Eternal
 
 		protected:
 
-			uint8_t* _States	= nullptr;
-			float* _Axis		= nullptr;
+			array<uint8_t, ToUInt(InputKey::KEY_COUNT)>	_States;
+			array<float, ToUInt(InputAxis::AXIS_COUNT)>	_Axis;
 		};
 	}
 }

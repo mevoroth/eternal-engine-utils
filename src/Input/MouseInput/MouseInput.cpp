@@ -16,7 +16,7 @@ namespace Eternal
 		void MouseInput::Update()
 		{
 			for (uint32_t Key = ToUInt(InputKey::KEY_MOUSE0); Key <= ToUInt(InputKey::KEY_MOUSE6); ++Key)
-				_States[Key] = (_States[Key] << 1) & (INPUT_CURRENT_STATE | INPUT_PREVIOUS_STATE);
+				_States[Key] = (_States[Key] << 1) & (InputCurrentState | InputPreviousState);
 
 			for (uint32_t RecordIndex = 0; RecordIndex < _KeyRecords.size(); ++RecordIndex)
 			{
