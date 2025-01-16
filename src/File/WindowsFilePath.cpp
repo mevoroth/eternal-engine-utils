@@ -38,6 +38,11 @@ namespace Eternal
 			ETERNAL_ASSERT(Result > 0);
 			return CurrentDirectoryString;
 		}
+
+		string FilePath::MakePath(_In_ const string& InFilePath)
+		{
+			return string("..\\") + InFilePath;
+		}
 	}
 }
 
