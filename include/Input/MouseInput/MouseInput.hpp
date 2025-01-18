@@ -20,7 +20,8 @@ namespace Eternal
 
 		private:
 
-			std::vector<KeyRecord> _KeyRecords;
+			std::vector<InputKey> _KeyDowns;
+			std::vector<InputKey> _KeyUps;
 
 		};
 	}

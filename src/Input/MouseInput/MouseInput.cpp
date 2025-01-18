@@ -1,6 +1,7 @@
 #include "Input/MouseInput/MouseInput.hpp"
 #include "Input/InputDefines.hpp"
 #include "Types/Enums.hpp"
+#include <algorithm>
 
 namespace Eternal
 {
@@ -11,6 +12,8 @@ namespace Eternal
 		MouseInput::MouseInput()
 			: Input()
 		{
+			_KeyDowns.reserve(16);
+			_KeyUps.reserve(16);
 		}
 
 		void MouseInput::Update()
@@ -18,15 +21,19 @@ namespace Eternal
 			for (uint32_t Key = ToUInt(InputKey::KEY_MOUSE0); Key <= ToUInt(InputKey::KEY_MOUSE6); ++Key)
 				_States[Key] = (_States[Key] << 1) & (InputCurrentState | InputPreviousState);
 
-			for (uint32_t RecordIndex = 0; RecordIndex < _KeyRecords.size(); ++RecordIndex)
+			for (uint32_t Key = 0; Key < _KeyUps.size(); ++Key)
 			{
-				KeyRecord& Record = _KeyRecords[RecordIndex];
-				if (Record.State == KeyState::KEYSTATE_DOWN)
-					_States[ToUInt(Record.KeyName)] |= 0x1;
-				else
-					_States[ToUInt(Record.KeyName)] &= ~(0x1);
+				auto FoundKey = std::find(_KeyDowns.begin(), _KeyDowns.end(), _KeyUps[Key]);
+				if (FoundKey != _KeyDowns.end())
+				{
+					std::swap(*FoundKey, _KeyDowns.back());
+					_KeyDowns.pop_back();
+				}
 			}
-			_KeyRecords.clear();
+			_KeyUps.clear();
+
+			for (uint32_t Key = 0; Key < _KeyDowns.size(); ++Key)
+				_States[ToUInt(_KeyDowns[Key])] |= ToUInt(KeyState::KEYSTATE_DOWN);
 		}
 
 		void MouseInput::NotifyKeyPressed(_In_ const InputKey& InKeyName)
@@ -34,7 +41,7 @@ namespace Eternal
 			if (ToUInt(InKeyName) < ToUInt(InputKey::KEY_MOUSE0) || ToUInt(InKeyName) > ToUInt(InputKey::KEY_MOUSE6))
 				return;
 
-			_KeyRecords.push_back(KeyRecord(InKeyName, KeyState::KEYSTATE_DOWN));
+			_KeyDowns.push_back(InKeyName);
 		}
 
 		void MouseInput::NotifyKeyReleased(_In_ const InputKey& InKeyName)
@@ -42,7 +49,7 @@ namespace Eternal
 			if (ToUInt(InKeyName) < ToUInt(InputKey::KEY_MOUSE0) || ToUInt(InKeyName) > ToUInt(InputKey::KEY_MOUSE6))
 				return;
 
-			_KeyRecords.push_back(KeyRecord(InKeyName, KeyState::KEYSTATE_UP));
+			_KeyUps.push_back(InKeyName);
 		}
 
 		void MouseInput::NotifyAxis(_In_ const InputAxis& InAxisName, _In_ float InAxisValue)

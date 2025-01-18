@@ -21,22 +21,17 @@ namespace Eternal
 
 		bool Input::IsDown(_In_ const InputKey& InKeyName)
 		{
-			return _States[ToUInt(InKeyName)] == InputPreviousState;
+			return (_States[ToUInt(InKeyName)] & InputCurrentState) == ToUInt(KeyState::KEYSTATE_DOWN);
 		}
 
 		bool Input::IsUp(_In_ const InputKey& InKeyName)
 		{
-			return _States[ToUInt(InKeyName)] == InputCurrentState;
+			return (_States[ToUInt(InKeyName)] & InputCurrentState) == ToUInt(KeyState::KEYSTATE_UP);
 		}
 
 		bool Input::IsPressed(_In_ const InputKey& InKeyName)
 		{
-			return (_States[ToUInt(InKeyName)] & InputCurrentState) != 0;
-		}
-
-		bool Input::IsReleased(_In_ const InputKey& InKeyName)
-		{
-			return (_States[ToUInt(InKeyName)] & InputCurrentState) != 0;
+			return (_States[ToUInt(InKeyName)] & (InputCurrentState | InputPreviousState)) == (ToUInt(KeyState::KEYSTATE_DOWN) << 1);
 		}
 
 		float Input::GetAxis(_In_ const InputAxis& InAxisName) const
