@@ -18,7 +18,6 @@ namespace Eternal
 			virtual void NotifyKeyReleased(_In_ const InputKey& InKeyName) override;
 			virtual void NotifyAxis(_In_ const InputAxis& InAxisName, _In_ float InAxisValue) override;
 			virtual bool IsPressed(_In_ const InputKey& InKeyName) override;
-			virtual bool IsReleased(_In_ const InputKey& InKeyName) override;
 			virtual bool IsUp(_In_ const InputKey& InKeyName) override;
 			virtual bool IsDown(_In_ const InputKey& InKeyName) override;
 			virtual float GetAxis(_In_ const InputAxis& InAxisName) const override;

@@ -39,13 +39,6 @@ namespace Eternal
 				Pressed = _Inputs[InputIndex]->IsPressed(InKeyName);
 			return Pressed;
 		}
-		bool MultiInput::IsReleased(_In_ const InputKey& InKeyName)
-		{
-			bool Released = false;
-			for (uint32_t InputIndex = 0; !Released && InputIndex < _Inputs.size(); ++InputIndex)
-				Released = _Inputs[InputIndex]->IsReleased(InKeyName);
-			return Released;
-		}
 		bool MultiInput::IsUp(_In_ const InputKey& InKeyName)
 		{
 			bool Up = false;

@@ -30,10 +30,6 @@ namespace Eternal
 			 */
 			virtual bool IsPressed(_In_ const InputKey& InKeyName);
 			/**
-			 * Key released
-			 */
-			virtual bool IsReleased(_In_ const InputKey& InKeyName);
-			/**
 			 * Key released frame
 			 */
 			virtual bool IsUp(_In_ const InputKey& InKeyName);
