@@ -105,6 +105,8 @@ namespace Eternal
 							return AxisValue * InputAxisWeights[AxisIndex].AxisWeight;
 					}
 				}
+
+				return 0.0f;
 			};
 
 			auto GetAxis = [this](_In_ const InputAxisWeight& InInputAxisWeight) -> float
