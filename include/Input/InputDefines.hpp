@@ -291,8 +291,8 @@ namespace Eternal
 
 		enum class KeyState
 		{
-			KEYSTATE_DOWN	= 0,
-			KEYSTATE_UP		= 1
+			KEYSTATE_UP		= 0,
+			KEYSTATE_DOWN	= 1
 		};
 
 		enum class KeyEvent
