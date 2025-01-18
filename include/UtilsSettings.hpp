@@ -11,7 +11,3 @@
 #ifndef ETERNAL_USE_STD_PARALLEL
 #define ETERNAL_USE_STD_PARALLEL	(1)
 #endif
-
-#include <cstdint>
-#include <vector>
-#include "Macros/Macros.hpp"
