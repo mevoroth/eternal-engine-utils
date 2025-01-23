@@ -486,8 +486,8 @@ namespace Eternal
 			: Matrix4x4()
 		{
 			XMStoreFloat4x4A(this, XMMatrixOrthographicOffCenterLH(
-				0.0f, InWidth,
-				0.0f, InHeight,
+				-InWidth * 0.5f, InWidth * 0.5f,
+				-InHeight * 0.5f, InHeight * 0.5f,
 				InNear, InFar
 			));
 		}
