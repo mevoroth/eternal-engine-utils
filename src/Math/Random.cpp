@@ -16,7 +16,16 @@ namespace Eternal
 
 		float Random::GetNormalized01()
 		{
-			return static_cast<float>(Next()) / static_cast<float>(std::numeric_limits<uint32_t>::max());
+			return static_cast<float>(_Next()) / static_cast<float>(std::numeric_limits<uint32_t>::max());
+		}
+
+		Vector3 Random::GetNormalizedVector301()
+		{
+			return Vector3(
+				GetNormalized01(),
+				GetNormalized01(),
+				GetNormalized01()
+			);
 		}
 
 		uint32_t Random::_Next(_In_ bool InIncrement)

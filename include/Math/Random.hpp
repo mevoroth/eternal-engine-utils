@@ -4,6 +4,8 @@ namespace Eternal
 {
 	namespace Math
 	{
+		using namespace Eternal::Types;
+
 		class Random
 		{
 		public:
@@ -12,6 +14,7 @@ namespace Eternal
 			Random(_In_ uint64_t InSeed);
 
 			float GetNormalized01();
+			Vector3 GetNormalizedVector301();
 
 		private:
 
