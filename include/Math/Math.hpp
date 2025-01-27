@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 
 namespace Eternal
 {
@@ -92,6 +93,12 @@ namespace Eternal
 		T Log2(_In_ const T& InX)
 		{
 			return static_cast<T>(log2(InX));
+		}
+
+		template<typename T>
+		T Atan2(_In_ const T& InY, _In_ const T& InX)
+		{
+			return atan2(InY, InX);
 		}
 
 		int Log2Fast(_In_ uint32_t InX);
