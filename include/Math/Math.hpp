@@ -101,6 +101,12 @@ namespace Eternal
 			return atan2(InY, InX);
 		}
 
+		template<typename T>
+		T FMod(_In_ const T& InNumerator, _In_ const T& InDenumerator)
+		{
+			return fmod(InNumerator, InDenumerator);
+		}
+
 		int Log2Fast(_In_ uint32_t InX);
 	}
 }
