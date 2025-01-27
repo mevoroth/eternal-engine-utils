@@ -34,8 +34,8 @@ namespace Eternal
 
 		private:
 
-			const std::function<void(_In_ uint32_t InIndex)>& _Functor;
-			uint32_t _Index;
+			const std::function<void(_In_ uint32_t InIndex)>& _Functor	= nullptr;
+			uint32_t _Index												= 0u;
 		};
 
 		ParallelSystem::ParallelSystem(_In_ const ParallelSystemCreateInformation& InParallelSystemCreateInformation)
