@@ -24,6 +24,7 @@ namespace Eternal
 			static_cast<uint32_t>(AssetType::ASSET_TYPE_MESH),
 			~0u,
 			~0u,
+			~0u,
 			~0u
 		};
 
