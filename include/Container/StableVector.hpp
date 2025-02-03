@@ -111,6 +111,7 @@ namespace Eternal
 				{
 					_UsedIndices.erase(UsedIndicesIterator);
 					_FreeIndices.push_back(InIndex);
+					_Container[InIndex] = {};
 				}
 			}
 
