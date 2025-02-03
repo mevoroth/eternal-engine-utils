@@ -96,6 +96,8 @@ namespace Eternal
 			rapidjson::Document JsonAnimation;
 			JsonAnimation.Parse(reinterpret_cast<const char*>(AnimationContent.Content), AnimationContent.Size);
 
+			AnimationData->SetAnimationLength(JsonAnimation["AnimationLength"].GetFloat());
+
 			const auto& Timelines = JsonAnimation["Timelines"].GetArray();
 			uint32_t TimelinesCount = Timelines.Size();
 			AnimationData->ReserveTimelines(TimelinesCount);
