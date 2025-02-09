@@ -102,9 +102,27 @@ namespace Eternal
 		}
 
 		template<typename T>
+		T Cos(_In_ const T& InAngleInRadians)
+		{
+			return cos(InAngleInRadians);
+		}
+
+		template<typename T>
+		T Sin(_In_ const T& InAngleInRadians)
+		{
+			return sin(InAngleInRadians);
+		}
+
+		template<typename T>
 		T FMod(_In_ const T& InNumerator, _In_ const T& InDenumerator)
 		{
 			return fmod(InNumerator, InDenumerator);
+		}
+
+		template<typename T>
+		T Floor(_In_ const T& InNumber)
+		{
+			return floor(InNumber);
 		}
 
 		int Log2Fast(_In_ uint32_t InX);
