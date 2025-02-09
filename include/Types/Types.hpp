@@ -109,6 +109,8 @@ namespace Eternal
 			static Vector2 Up;
 			static Vector2 Left;
 			static Vector2 Down;
+			static Vector2 NegativeInfinity;
+			static Vector2 PositiveInfinity;
 
 			using Float2::Float2;
 		};

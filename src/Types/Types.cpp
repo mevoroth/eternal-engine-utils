@@ -21,10 +21,12 @@ namespace Eternal
 
 		Quaternion Quaternion::QuaternionIdentity(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		Vector2 Vector2::Right(	 1.0f,	 0.0f);
-		Vector2 Vector2::Up(	 0.0f,	 1.0f);
-		Vector2 Vector2::Left(	-1.0f,	 0.0f);
-		Vector2 Vector2::Down(	 0.0f,	-1.0f);
+		Vector2 Vector2::Right(				 1.0f,	 0.0f);
+		Vector2 Vector2::Up(				 0.0f,	 1.0f);
+		Vector2 Vector2::Left(				-1.0f,	 0.0f);
+		Vector2 Vector2::Down(				 0.0f,	-1.0f);
+		Vector2 Vector2::NegativeInfinity(	-std::numeric_limits<float>::infinity());
+		Vector2 Vector2::PositiveInfinity(	 std::numeric_limits<float>::infinity());
 
 		Vector3 Vector3::Right(				 1.0f,  0.0f,  0.0f);
 		Vector3 Vector3::Up(				 0.0f,  1.0f,  0.0f);
