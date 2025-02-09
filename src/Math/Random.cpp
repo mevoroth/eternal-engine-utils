@@ -19,6 +19,14 @@ namespace Eternal
 			return static_cast<float>(_Next()) / static_cast<float>(std::numeric_limits<uint32_t>::max());
 		}
 
+		Vector2 Random::GetNormalizedVector201()
+		{
+			return Vector2(
+				GetNormalized01(),
+				GetNormalized01()
+			);
+		}
+
 		Vector3 Random::GetNormalizedVector301()
 		{
 			return Vector3(
@@ -32,8 +40,8 @@ namespace Eternal
 		{
 			uint64_t PreviousState = _Seed;
 			_Seed = _Seed * 6364136223846793005ULL + (InIncrement ? 1 : 0);
-			uint32_t XorShifted = ((PreviousState >> 18u) ^ PreviousState) >> 27u;
-			uint32_t Rotated = PreviousState >> 59u;
+			uint32_t XorShifted = static_cast<uint32_t>(((PreviousState >> 18u) ^ PreviousState) >> 27u);
+			uint32_t Rotated = static_cast<uint32_t>(PreviousState >> 59u);
 			return (XorShifted >> Rotated) | (XorShifted << ((-Rotated) & 31));
 		}
 	}

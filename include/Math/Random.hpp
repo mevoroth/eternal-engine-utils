@@ -14,6 +14,7 @@ namespace Eternal
 			Random(_In_ uint64_t InSeed);
 
 			float GetNormalized01();
+			Vector2 GetNormalizedVector201();
 			Vector3 GetNormalizedVector301();
 
 		private:
