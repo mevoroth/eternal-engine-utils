@@ -69,33 +69,47 @@ namespace Eternal
 		{
 			return B * A;
 		}
-		float SquareLength(_In_ const Vector4& V)
+		float SquareLength(_In_ const Vector4& InVector)
 		{
-			return Dot(V, V);
+			return Dot(InVector, InVector);
 		}
-		float SquareLength(_In_ const Vector3& V)
+		float SquareLength(_In_ const Vector3& InVector)
 		{
-			return Dot(V, V);
+			return Dot(InVector, InVector);
 		}
-		float Length(_In_ const Vector4& V)
+		float SquareLength(_In_ const Vector2& InVector)
 		{
-			return sqrt(SquareLength(V));
+			return Dot(InVector, InVector);
 		}
-		float Length(_In_ const Vector3& V)
+		float Length(_In_ const Vector4& InVector)
 		{
-			return sqrt(SquareLength(V));
+			return sqrt(SquareLength(InVector));
 		}
-		Vector4 Normalize(_In_ const Vector4& V)
+		float Length(_In_ const Vector3& InVector)
 		{
-			float VectorLength = Length(V);
+			return sqrt(SquareLength(InVector));
+		}
+		float Length(_In_ const Vector2& InVector)
+		{
+			return sqrt(SquareLength(InVector));
+		}
+		Vector4 Normalize(_In_ const Vector4& InVector)
+		{
+			float VectorLength = Length(InVector);
 			ETERNAL_ASSERT(VectorLength > 0.0f);
-			return V / VectorLength;
+			return InVector / VectorLength;
 		}
-		Vector3 Normalize(_In_ const Vector3& V)
+		Vector3 Normalize(_In_ const Vector3& InVector)
 		{
-			float VectorLength = Length(V);
+			float VectorLength = Length(InVector);
 			ETERNAL_ASSERT(VectorLength > 0.0f);
-			return V / VectorLength;
+			return InVector / VectorLength;
+		}
+		Vector2 Normalize(_In_ const Vector2& InVector)
+		{
+			float VectorLength = Length(InVector);
+			ETERNAL_ASSERT(VectorLength > 0.0f);
+			return InVector / VectorLength;
 		}
 
 		//////////////////////////////////////////////////////////////////////////

@@ -324,20 +324,28 @@ namespace Eternal
 			return Result;
 		}
 
-		float Dot(_In_ const Vector3& A, _In_ const Vector3& B)
+		float Dot(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
-			return A.x*B.x + A.y*B.y + A.z*B.z;
+			return InA.x * InB.x + InA.y * InB.y;
 		}
-		float Dot(_In_ const Vector4& A, _In_ const Vector4& B)
+		float Dot(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
-			return A.x*B.x + A.y*B.y + A.z*B.z + A.w*B.w;
+			return InA.x * InB.x + InA.y * InB.y + InA.z * InB.z;
 		}
-		Vector3 Cross(_In_ const Vector3& A, _In_ const Vector3& B)
+		float Dot(_In_ const Vector4& InA, _In_ const Vector4& InB)
+		{
+			return InA.x * InB.x + InA.y * InB.y + InA.z * InB.z + InA.w * InB.w;
+		}
+		float Determinant(_In_ const Vector2& InA, _In_ const Vector2& InB)
+		{
+			return InA.x * InB.y - InA.y * InB.x;
+		}
+		Vector3 Cross(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.y * B.z - A.z * B.y,
-				A.z * B.x - A.x * B.z,
-				A.x * B.y - A.y * B.x
+				InA.y * InB.z - InA.z * InB.y,
+				InA.z * InB.x - InA.x * InB.z,
+				InA.x * InB.y - InA.y * InB.x
 			);
 		}
 		Quaternion ToQuaternion(_In_ const Euler& R)

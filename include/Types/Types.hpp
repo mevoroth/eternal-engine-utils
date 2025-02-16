@@ -247,15 +247,20 @@ namespace Eternal
 		// MATH STUFF: MOVE THIS
 		extern void Transpose(_Inout_ Matrix4x4& A);
 		extern Matrix4x4 Inverse(_In_ const Matrix4x4& A);
-		extern float SquareLength(_In_ const Vector4& V);
-		extern float SquareLength(_In_ const Vector3& V);
-		extern float Length(_In_ const Vector4& V);
-		extern float Length(_In_ const Vector3& V);
-		extern Vector4 Normalize(_In_ const Vector4& V);
-		extern Vector3 Normalize(_In_ const Vector3& V);
-		extern float Dot(_In_ const Vector3& A, _In_ const Vector3& B);
-		extern float Dot(_In_ const Vector4& A, _In_ const Vector4& B);
-		extern Vector3 Cross(_In_ const Vector3& A, const Vector3& B);
+		extern float SquareLength(_In_ const Vector4& InVector);
+		extern float SquareLength(_In_ const Vector3& InVector);
+		extern float SquareLength(_In_ const Vector2& InVector);
+		extern float Length(_In_ const Vector4& InVector);
+		extern float Length(_In_ const Vector3& InVector);
+		extern float Length(_In_ const Vector2& InVector);
+		extern Vector4 Normalize(_In_ const Vector4& InVector);
+		extern Vector3 Normalize(_In_ const Vector3& InVector);
+		extern Vector2 Normalize(_In_ const Vector2& InVector);
+		extern float Dot(_In_ const Vector2& InA, _In_ const Vector2& InB);
+		extern float Dot(_In_ const Vector3& InA, _In_ const Vector3& InB);
+		extern float Dot(_In_ const Vector4& InA, _In_ const Vector4& InB);
+		extern float Determinant(_In_ const Vector2& InA, const Vector2& InB);
+		extern Vector3 Cross(_In_ const Vector3& InA, const Vector3& InB);
 		extern Quaternion ToQuaternion(_In_ const Euler& R);
 	}
 }
