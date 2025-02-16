@@ -59,6 +59,12 @@ namespace Eternal
 		void WindowsTimer::Update()
 		{
 			TimeMicroSecondsT PreviousTimeMicroSeconds = _PreviousTimeMicroSeconds;
+#if ETERNAL_DEBUG
+			static constexpr double TimerThreshold = 333000;
+			TimeMicroSecondsT DeltaTimeMicroSeconds = GetTimeMicroSeconds() - PreviousTimeMicroSeconds;
+			if (DeltaTimeMicroSeconds > TimerThreshold && IsDebuggerPresent())
+				PreviousTimeMicroSeconds = GetTimeMicroSeconds();
+#endif
 			_PreviousTimeMicroSeconds = GetTimeMicroSeconds();
 			_DeltaTimeMicroSeconds = _PreviousTimeMicroSeconds - PreviousTimeMicroSeconds;
 			_DeltaTimeSeconds = (double)_DeltaTimeMicroSeconds / 1000000.0;

@@ -6,6 +6,10 @@ namespace Eternal
 {
 	namespace Time
 	{
+		constexpr int Timer::TIMER_STACK_SIZE;
+		constexpr double Timer::SecondsToMicroSeconds;
+		constexpr double Timer::MicroSecondsToSeconds;
+
 		Timer* Timer::_Instance = nullptr;
 
 		Timer::Timer()
@@ -43,6 +47,11 @@ namespace Eternal
 			Days = (uint32_t)TempValue;
 
 			sprintf_s(HumanReadable, 24, "[%02dd%02dh%02dm%02ds%04d.%04d]", Days, Hours, Minutes, Seconds, MilliSeconds, MicroSeconds);
+		}
+
+		TimeSecondsT Timer::GetTimeSeconds() const
+		{
+			return GetTimeMicroSeconds() * MicroSecondsToSeconds;
 		}
 	}
 }

@@ -13,7 +13,9 @@ namespace Eternal
 		class Timer
 		{
 		public:
-			static constexpr int TIMER_STACK_SIZE = 1024;
+			static constexpr int TIMER_STACK_SIZE			= 1024;
+			static constexpr double SecondsToMicroSeconds	= 1000000.0;
+			static constexpr double MicroSecondsToSeconds	= 1.0 / SecondsToMicroSeconds;
 
 			Timer();
 			virtual ~Timer() {}
@@ -23,14 +25,16 @@ namespace Eternal
 			virtual void Begin() = 0;
 			virtual TimeMicroSecondsT End() = 0;
 			virtual TimeMicroSecondsT GetTimeMicroSeconds() const = 0;
+			TimeSecondsT GetTimeSeconds() const;
+
 			TimeMicroSecondsT GetDeltaTimeMicroSeconds() const { return _DeltaTimeMicroSeconds; }
 			TimeSecondsT GetDeltaTimeSeconds() const { return _DeltaTimeSeconds; }
 			virtual void Update() = 0;
 
 		protected:
-			TimeMicroSecondsT	_PreviousTimeMicroSeconds = 0ull;
-			TimeMicroSecondsT	_DeltaTimeMicroSeconds = 0ull;
-			TimeSecondsT		_DeltaTimeSeconds = 0.0;
+			TimeMicroSecondsT	_PreviousTimeMicroSeconds	= 0ull;
+			TimeMicroSecondsT	_DeltaTimeMicroSeconds		= 0ull;
+			TimeSecondsT		_DeltaTimeSeconds			= 0.0;
 
 		private:
 			static Timer*		_Instance;
