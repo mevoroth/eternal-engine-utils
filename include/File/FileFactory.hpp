@@ -1,12 +1,14 @@
 #pragma once
 
-#include "File/File.hpp"
 #include <string>
 
 namespace Eternal
 {
 	namespace FileSystem
 	{
+		class File;
+		enum class FileOpenMode;
+
 		struct FileContent
 		{
 			uint8_t* Content	= nullptr;
@@ -14,12 +16,12 @@ namespace Eternal
 
 			~FileContent();
 		};
-
+		
 		class FileScope
 		{
 		public:
 
-			FileScope(_In_ const std::string& InFileName, _In_ const File::OpenMode& InOpenMode);
+			FileScope(_In_ const std::string& InFileName, _In_ const FileOpenMode& InOpenMode);
 			~FileScope();
 
 			File* operator->() const { return _File; }
@@ -34,5 +36,6 @@ namespace Eternal
 		bool FileExists(_In_ const std::string& InFileName);
 		FileContent LoadFileToMemory(_In_ const std::string& InFileName);
 		void UnloadFileFromMemory(_Inout_ FileContent& InOutFileContent);
+
 	}
 }

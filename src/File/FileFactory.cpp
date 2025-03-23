@@ -38,7 +38,7 @@ namespace Eternal
 			FileContent Content;
 
 			File* FileHandle = CreateFileHandle(InFileName);
-			FileHandle->Open(File::OpenMode::READ);
+			FileHandle->Open(FileOpenMode::FILE_OPEN_MODE_READ);
 			Content.Size	= FileHandle->GetFileSize();
 			Content.Content	= new uint8_t[Content.Size + 1];
 			FileHandle->Read(Content.Content, Content.Size);
@@ -66,7 +66,7 @@ namespace Eternal
 
 		////////////////////////////////////////////////////////////////////////////
 
-		FileScope::FileScope(_In_ const std::string& InFileName, _In_ const File::OpenMode& InOpenMode)
+		FileScope::FileScope(_In_ const std::string& InFileName, _In_ const FileOpenMode& InOpenMode)
 			: _File(CreateFileHandle(InFileName))
 		{
 			_File->Open(InOpenMode);

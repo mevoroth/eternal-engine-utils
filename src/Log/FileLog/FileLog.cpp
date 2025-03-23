@@ -26,11 +26,11 @@ namespace Eternal
 			for (int LogLevelIndex = 0; LogLevelIndex < Log::LogLevelCount; ++LogLevelIndex)
 			{
 				_LogFiles[LogLevelIndex] = CreateFileHandle(Prefix + string(".") + string(LogLevels[LogLevelIndex]->Tag) + Suffix);
-				_LogFiles[LogLevelIndex]->Open(File::OpenMode::WRITE);
+				_LogFiles[LogLevelIndex]->Open(FileOpenMode::FILE_OPEN_MODE_WRITE);
 			}
 
 			_LogAllFile = CreateFileHandle(Prefix + Suffix);
-			_LogAllFile->Open(File::OpenMode::WRITE);
+			_LogAllFile->Open(FileOpenMode::FILE_OPEN_MODE_WRITE);
 
 			Write(Info, Engine, "Start logging");
 		}

@@ -61,7 +61,7 @@ namespace Eternal
 
 			if (IsCachedMeshValid)
 			{
-				FileScope CachedMeshFile(CachedMeshFilePath, File::OpenMode::READ);
+				FileScope CachedMeshFile(CachedMeshFilePath, FileOpenMode::FILE_OPEN_MODE_READ);
 
 				CachedMeshFileMetaData FileMetaData(SerializationMode::SERIALIZATION_MODE_READ);
 				CachedMeshFile->Serialize(reinterpret_cast<uint8_t*>(&FileMetaData), sizeof(CachedMeshFileMetaData));
@@ -78,7 +78,7 @@ namespace Eternal
 			std::string CachedMeshFilePath = FilePath::FindOrCreate(MeshFactory_KeyToCachedMeshFilePath(InKey), FileType::FILE_TYPE_CACHED_MESHES);
 			FileScope CachedMeshFile(
 				CachedMeshFilePath,
-				InSerializationMode == SerializationMode::SERIALIZATION_MODE_READ ? File::OpenMode::READ : File::OpenMode::WRITE
+				InSerializationMode == SerializationMode::SERIALIZATION_MODE_READ ? FileOpenMode::FILE_OPEN_MODE_READ : FileOpenMode::FILE_OPEN_MODE_WRITE
 			);
 			
 			CachedMeshFileMetaData FileMetaData(InSerializationMode);
