@@ -1,29 +1,30 @@
 #pragma once
 
-#include "Types/Types.hpp"
+#include <array>
 
 namespace Eternal
 {
 	namespace Container
 	{
 		using namespace std;
-		using namespace Eternal::Types;
-
-		template<typename TypeT>
+		
+		template<typename TypeT, uint32_t Size>
 		class RingBuffer
 		{
 		public:
-			RingBuffer(_In_ u32 Size)
-				: _Size(Size)
+
+			static constexpr uint32_t RingBufferSize = Size;
+
+			ETERNAL_STATIC_ASSERT(Size > 0, "Size must be > 0");
+
+			RingBuffer()
 			{
-				ETERNAL_ASSERT(Size > 0);
-				_Elements.resize(Size);
 			}
 
-			void Push(_In_ const TypeT& Element)
+			void Push(_In_ const TypeT& InElement)
 			{
-				ETERNAL_ASSERT(_Count < _Size);
-				_Elements[(_First + _Count) % _Size] = Element;
+				ETERNAL_ASSERT(_Count < Size());
+				_Elements[(_First + _Count) % Size()] = InElement;
 				++_Count;
 			}
 
@@ -33,16 +34,16 @@ namespace Eternal
 				return _Elements[_First];
 			}
 
-			inline TypeT& operator[](_In_ const u32 Index)
+			inline TypeT& operator[](_In_ const uint32_t InIndex)
 			{
-				ETERNAL_ASSERT(Index < _Count);
-				return _Elements[(_First + Index) % _Size];
+				ETERNAL_ASSERT(InIndex < _Count);
+				return _Elements[(_First + InIndex) % Size()];
 			}
 
 			inline TypeT& Tail()
 			{
 				ETERNAL_ASSERT(!Empty());
-				return _Elements[(_First - 1u + _Count) % _Size];
+				return _Elements[(_First - 1u + _Count) % Size()];
 			}
 
 			void PopHead()
@@ -60,7 +61,7 @@ namespace Eternal
 
 			bool Full() const
 			{
-				return _Count == _Size;
+				return _Count == Size();
 			}
 
 			bool Empty() const
@@ -68,21 +69,20 @@ namespace Eternal
 				return _Count == 0;
 			}
 
-			inline u32 Size() const
+			inline constexpr uint32_t Size() const
 			{
-				return _Size;
+				return RingBufferSize;
 			}
 
-			inline int Count() const
+			inline uint32_t Count() const
 			{
 				return _Count;
 			}
 
 		private:
-			vector<TypeT> _Elements;
-			u32 _Size = 0u;
-			u32 _Count = 0u;
-			u32 _First = 0u;
+			array<TypeT, RingBufferSize> _Elements;
+			uint32_t _Count = 0u;
+			uint32_t _First = 0u;
 		};
 	}
 }
