@@ -25,6 +25,8 @@ namespace Eternal
 			~0u,
 			~0u,
 			~0u,
+			~0u,
+			~0u,
 			~0u
 		};
 
