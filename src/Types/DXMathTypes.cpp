@@ -189,12 +189,12 @@ namespace Eternal
 			XMStoreFloat4(&Result, XMVectorDivide(XMLoadFloat4A(&A), XMVectorReplicate(B)));
 			return Result;
 		}
-		Vector4 operator*(_In_ const Matrix4x4& A, _In_ const Vector4& B)
+		Vector4 operator*(_In_ const Matrix4x4& InM, _In_ const Vector4& InV)
 		{
 			Vector4 Result;
 			XMStoreFloat4A(&Result, XMVector4Transform(
-				XMLoadFloat4A(&B),
-				XMLoadFloat4x4A(&A)
+				XMLoadFloat4A(&InV),
+				XMLoadFloat4x4A(&InM)
 			));
 			return Result;
 		}
@@ -368,33 +368,33 @@ namespace Eternal
 
 		//////////////////////////////////////////////////////////////////////////
 
-		TranslationMatrix::TranslationMatrix(_In_ const Vector3& InTranslation)
+		TranslationMatrix4x4::TranslationMatrix4x4(_In_ const Vector3& InTranslation)
 		{
 			XMStoreFloat4x4(this, XMMatrixTranslationFromVector(XMLoadFloat3(&InTranslation)));
 		}
 
-		TranslationMatrix::TranslationMatrix(_In_ float InX, _In_ float InY, _In_ float InZ)
-			: TranslationMatrix(Vector3(InX, InY, InZ))
+		TranslationMatrix4x4::TranslationMatrix4x4(_In_ float InX, _In_ float InY, _In_ float InZ)
+			: TranslationMatrix4x4(Vector3(InX, InY, InZ))
 		{
 		}
 
-		RotationMatrix::RotationMatrix(_In_ const Quaternion& InQuaternion)
+		RotationMatrix4x4::RotationMatrix4x4(_In_ const Quaternion& InQuaternion)
 		{
 			XMStoreFloat4x4(this, XMMatrixRotationQuaternion(XMLoadFloat4(&InQuaternion)));
 		}
 
-		ScaleMatrix::ScaleMatrix(_In_ float InUniformScale)
-			: ScaleMatrix(Vector3(InUniformScale))
+		ScaleMatrix4x4::ScaleMatrix4x4(_In_ float InUniformScale)
+			: ScaleMatrix4x4(Vector3(InUniformScale))
 		{
 		}
 
-		ScaleMatrix::ScaleMatrix(_In_ const Vector3& InScale)
+		ScaleMatrix4x4::ScaleMatrix4x4(_In_ const Vector3& InScale)
 		{
 			XMStoreFloat4x4(this, XMMatrixScalingFromVector(XMLoadFloat3(&InScale)));
 		}
 
-		ScaleMatrix::ScaleMatrix(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ)
-			: ScaleMatrix(Vector3(InScaleX, InScaleY, InScaleZ))
+		ScaleMatrix4x4::ScaleMatrix4x4(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ)
+			: ScaleMatrix4x4(Vector3(InScaleX, InScaleY, InScaleZ))
 		{
 		}
 

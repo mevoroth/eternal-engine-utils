@@ -498,12 +498,12 @@ namespace Eternal
 
 		//////////////////////////////////////////////////////////////////////////
 
-		TranslationMatrix::TranslationMatrix(_In_ const Vector3& InTranslation)
-			: TranslationMatrix(InTranslation.x, InTranslation.y, InTranslation.z)
+		TranslationMatrix4x4::TranslationMatrix4x4(_In_ const Vector3& InTranslation)
+			: TranslationMatrix4x4(InTranslation.x, InTranslation.y, InTranslation.z)
 		{
 		}
 
-		TranslationMatrix::TranslationMatrix(_In_ float InX, _In_ float InY, _In_ float InZ)
+		TranslationMatrix4x4::TranslationMatrix4x4(_In_ float InX, _In_ float InY, _In_ float InZ)
 			: Matrix4x4(
 				1.0f,	0.0f,	0.0f,	0.0f,
 				0.0f,	1.0f,	0.0f,	0.0f,
@@ -513,7 +513,7 @@ namespace Eternal
 		{
 		}
 
-		RotationMatrix::RotationMatrix(_In_ const Quaternion& InQuaternion)
+		RotationMatrix4x4::RotationMatrix4x4(_In_ const Quaternion& InQuaternion)
 			: Matrix4x4()
 		{
 			float RX = InQuaternion.x;
@@ -548,17 +548,17 @@ namespace Eternal
 			m[3][3] = 1.0f;
 		}
 
-		ScaleMatrix::ScaleMatrix(_In_ float InUniformScale)
-			: ScaleMatrix(InUniformScale, InUniformScale, InUniformScale)
+		ScaleMatrix4x4::ScaleMatrix4x4(_In_ float InUniformScale)
+			: ScaleMatrix4x4(InUniformScale, InUniformScale, InUniformScale)
 		{
 		}
 		
-		ScaleMatrix::ScaleMatrix(_In_ const Vector3& InScale)
-			: ScaleMatrix(InScale.x, InScale.y, InScale.z)
+		ScaleMatrix4x4::ScaleMatrix4x4(_In_ const Vector3& InScale)
+			: ScaleMatrix4x4(InScale.x, InScale.y, InScale.z)
 		{
 		}
 
-		ScaleMatrix::ScaleMatrix(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ)
+		ScaleMatrix4x4::ScaleMatrix4x4(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ)
 			: Matrix4x4(
 				InScaleX,	0.0f,		0.0f,		0.0f,
 				0.0f,		InScaleY,	0.0f,		0.0f,

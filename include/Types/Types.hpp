@@ -38,22 +38,22 @@ namespace Eternal
 			}
 		};
 
-		struct TranslationMatrix : public Matrix4x4
 		{
-			TranslationMatrix(_In_ const Vector3& InTranslation);
-			TranslationMatrix(_In_ float InX, _In_ float InY, _In_ float InZ);
+		struct TranslationMatrix4x4 : public Matrix4x4
+			TranslationMatrix4x4(_In_ const Vector3& InTranslation);
+			TranslationMatrix4x4(_In_ float InX, _In_ float InY, _In_ float InZ);
 		};
 
-		struct RotationMatrix : public Matrix4x4
+		struct RotationMatrix4x4 : public Matrix4x4
 		{
-			RotationMatrix(_In_ const Quaternion& InQuaternion);
+			RotationMatrix4x4(_In_ const Quaternion& InQuaternion);
 		};
 
-		struct ScaleMatrix : public Matrix4x4
+		struct ScaleMatrix4x4 : public Matrix4x4
 		{
-			ScaleMatrix(_In_ float InUniformScale);
-			ScaleMatrix(_In_ const Vector3& InScale);
-			ScaleMatrix(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ);
+			ScaleMatrix4x4(_In_ float InUniformScale);
+			ScaleMatrix4x4(_In_ const Vector3& InScale);
+			ScaleMatrix4x4(_In_ float InScaleX, _In_ float InScaleY, _In_ float InScaleZ);
 		};
 
 		struct PerspectiveLHMatrix : public Matrix4x4
@@ -196,7 +196,7 @@ namespace Eternal
 		extern Vector2 operator*(_In_ const Vector2& A, _In_ const Vector2& B);
 		extern Quaternion operator*(_In_ const Quaternion& A, _In_ const Quaternion& B);
 		extern Quaternion operator*(_In_ const Quaternion& A, _In_ const Euler& B);
-		extern Vector4 operator*(_In_ const Matrix4x4& A, _In_ const Vector4& B);
+		extern Vector4 operator*(_In_ const Matrix4x4& InM, _In_ const Vector4& InV);
 		extern Vector4& operator+=(_Inout_ Vector4& A, _In_ const Vector4& B);
 		extern Vector3& operator+=(_Inout_ Vector3& A, _In_ const Vector3& B);
 		extern Vector2& operator+=(_Inout_ Vector2& A, _In_ const Vector2& B);
