@@ -34,7 +34,7 @@ namespace Eternal
 		}
 
 		template<typename T>
-		T Sign(_In_ const T& InX)
+		constexpr T Sign(_In_ const T& InX)
 		{
 			return T(T(0) < InX) - (InX < T(0));
 		}
@@ -46,25 +46,25 @@ namespace Eternal
 		}
 
 		template<typename T>
-		T Min(_In_ const T& In, _In_ const T& InB)
+		constexpr T Min(_In_ const T& In, _In_ const T& InB)
 		{
 			return std::min<T>(In, InB);
 		}
 
 		template<typename T>
-		T Max(_In_ const T& InA, _In_ const T& InB)
+		constexpr T Max(_In_ const T& InA, _In_ const T& InB)
 		{
 			return std::max(InA, InB);
 		}
 
 		template<typename T>
-		T Clamp(_In_ const T& InX, _In_ const T& InA, _In_ const T& InB)
+		constexpr T Clamp(_In_ const T& InX, _In_ const T& InA, _In_ const T& InB)
 		{
 			return Max(Min(InX, InB), InA);
 		}
 
 		template<typename T>
-		T SafeClamp(_In_ const T& InX, _In_ const T& InA, _In_ const T& InB)
+		constexpr T SafeClamp(_In_ const T& InX, _In_ const T& InA, _In_ const T& InB)
 		{
 			if (InA < InB)
 				std::swap(InA, InB);
@@ -73,55 +73,55 @@ namespace Eternal
 		}
 
 		template<typename T>
-		T Saturate(_In_ const T& InX)
+		constexpr T Saturate(_In_ const T& InX)
 		{
 			return Clamp(InX, T(0.0f), T(1.0f));
 		}
 
 		template<typename T>
-		T Lerp(_In_ const T& InA, _In_ const T& InB, _In_ float InX)
+		constexpr T Lerp(_In_ const T& InA, _In_ const T& InB, _In_ float InX)
 		{
 			return  InA + (InB - InA) * InX;
 		}
 
 		template<typename T>
-		T InverseLerp(_In_ const T& InA, _In_ const T& InB, _In_ const T& InY)
+		constexpr T InverseLerp(_In_ const T& InA, _In_ const T& InB, _In_ const T& InY)
 		{
 			return (InY - InA) / (InB - InA);
 		}
 
 		template<typename T>
-		T Log2(_In_ const T& InX)
+		constexpr T Log2(_In_ const T& InX)
 		{
 			return static_cast<T>(log2(InX));
 		}
 
 		template<typename T>
-		T Atan2(_In_ const T& InY, _In_ const T& InX)
+		constexpr T Atan2(_In_ const T& InY, _In_ const T& InX)
 		{
 			return atan2(InY, InX);
 		}
 
 		template<typename T>
-		T Cos(_In_ const T& InAngleInRadians)
+		constexpr T Cos(_In_ const T& InAngleInRadians)
 		{
 			return cos(InAngleInRadians);
 		}
 
 		template<typename T>
-		T Sin(_In_ const T& InAngleInRadians)
+		constexpr T Sin(_In_ const T& InAngleInRadians)
 		{
 			return sin(InAngleInRadians);
 		}
 
 		template<typename T>
-		T FMod(_In_ const T& InNumerator, _In_ const T& InDenumerator)
+		constexpr T FMod(_In_ const T& InNumerator, _In_ const T& InDenumerator)
 		{
 			return fmod(InNumerator, InDenumerator);
 		}
 
 		template<typename T>
-		T Floor(_In_ const T& InNumber)
+		constexpr T Floor(_In_ const T& InNumber)
 		{
 			return floor(InNumber);
 		}
