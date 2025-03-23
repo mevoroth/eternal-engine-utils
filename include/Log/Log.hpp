@@ -43,6 +43,7 @@ namespace Eternal
 				const char* Category = nullptr;
 			};
 
+			static const LogCategory Audio;
 			static const LogCategory Graphics;
 			static const LogCategory Shaders;
 			static const LogCategory Engine;
@@ -73,6 +74,7 @@ namespace Eternal
 	extern const LogSystem::Log::LogLevel& LogError;
 	extern const LogSystem::Log::LogLevel& LogCritical;
 
+	extern const LogSystem::Log::LogCategory& LogAudio;
 	extern const LogSystem::Log::LogCategory& LogGraphics;
 	extern const LogSystem::Log::LogCategory& LogShaders;
 	extern const LogSystem::Log::LogCategory& LogEngine;

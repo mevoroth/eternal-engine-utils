@@ -9,6 +9,7 @@ namespace Eternal
 		const Log::LogLevel Log::Error(2, "error");
 		const Log::LogLevel Log::Critical(3, "critical");
 
+		const Log::LogCategory Log::Audio("Audio");
 		const Log::LogCategory Log::Graphics("Graphics");
 		const Log::LogCategory Log::Shaders("Shaders");
 		const Log::LogCategory Log::Engine("Engine");
@@ -55,6 +56,7 @@ namespace Eternal
 	const LogSystem::Log::LogLevel& LogError			= LogSystem::Log::Error;
 	const LogSystem::Log::LogLevel& LogCritical			= LogSystem::Log::Critical;
 
+	const LogSystem::Log::LogCategory& LogAudio			= LogSystem::Log::Audio;
 	const LogSystem::Log::LogCategory& LogGraphics		= LogSystem::Log::Graphics;
 	const LogSystem::Log::LogCategory& LogShaders		= LogSystem::Log::Shaders;
 	const LogSystem::Log::LogCategory& LogEngine		= LogSystem::Log::Engine;
