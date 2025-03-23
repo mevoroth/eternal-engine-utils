@@ -38,8 +38,44 @@ namespace Eternal
 			}
 		};
 
+		struct Matrix2x2
 		{
+			constexpr Matrix2x2()
+				: _11(1.0f), _12(0.0f)
+				, _21(0.0f), _22(1.0f)
+			{
+			}
+
+			constexpr Matrix2x2(
+				_In_ float InM00, _In_ float InM01,
+				_In_ float InM10, _In_ float InM11
+			) noexcept
+				: _11(InM00), _12(InM01)
+				, _21(InM10), _22(InM11)
+			{
+			}
+
+			constexpr Matrix2x2(_In_ const Matrix2x2& InM)
+				: Matrix2x2(
+					InM._11, InM._12,
+					InM._21, InM._22
+				)
+			{
+			}
+
+			union
+			{
+				struct
+				{
+					float _11, _12;
+					float _21, _22;
+				};
+				float m[2][2];
+			};
+		};
+
 		struct TranslationMatrix4x4 : public Matrix4x4
+		{
 			TranslationMatrix4x4(_In_ const Vector3& InTranslation);
 			TranslationMatrix4x4(_In_ float InX, _In_ float InY, _In_ float InZ);
 		};
@@ -99,6 +135,11 @@ namespace Eternal
 		struct LookToLHMatrix : public Matrix4x4
 		{
 			LookToLHMatrix(_In_ const Vector3& InPosition, _In_ const Vector3& InForward, _In_ const Vector3& InUp);
+		};
+
+		struct RotationMatrix2x2 : public Matrix2x2
+		{
+			RotationMatrix2x2(_In_ float InAngle);
 		};
 
 		struct Vector2 : public Float2
@@ -197,6 +238,7 @@ namespace Eternal
 		extern Quaternion operator*(_In_ const Quaternion& A, _In_ const Quaternion& B);
 		extern Quaternion operator*(_In_ const Quaternion& A, _In_ const Euler& B);
 		extern Vector4 operator*(_In_ const Matrix4x4& InM, _In_ const Vector4& InV);
+		extern Vector2 operator*(_In_ const Matrix2x2& InM, _In_ const Vector2& InV);
 		extern Vector4& operator+=(_Inout_ Vector4& A, _In_ const Vector4& B);
 		extern Vector3& operator+=(_Inout_ Vector3& A, _In_ const Vector3& B);
 		extern Vector2& operator+=(_Inout_ Vector2& A, _In_ const Vector2& B);
