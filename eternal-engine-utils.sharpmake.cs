@@ -28,6 +28,7 @@ namespace EternalEngine
 				@"$(SolutionDir)eternal-engine-graphics\include",
 				@"$(SolutionDir)eternal-engine-graphics\GraphicsPrivate\include",
 				@"$(SolutionDir)eternal-engine-extern\libtga",
+				@"$(SolutionDir)eternal-engine-extern\libwav",
 				@"$(SolutionDir)eternal-engine-extern\rapidjson\include",
 				@"$(SolutionDir)eternal-engine-extern\DirectXTex",
 				@"$(SolutionDir)eternal-engine-shaders",
