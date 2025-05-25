@@ -39,6 +39,11 @@ namespace Eternal
 				: XMFLOAT3(InScalar, InScalar, InScalar)
 			{
 			}
+
+			Float3(_In_ const Float2& InFloat2, _In_ float InZ)
+				: XMFLOAT3(InFloat2.x, InFloat2.y, InZ)
+			{
+			}
 		};
 
 		struct Float4 : XMFLOAT4A

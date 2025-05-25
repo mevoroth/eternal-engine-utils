@@ -43,6 +43,12 @@ namespace Eternal
 				, z(InZ)
 			{
 			}
+			Float3(_In_ const Float2& InFloat2, _In_ float InZ)
+				: x(InFloat2.x)
+				, y(InFloat2.y)
+				, z(InZ)
+			{
+			}
 
 			float x = 0.0f;
 			float y = 0.0f;
