@@ -10,11 +10,11 @@ namespace Eternal
 		{
 		}
 
-		void MemoryFile::Read(_In_ uint8_t* InBlock, _In_ uint64_t InSize)
+		void MemoryFile::Read(_Out_ uint8_t* OutBlock, _In_ uint64_t InSize)
 		{
-			File::Read(InBlock, InSize);
+			File::Read(OutBlock, InSize);
 			ETERNAL_ASSERT(_Offset < GetFileSize());
-			memcpy(InBlock, _FileContent.Content + _Offset, InSize);
+			memcpy(OutBlock, _FileContent.Content + _Offset, InSize);
 			_Offset += InSize;
 		}
 

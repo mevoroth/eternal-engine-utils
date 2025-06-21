@@ -66,11 +66,11 @@ namespace Eternal
 			fclose(_File);
 		}
 
-		void CFile::Read(_In_ uint8_t* InBlock, _In_ uint64_t InSize)
+		void CFile::Read(_Out_ uint8_t* OutBlock, _In_ uint64_t InSize)
 		{
-			File::Read(InBlock, InSize);
+			File::Read(OutBlock, InSize);
 
-			fread(InBlock, InSize, 1, _File);
+			fread(OutBlock, InSize, 1, _File);
 		}
 
 		void CFile::Write(_In_ const uint8_t* InBlock, _In_ uint64_t InSize)

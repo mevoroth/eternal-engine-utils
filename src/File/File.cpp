@@ -18,10 +18,10 @@ namespace Eternal
 			_OpenMode = FileOpenMode::FILE_OPEN_MODE_CLOSED;
 		}
 
-		void File::Read(_In_ uint8_t* InBlock, _In_ uint64_t InSize)
+		void File::Read(_Out_ uint8_t* OutBlock, _In_ uint64_t InSize)
 		{
 			ETERNAL_ASSERT(IsOpenedForRead());
-			(void)InBlock;
+			(void)OutBlock;
 			(void)InSize;
 		}
 
