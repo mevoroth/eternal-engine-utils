@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 namespace Eternal
 {
 	namespace Container
@@ -10,11 +12,15 @@ namespace Eternal
 		class FreeList
 		{
 		public:
-			FreeList(_In_ uint32_t Count)
+
+			FreeList(_In_ const function<TypeT()>& InFreeListConstructorFunction, _In_ uint32_t Count)
 				: _Count(Count)
 			{
 				ETERNAL_ASSERT(Count > 0);
-				//_List.resize(Count);
+				_List.resize(Count);
+			
+				for (uint32_t Index = 0; Index < Count; ++Index)
+					_List[Index] = InFreeListConstructorFunction();
 			}
 
 			bool Empty() const
