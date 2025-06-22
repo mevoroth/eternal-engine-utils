@@ -7,7 +7,7 @@ namespace Eternal
 {
 	namespace NetworkSystem
 	{
-		struct NetworkClientCreateInformation
+		struct NetworkClientCreateInformation : public NetworkCreateInformation
 		{
 			std::string Host;
 		};

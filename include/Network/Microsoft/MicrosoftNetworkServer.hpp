@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Network/NetworkServer.hpp"
+#include "Network/Microsoft/MicrosoftNetwork.hpp"
 #include "Container/FreeList.hpp"
 #include <WinSock2.h>
 
@@ -12,63 +13,23 @@ namespace Eternal
 
 		class MicrosoftNetworkServer;
 
-		class MicrosoftNetworkServerClientConnection : public NetworkServerClientConnection
-		{
-		protected:
-		
-			MicrosoftNetworkServerClientConnection(_In_ uint32_t InSendBufferSize, _In_ uint32_t InReceiveBufferSize);
-
-		};
-
-		class MicrosoftNetworkServerClientConnectionTCP : public MicrosoftNetworkServerClientConnection
-		{
-		public:
-
-			MicrosoftNetworkServerClientConnectionTCP(_In_ uint32_t InSendBufferSize, _In_ uint32_t InReceiveBufferSize);
-
-			virtual void Poll() override final;
-			virtual void Commit() override final;
-
-			void SetupMicrosoftNetworkServerClientConnectionTCP(_In_ SOCKET InClientSocket);
-
-		private:
-			
-			SOCKET ClientSocket = INVALID_SOCKET;
-		};
-
-		class MicrosoftNetworkServerClientConnectionUDP : public MicrosoftNetworkServerClientConnection
-		{
-		public:
-
-			MicrosoftNetworkServerClientConnectionUDP(_In_ uint32_t InSendBufferSize, _In_ uint32_t InReceiveBufferSize);
-
-			virtual void Poll() override final;
-			virtual void Commit() override final;
-
-			void SetupMicrosoftNetworkServerClientConnectionUDP(_In_ sockaddr_in&& InClientAddress);
-
-		private:
-
-			sockaddr_in ClientAddress = {};
-
-			friend class MicrosoftNetworkServer;
-
-		};
-
-		//////////////////////////////////////////////////////////////////////////
-
 		class MicrosoftNetworkServerClientConnectionScope
 		{
 		public:
 
 			~MicrosoftNetworkServerClientConnectionScope();
 
+			MicrosoftNetworkConnection* operator->();
+			operator bool() const;
+
 		private:
 
-			MicrosoftNetworkServerClientConnectionScope(_In_ MicrosoftNetworkServer* InServer, _In_ MicrosoftNetworkServerClientConnection* InClientConnection);
+			MicrosoftNetworkServerClientConnectionScope(_In_ MicrosoftNetworkServer* InServer, _In_ MicrosoftNetworkConnection* InClientConnection);
 
-			MicrosoftNetworkServer*					_Server				= nullptr;
-			MicrosoftNetworkServerClientConnection*	_ClientConnection	= nullptr;
+			bool IsValid() const;
+
+			MicrosoftNetworkServer*		_Server				= nullptr;
+			MicrosoftNetworkConnection*	_ClientConnection	= nullptr;
 
 			friend class MicrosoftNetworkServer;
 
@@ -76,7 +37,9 @@ namespace Eternal
 
 		//////////////////////////////////////////////////////////////////////////
 
-		class MicrosoftNetworkServer : public NetworkServer
+		class MicrosoftNetworkServer
+			: public NetworkServer
+			, public MicrosoftNetworkSocket
 		{
 		public:
 
@@ -89,11 +52,9 @@ namespace Eternal
 
 		private:
 
-			void ReleaseClientConnection(_In_ MicrosoftNetworkServerClientConnection* InClientConnection);
+			void ReleaseClientConnection(_In_ MicrosoftNetworkConnection* InClientConnection);
 
-			addrinfo*											_Address	= nullptr;
-			SOCKET												_Socket		= INVALID_SOCKET;
-			FreeList<MicrosoftNetworkServerClientConnection*>	_Connections;
+			FreeList<MicrosoftNetworkConnection*>	_Connections;
 
 			friend class MicrosoftNetworkServerClientConnectionScope;
 
