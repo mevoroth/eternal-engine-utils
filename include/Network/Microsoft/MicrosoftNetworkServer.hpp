@@ -10,6 +10,8 @@ namespace Eternal
 	{
 		using namespace Eternal::Container;
 
+		class MicrosoftNetworkServer;
+
 		class MicrosoftNetworkServerClientConnection : public NetworkServerClientConnection
 		{
 		protected:
@@ -53,6 +55,27 @@ namespace Eternal
 
 		};
 
+		//////////////////////////////////////////////////////////////////////////
+
+		class MicrosoftNetworkServerClientConnectionScope
+		{
+		public:
+
+			~MicrosoftNetworkServerClientConnectionScope();
+
+		private:
+
+			MicrosoftNetworkServerClientConnectionScope(_In_ MicrosoftNetworkServer* InServer, _In_ MicrosoftNetworkServerClientConnection* InClientConnection);
+
+			MicrosoftNetworkServer*					_Server				= nullptr;
+			MicrosoftNetworkServerClientConnection*	_ClientConnection	= nullptr;
+
+			friend class MicrosoftNetworkServer;
+
+		};
+
+		//////////////////////////////////////////////////////////////////////////
+
 		class MicrosoftNetworkServer : public NetworkServer
 		{
 		public:
@@ -62,13 +85,17 @@ namespace Eternal
 			MicrosoftNetworkServer(_In_ const NetworkServerCreateInformation& InNetworkCreateInformation);
 
 			bool BindSocket();
-			MicrosoftNetworkServerClientConnection* AcceptClientConnection();
+			MicrosoftNetworkServerClientConnectionScope AcceptClientConnection();
 
 		private:
+
+			void ReleaseClientConnection(_In_ MicrosoftNetworkServerClientConnection* InClientConnection);
 
 			addrinfo*											_Address	= nullptr;
 			SOCKET												_Socket		= INVALID_SOCKET;
 			FreeList<MicrosoftNetworkServerClientConnection*>	_Connections;
+
+			friend class MicrosoftNetworkServerClientConnectionScope;
 
 		};
 	}

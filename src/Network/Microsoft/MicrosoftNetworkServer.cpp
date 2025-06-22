@@ -61,6 +61,20 @@ namespace Eternal
 
 		//////////////////////////////////////////////////////////////////////////
 
+		MicrosoftNetworkServerClientConnectionScope::MicrosoftNetworkServerClientConnectionScope(_In_ MicrosoftNetworkServer* InServer, _In_ MicrosoftNetworkServerClientConnection* InClientConnection)
+			: _Server(InServer)
+			, _ClientConnection(InClientConnection)
+		{
+		}
+
+		MicrosoftNetworkServerClientConnectionScope::~MicrosoftNetworkServerClientConnectionScope()
+		{
+			if (_ClientConnection)
+				_Server->ReleaseClientConnection(_ClientConnection);
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
 		constexpr uint32_t MicrosoftNetworkServer::ServerClientConnectionInitialPoolCount;
 
 		MicrosoftNetworkServer::MicrosoftNetworkServer(_In_ const NetworkServerCreateInformation& InNetworkCreateInformation)
@@ -76,7 +90,7 @@ namespace Eternal
 					if (_NetworkCreateInformation.TransportLayer == NetworkTransportLayer::TRANSPORT_UDP)
 						NewMicrosoftNetworkServerClientConnection = new MicrosoftNetworkServerClientConnectionUDP(8192u, 16384u);
 
-					ETERNAL_BREAK();
+					ETERNAL_ASSERT(NewMicrosoftNetworkServerClientConnection);
 					return NewMicrosoftNetworkServerClientConnection;
 				},
 				ServerClientConnectionInitialPoolCount
@@ -134,7 +148,7 @@ namespace Eternal
 			return true;
 		}
 
-		MicrosoftNetworkServerClientConnection* MicrosoftNetworkServer::AcceptClientConnection()
+		MicrosoftNetworkServerClientConnectionScope MicrosoftNetworkServer::AcceptClientConnection()
 		{
 			MicrosoftNetworkServerClientConnection* NewServerClientConnection = nullptr;
 
@@ -168,7 +182,7 @@ namespace Eternal
 				break;
 			}
 
-			return NewServerClientConnection;
+			return MicrosoftNetworkServerClientConnectionScope(this, NewServerClientConnection);
 		}
 	}
 }
