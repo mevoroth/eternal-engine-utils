@@ -59,20 +59,18 @@ namespace Eternal
 		{
 		}
 
-		bool MicrosoftNetworkServer::BindSocket()
+		void MicrosoftNetworkServer::BindSocket()
 		{
 			CreateSocket(_NetworkCreateInformation);
 
 			int Result = ::bind(_Socket, _Address->ai_addr, static_cast<int>(_Address->ai_addrlen));
-			ETERNAL_ASSERT(Result != SOCKET_ERROR);
+			ETERNAL_ASSERT(Result != INVALID_SOCKET);
 
 			if (_NetworkCreateInformation.TransportLayer == NetworkTransportLayer::TRANSPORT_TCP)
 			{
 				Result = listen(_Socket, SOMAXCONN);
 				ETERNAL_ASSERT(Result != SOCKET_ERROR);
 			}
-
-			return true;
 		}
 
 		MicrosoftNetworkServerClientConnectionScope MicrosoftNetworkServer::AcceptClientConnection()
@@ -95,15 +93,26 @@ namespace Eternal
 			} break;
 			case NetworkTransportLayer::TRANSPORT_UDP:
 			{
-				NewServerClientConnection = _Connections.Pop();
-
-				char MagicKeyBuffer[1024] = {};
+				char MagicKeyBuffer[64] = {};
 				sockaddr_in ClientAddress = {};
-				int ClientAddressLength = 0;
-				int ReceivedBytes = recvfrom(_Socket, MagicKeyBuffer, ETERNAL_ARRAYSIZE(MagicKeyBuffer), 0,
-					(sockaddr*)&ClientAddress, &ClientAddressLength);
+				int ClientAddressLength = sizeof(sockaddr_in);
+				
+				int ReceivedBytes = SOCKET_ERROR;
+				do 
+				{
+					ReceivedBytes = recvfrom(
+						_Socket,
+						MagicKeyBuffer,
+						ETERNAL_ARRAYSIZE(MagicKeyBuffer),
+						0,
+						(sockaddr*)&ClientAddress,
+						&ClientAddressLength
+					);
+				} while (ReceivedBytes == SOCKET_ERROR);
 				ETERNAL_ASSERT(ReceivedBytes != SOCKET_ERROR);
-				static_cast<MicrosoftNetworkConnectionUDP*>(NewServerClientConnection)->SetupMicrosoftNetworkConnectionUDP(std::move(ClientAddress));
+
+				NewServerClientConnection = _Connections.Pop();
+				static_cast<MicrosoftNetworkConnectionUDP*>(NewServerClientConnection)->SetupMicrosoftNetworkConnectionUDP(_Socket, std::move(ClientAddress));
 			} break;
 			default:
 				break;

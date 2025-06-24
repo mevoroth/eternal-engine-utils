@@ -47,7 +47,7 @@ namespace Eternal
 
 			MicrosoftNetworkServer(_In_ const NetworkServerCreateInformation& InNetworkCreateInformation);
 
-			bool BindSocket();
+			void BindSocket();
 			MicrosoftNetworkServerClientConnectionScope AcceptClientConnection();
 
 		private:

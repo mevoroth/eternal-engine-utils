@@ -48,16 +48,28 @@ namespace Eternal
 
 			Hints.ai_flags = 0;
 
+			int Result = getaddrinfo(InHost, PortString, &Hints, &_Address);
+			ETERNAL_ASSERT(Result == 0);
+			ETERNAL_ASSERT(Hints.ai_family == _Address->ai_family);
+			ETERNAL_ASSERT(Hints.ai_socktype == _Address->ai_socktype);
+			ETERNAL_ASSERT(Hints.ai_protocol == _Address->ai_protocol);
+			
+			_Socket = socket(_Address->ai_family, _Address->ai_socktype, _Address->ai_protocol);
+
 			if (InCreateInformation.TransportLayer == NetworkTransportLayer::TRANSPORT_TCP)
 			{
-				int Result = getaddrinfo(InHost, PortString, &Hints, &_Address);
-				ETERNAL_ASSERT(Result == 0);
-				ETERNAL_ASSERT(Hints.ai_family == _Address->ai_family);
-				ETERNAL_ASSERT(Hints.ai_socktype == _Address->ai_socktype);
-				ETERNAL_ASSERT(Hints.ai_protocol == _Address->ai_protocol);
+				while (_Socket == INVALID_SOCKET && _Address)
+				{
+					_Socket = socket(_Address->ai_family, _Address->ai_socktype, _Address->ai_protocol);
+					_Address = _Address->ai_next;
+				}
 			}
 
-			_Socket = socket(Hints.ai_family, Hints.ai_socktype, Hints.ai_protocol);
+			do
+			{
+				_Socket = socket(_Address->ai_family, _Address->ai_socktype, _Address->ai_protocol);
+
+			} while (InCreateInformation.TransportLayer == NetworkTransportLayer::TRANSPORT_TCP);
 			ETERNAL_ASSERT(_Socket != INVALID_SOCKET);
 		}
 
@@ -78,21 +90,21 @@ namespace Eternal
 		void MicrosoftNetworkConnectionTCP::Poll()
 		{
 			_ReceiveBuffer.resize(_ReceiveBuffer.capacity());
-			int ReceivedBytes = recv(ConnectionSocket, reinterpret_cast<char*>(_ReceiveBuffer.data()), static_cast<int>(_ReceiveBuffer.capacity()), 0);
+			int ReceivedBytes = recv(_ConnectionSocket, reinterpret_cast<char*>(_ReceiveBuffer.data()), static_cast<int>(_ReceiveBuffer.capacity()), 0);
 			ETERNAL_ASSERT(ReceivedBytes != SOCKET_ERROR);
 			_ReceiveBuffer.resize(ReceivedBytes);
 		}
 
 		void MicrosoftNetworkConnectionTCP::Commit()
 		{
-			int Result = send(ConnectionSocket, reinterpret_cast<const char*>(_SendBuffer.data()), static_cast<int>(_SendBuffer.size()), 0);
+			int Result = send(_ConnectionSocket, reinterpret_cast<const char*>(_SendBuffer.data()), static_cast<int>(_SendBuffer.size()), 0);
 			ETERNAL_ASSERT(Result != SOCKET_ERROR);
 			_SendBuffer.clear();
 		}
 
 		void MicrosoftNetworkConnectionTCP::SetupMicrosoftNetworkConnectionTCP(_In_ SOCKET InConnectionSocket)
 		{
-			ConnectionSocket = InConnectionSocket;
+			_ConnectionSocket = InConnectionSocket;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -104,17 +116,40 @@ namespace Eternal
 
 		void MicrosoftNetworkConnectionUDP::Poll()
 		{
-			ETERNAL_BREAK();
+			sockaddr_in	SenderAddress		= {};
+			int			SenderAddressLength	= sizeof(sockaddr_in);
+
+			_ReceiveBuffer.resize(_ReceiveBuffer.capacity());
+			int ReceivedBytes = recvfrom(
+				_ConnectionSocket,
+				reinterpret_cast<char*>(_ReceiveBuffer.data()),
+				static_cast<int>(_ReceiveBuffer.capacity()),
+				0,
+				reinterpret_cast<sockaddr*>(&SenderAddress),
+				&SenderAddressLength
+			);
+			ETERNAL_ASSERT(ReceivedBytes != SOCKET_ERROR);
+			_ReceiveBuffer.resize(ReceivedBytes);
 		}
 
 		void MicrosoftNetworkConnectionUDP::Commit()
 		{
-			ETERNAL_BREAK();
+			int Result = sendto(
+				_ConnectionSocket,
+				reinterpret_cast<const char*>(_SendBuffer.data()),
+				static_cast<int>(_SendBuffer.size()),
+				0,
+				reinterpret_cast<const sockaddr*>(&_ConnectionAddress),
+				sizeof(sockaddr_in)
+			);
+			ETERNAL_ASSERT(Result != SOCKET_ERROR);
+			_SendBuffer.clear();
 		}
 
-		void MicrosoftNetworkConnectionUDP::SetupMicrosoftNetworkConnectionUDP(_In_ sockaddr_in&& InClientAddress)
+		void MicrosoftNetworkConnectionUDP::SetupMicrosoftNetworkConnectionUDP(_In_ SOCKET InConnectionSocket, _In_ sockaddr_in&& InConnectionAddress)
 		{
-			ClientAddress = std::move(InClientAddress);
+			_ConnectionSocket	= InConnectionSocket;
+			_ConnectionAddress	= std::move(InConnectionAddress);
 		}
 
 	}

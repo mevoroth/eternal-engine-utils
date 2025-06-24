@@ -45,7 +45,7 @@ namespace Eternal
 
 		private:
 
-			SOCKET ConnectionSocket = INVALID_SOCKET;
+			SOCKET _ConnectionSocket = INVALID_SOCKET;
 		};
 
 		//////////////////////////////////////////////////////////////////////////
@@ -59,12 +59,13 @@ namespace Eternal
 			virtual void Poll() override final;
 			virtual void Commit() override final;
 
-			void SetupMicrosoftNetworkConnectionUDP(_In_ sockaddr_in&& InClientAddress);
+			void SetupMicrosoftNetworkConnectionUDP(_In_ SOCKET InConnectionSocket, _In_ sockaddr_in&& InConnectionAddress);
 
 		private:
 
-			sockaddr_in ClientAddress = {};
-
+			SOCKET		_ConnectionSocket	= {};
+			sockaddr_in	_ConnectionAddress	= {};
+			
 			friend class MicrosoftNetworkServer;
 
 		};
