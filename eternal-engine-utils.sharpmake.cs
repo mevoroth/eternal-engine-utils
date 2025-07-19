@@ -4,24 +4,10 @@
 
 namespace EternalEngine
 {
-	[Sharpmake.Generate]
-	public class EternalEngineUtilsProject : EternalEngineBaseProject
+	public class EternalEngineUtilsProjectUtils
 	{
-		public EternalEngineUtilsProject()
-			: base(
-				"utils",
-				new EternalEngineProjectSettings(
-					EternalEngineProjectSettingsFlags.EEPSF_IncludeSettingsHeader |
-					EternalEngineProjectSettingsFlags.EEPSF_IncludeHLSLReflection
-				)
-			)
+		public static void ConfigureAll(Project.Configuration InConfiguration, ITarget InTarget)
 		{
-		}
-
-		public override void ConfigureAll(Configuration InConfiguration, Target InTarget)
-		{
-			base.ConfigureAll(InConfiguration, InTarget);
-
 			// Include paths
 			InConfiguration.IncludePaths.AddRange(new string[] {
 				@"$(SolutionDir)eternal-engine-components\include",
@@ -39,6 +25,50 @@ namespace EternalEngine
 			InConfiguration.Defines.AddRange(new string[] {
 				"FBXSDK_SHARED=(ETERNAL_PLATFORM_WINDOWS)",
 			});
+		}
+	}
+
+	[Sharpmake.Generate]
+	public class EternalEngineUtilsProject : EternalEngineBaseProject
+	{
+		public EternalEngineUtilsProject()
+			: base(
+				typeof(Target),
+				"utils",
+				new EternalEngineProjectSettings(
+					EternalEngineProjectSettingsFlags.EEPSF_IncludeSettingsHeader |
+					EternalEngineProjectSettingsFlags.EEPSF_IncludeHLSLReflection
+				)
+			)
+		{
+		}
+
+		public override void ConfigureAll(Configuration InConfiguration, ITarget InTarget)
+		{
+			base.ConfigureAll(InConfiguration, InTarget);
+			EternalEngineUtilsProjectUtils.ConfigureAll(InConfiguration, InTarget);
+		}
+	}
+
+	[Sharpmake.Generate]
+	public class EternalEngineUtilsAndroidProject : EternalEngineBaseAndroidProject
+	{
+		public EternalEngineUtilsAndroidProject()
+			: base(
+				typeof(AndroidTarget),
+				"utils",
+				new EternalEngineProjectSettings(
+					EternalEngineProjectSettingsFlags.EEPSF_IncludeSettingsHeader |
+					EternalEngineProjectSettingsFlags.EEPSF_IncludeHLSLReflection
+				)
+			)
+		{
+		}
+
+		public override void ConfigureAll(Configuration InConfiguration, ITarget InTarget)
+		{
+			base.ConfigureAll(InConfiguration, InTarget);
+			EternalEngineUtilsProjectUtils.ConfigureAll(InConfiguration, InTarget);
 		}
 	}
 }
