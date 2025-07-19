@@ -17,6 +17,7 @@ namespace Eternal
 		{
 		public:
 
+			MicrosoftNetworkServerClientConnectionScope() = default;
 			~MicrosoftNetworkServerClientConnectionScope();
 
 			MicrosoftNetworkConnection* operator->();
