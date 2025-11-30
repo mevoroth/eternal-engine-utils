@@ -1,5 +1,7 @@
 #include "Audio/AudioSystem.hpp"
 
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Container/RingBuffer.hpp"
 #include <xaudio2.h>
 #include <array>
@@ -75,3 +77,5 @@ namespace Eternal
 		};
 	}
 }
+
+#endif

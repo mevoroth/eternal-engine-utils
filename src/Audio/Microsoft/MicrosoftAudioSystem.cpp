@@ -1,4 +1,7 @@
 #include "Audio/Microsoft/MicrosoftAudioSystem.hpp"
+
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Audio/Microsoft/MicrosoftAudioHandle.hpp"
 #include "Log/Log.hpp"
 #include <Objbase.h>
@@ -192,3 +195,5 @@ namespace Eternal
 		}
 	}
 }
+
+#endif

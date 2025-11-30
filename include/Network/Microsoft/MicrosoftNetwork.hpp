@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Network/Network.hpp"
+
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include <WinSock2.h>
 
 namespace Eternal
@@ -71,3 +74,5 @@ namespace Eternal
 		};
 	}
 }
+
+#endif

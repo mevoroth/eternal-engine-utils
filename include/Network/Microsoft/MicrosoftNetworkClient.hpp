@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Network/NetworkClient.hpp"
+
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Network/Microsoft/MicrosoftNetwork.hpp"
 
 namespace Eternal
@@ -42,3 +45,5 @@ namespace Eternal
 		};
 	}
 }
+
+#endif

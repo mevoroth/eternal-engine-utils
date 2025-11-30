@@ -1,5 +1,7 @@
 #include "Audio/Microsoft/MicrosoftAudioHandle.hpp"
 
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Audio/AudioHandle.hpp"
 #include "include/Wav.h"
 #include "Math/Math.hpp"
@@ -82,3 +84,5 @@ namespace Eternal
 		}
 	}
 }
+
+#endif

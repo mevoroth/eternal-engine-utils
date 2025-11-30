@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Network/NetworkServer.hpp"
+
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Network/Microsoft/MicrosoftNetwork.hpp"
 #include "Container/FreeList.hpp"
 #include <WinSock2.h>
@@ -62,3 +65,5 @@ namespace Eternal
 		};
 	}
 }
+
+#endif

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Audio/AudioHandle.hpp"
+
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "File/FileFactory.hpp"
 #include "File/MemoryFile.hpp"
 #include <xaudio2.h>
@@ -24,3 +27,5 @@ namespace Eternal
 		};
 	}
 }
+
+#endif

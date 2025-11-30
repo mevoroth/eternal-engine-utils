@@ -1,4 +1,7 @@
 #include "Network/Microsoft/MicrosoftNetwork.hpp"
+
+#if ETERNAL_PLATFORM_WINDOWS
+
 #include "Network/Network.hpp"
 #include <WS2tcpip.h>
 
@@ -154,3 +157,5 @@ namespace Eternal
 
 	}
 }
+
+#endif
