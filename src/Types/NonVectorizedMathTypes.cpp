@@ -31,17 +31,17 @@ namespace Eternal
 
 		static const float Float0xFFFFFFFF = TypesPrivate::UIntFloat(0xFFFFFFFFu).FloatValue;
 
-		Matrix4x4 operator*(_In_ const Matrix4x4& A, _In_ const Matrix4x4& B)
+		Matrix4x4 operator*(_In_ const Matrix4x4& InA, _In_ const Matrix4x4& InB)
 		{
-			Vector4 Row0(A._11, A._12, A._13, A._14);
-			Vector4 Row1(A._21, A._22, A._23, A._24);
-			Vector4 Row2(A._31, A._32, A._33, A._34);
-			Vector4 Row3(A._41, A._42, A._43, A._44);
+			Vector4 Row0(InA._11, InA._12, InA._13, InA._14);
+			Vector4 Row1(InA._21, InA._22, InA._23, InA._24);
+			Vector4 Row2(InA._31, InA._32, InA._33, InA._34);
+			Vector4 Row3(InA._41, InA._42, InA._43, InA._44);
 
-			Vector4 Col0(B._11, B._21, B._31, B._41);
-			Vector4 Col1(B._12, B._22, B._32, B._42);
-			Vector4 Col2(B._13, B._23, B._33, B._43);
-			Vector4 Col3(B._14, B._24, B._34, B._44);
+			Vector4 Col0(InB._11, InB._21, InB._31, InB._41);
+			Vector4 Col1(InB._12, InB._22, InB._32, InB._42);
+			Vector4 Col2(InB._13, InB._23, InB._33, InB._43);
+			Vector4 Col3(InB._14, InB._24, InB._34, InB._44);
 
 			return Matrix4x4(
 				Dot(Row0, Col0), Dot(Row0, Col1), Dot(Row0, Col2), Dot(Row0, Col3),
@@ -51,283 +51,283 @@ namespace Eternal
 			);
 		}
 
-		Matrix4x4& operator*=(_In_ Matrix4x4& A, _In_ const _In_ Matrix4x4& B)
+		Matrix4x4& operator*=(_In_ Matrix4x4& InA, _In_ const _In_ Matrix4x4& InB)
 		{
-			A = A * B;
-			return A;
+			InA = InA * InB;
+			return InA;
 		}
 
-		Quaternion& operator*=(_In_ Quaternion& A, _In_ const Quaternion& B)
+		Quaternion& operator*=(_In_ Quaternion& InA, _In_ const Quaternion& InB)
 		{
-			A = A * B;
-			return A;
+			InA = InA * InB;
+			return InA;
 		}
 
-		Quaternion& operator*=(_In_ Quaternion& A, _In_ const Euler& B)
+		Quaternion& operator*=(_In_ Quaternion& InA, _In_ const Euler& InB)
 		{
-			A *= ToQuaternion(B);
-			return A;
+			InA *= ToQuaternion(InB);
+			return InA;
 		}
 
-		Vector4 operator+(_In_ const Vector4& A, _In_ const Vector4& B)
+		Vector4 operator+(_In_ const Vector4& InA, _In_ const Vector4& InB)
 		{
 			return Vector4(
-				A.x + B.x,
-				A.y + B.y,
-				A.z + B.z,
-				A.w + B.w
+				InA.x + InB.x,
+				InA.y + InB.y,
+				InA.z + InB.z,
+				InA.w + InB.w
 			);
 		}
-		Vector3 operator+(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 operator+(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.x + B.x,
-				A.y + B.y,
-				A.z + B.z
+				InA.x + InB.x,
+				InA.y + InB.y,
+				InA.z + InB.z
 			);
 		}
-		Vector2 operator+(_In_ const Vector2& A, _In_ const Vector2& B)
+		Vector2 operator+(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
 			return Vector2(
-				A.x + B.x,
-				A.y + B.y
+				InA.x + InB.x,
+				InA.y + InB.y
 			);
 		}
-		Vector4 operator-(_In_ const Vector4& A, _In_ const Vector4& B)
+		Vector4 operator-(_In_ const Vector4& InA, _In_ const Vector4& InB)
 		{
 			return Vector4(
-				A.x - B.x,
-				A.y - B.y,
-				A.z - B.z,
-				A.w - B.w
+				InA.x - InB.x,
+				InA.y - InB.y,
+				InA.z - InB.z,
+				InA.w - InB.w
 			);
 		}
-		Vector3 operator-(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 operator-(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.x - B.x,
-				A.y - B.y,
-				A.z - B.z
+				InA.x - InB.x,
+				InA.y - InB.y,
+				InA.z - InB.z
 			);
 		}
-		Vector2 operator-(_In_ const Vector2& A, _In_ const Vector2& B)
+		Vector2 operator-(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
 			return Vector2(
-				A.x - B.x,
-				A.y - B.y
+				InA.x - InB.x,
+				InA.y - InB.y
 			);
 		}
-		Vector4 operator*(_In_ const Vector4& A, _In_ const Vector4& B)
+		Vector4 operator*(_In_ const Vector4& InA, _In_ const Vector4& InB)
 		{
 			return Vector4(
-				A.x * B.x,
-				A.y * B.y,
-				A.z * B.z,
-				A.w * B.w
+				InA.x * InB.x,
+				InA.y * InB.y,
+				InA.z * InB.z,
+				InA.w * InB.w
 			);
 		}
-		Vector3 operator*(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 operator*(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.x * B.x,
-				A.y * B.y,
-				A.z * B.z
+				InA.x * InB.x,
+				InA.y * InB.y,
+				InA.z * InB.z
 			);
 		}
-		Vector2 operator*(_In_ const Vector2& A, _In_ const Vector2& B)
+		Vector2 operator*(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
 			return Vector2(
-				A.x * B.x,
-				A.y * B.y
+				InA.x * InB.x,
+				InA.y * InB.y
 			);
 		}
-		Quaternion operator*(_In_ const Quaternion& A, _In_ const Quaternion& B)
+		Quaternion operator*(_In_ const Quaternion& InA, _In_ const Quaternion& InB)
 		{
 			return Quaternion(
-				(B.w * A.x) + (B.x * A.w) + (B.y * A.z) - (B.z * A.y),
-				(B.w * A.y) - (B.x * A.z) + (B.y * A.w) + (B.z * A.x),
-				(B.w * A.z) + (B.x * A.y) - (B.y * A.x) + (B.z * A.w),
-				(B.w * A.w) - (B.x * A.x) - (B.y * A.y) - (B.z * A.z)
+				(InB.w * InA.x) + (InB.x * InA.w) + (InB.y * InA.z) - (InB.z * InA.y),
+				(InB.w * InA.y) - (InB.x * InA.z) + (InB.y * InA.w) + (InB.z * InA.x),
+				(InB.w * InA.z) + (InB.x * InA.y) - (InB.y * InA.x) + (InB.z * InA.w),
+				(InB.w * InA.w) - (InB.x * InA.x) - (InB.y * InA.y) - (InB.z * InA.z)
 			);
 		}
-		Vector4& operator+=(_Inout_ Vector4& A, _In_ const Vector4& B)
+		Vector4& operator+=(_Inout_ Vector4& InA, _In_ const Vector4& InB)
 		{
-			A = A + B;
-			return A;
+			InA = InA + InB;
+			return InA;
 		}
-		Vector3& operator+=(_Inout_ Vector3& A, _In_ const Vector3& B)
+		Vector3& operator+=(_Inout_ Vector3& InA, _In_ const Vector3& InB)
 		{
-			A = A + B;
-			return A;
+			InA = InA + InB;
+			return InA;
 		}
-		Vector2& operator+=(_Inout_ Vector2& A, _In_ const Vector2& B)
+		Vector2& operator+=(_Inout_ Vector2& InA, _In_ const Vector2& InB)
 		{
-			A = A + B;
-			return A;
+			InA = InA + InB;
+			return InA;
 		}
-		Vector4& operator-=(_Inout_ Vector4& A, _In_ const Vector4& B)
+		Vector4& operator-=(_Inout_ Vector4& InA, _In_ const Vector4& InB)
 		{
-			A = A - B;
-			return A;
+			InA = InA - InB;
+			return InA;
 		}
-		Vector3& operator-=(_Inout_ Vector3& A, _In_ const Vector3& B)
+		Vector3& operator-=(_Inout_ Vector3& InA, _In_ const Vector3& InB)
 		{
-			A = A - B;
-			return A;
+			InA = InA - InB;
+			return InA;
 		}
-		Vector2& operator-=(_Inout_ Vector2& A, _In_ const Vector2& B)
+		Vector2& operator-=(_Inout_ Vector2& InA, _In_ const Vector2& InB)
 		{
-			A = A - B;
-			return A;
+			InA = InA - InB;
+			return InA;
 		}
-		Vector4& operator*=(_Inout_ Vector4& A, _In_ const Vector4& B)
+		Vector4& operator*=(_Inout_ Vector4& InA, _In_ const Vector4& InB)
 		{
-			A = A * B;
-			return A;
+			InA = InA * InB;
+			return InA;
 		}
-		Vector3& operator*=(_Inout_ Vector3& A, _In_ const Vector3& B)
+		Vector3& operator*=(_Inout_ Vector3& InA, _In_ const Vector3& InB)
 		{
-			A = A * B;
-			return A;
+			InA = InA * InB;
+			return InA;
 		}
-		Vector2& operator*=(_Inout_ Vector2& A, _In_ const Vector2& B)
+		Vector2& operator*=(_Inout_ Vector2& InA, _In_ const Vector2& InB)
 		{
-			A = A * B;
-			return A;
+			InA = InA * InB;
+			return InA;
 		}
-		Vector4& operator/=(_Inout_ Vector4& A, _In_ float B)
+		Vector4& operator/=(_Inout_ Vector4& InA, _In_ float InB)
 		{
-			float BRcp = 1.0f / B;
-			A *= BRcp;
-			return A;
+			float BRcp = 1.0f / InB;
+			InA *= BRcp;
+			return InA;
 		}
-		Vector3& operator/=(_Inout_ Vector3& A, _In_ float B)
+		Vector3& operator/=(_Inout_ Vector3& InA, _In_ float InB)
 		{
-			float BRcp = 1.0f / B;
-			A *= BRcp;
-			return A;
+			float BRcp = 1.0f / InB;
+			InA *= BRcp;
+			return InA;
 		}
-		Vector2& operator/=(_Inout_ Vector2& A, _In_ float B)
+		Vector2& operator/=(_Inout_ Vector2& InA, _In_ float InB)
 		{
-			float BRcp = 1.0f / B;
-			A *= BRcp;
-			return A;
+			float BRcp = 1.0f / InB;
+			InA *= BRcp;
+			return InA;
 		}
-		Vector4 operator*(_In_ const Vector4& A, _In_ float B)
+		Vector4 operator*(_In_ const Vector4& InA, _In_ float InB)
 		{
 			return Vector4(
-				A.x * B,
-				A.y * B,
-				A.z * B,
-				A.w * B
+				InA.x * InB,
+				InA.y * InB,
+				InA.z * InB,
+				InA.w * InB
 			);
 		}
-		Vector3 operator*(_In_ const Vector3& A, _In_ float B)
+		Vector3 operator*(_In_ const Vector3& InA, _In_ float InB)
 		{
 			return Vector3(
-				A.x * B,
-				A.y * B,
-				A.z * B
+				InA.x * InB,
+				InA.y * InB,
+				InA.z * InB
 			);
 		}
-		Vector2 operator*(_In_ const Vector2& A, _In_ float B)
+		Vector2 operator*(_In_ const Vector2& InA, _In_ float InB)
 		{
 			return Vector2(
-				A.x * B,
-				A.y * B
+				InA.x * InB,
+				InA.y * InB
 			);
 		}
-		Vector2 operator/(_In_ const Vector2& A, _In_ float B)
+		Vector2 operator/(_In_ const Vector2& InA, _In_ float InB)
 		{
-			float BRcp = 1.0f / B;
-			return A * BRcp;
+			float BRcp = 1.0f / InB;
+			return InA * BRcp;
 		}
-		Vector3 operator/(_In_ const Vector3& A, _In_ float B)
+		Vector3 operator/(_In_ const Vector3& InA, _In_ float InB)
 		{
-			float BRcp = 1.0f / B;
-			return A * BRcp;
+			float BRcp = 1.0f / InB;
+			return InA * BRcp;
 		}
-		Vector4 operator/(_In_ const Vector4& A, _In_ float B)
+		Vector4 operator/(_In_ const Vector4& InA, _In_ float InB)
 		{
-			float BRcp = 1.0f / B;
-			return A * BRcp;
+			float BRcp = 1.0f / InB;
+			return InA * BRcp;
 		}
-		Vector4 operator*(_In_ const Matrix4x4& A, _In_ const Vector4& B)
+		Vector4 operator*(_In_ const Matrix4x4& InA, _In_ const Vector4& InB)
 		{
-			Vector4 Col0(A._11, A._21, A._31, A._41);
-			Vector4 Col1(A._12, A._22, A._32, A._42);
-			Vector4 Col2(A._13, A._23, A._33, A._43);
-			Vector4 Col3(A._14, A._24, A._34, A._44);
+			Vector4 Col0(InA._11, InA._21, InA._31, InA._41);
+			Vector4 Col1(InA._12, InA._22, InA._32, InA._42);
+			Vector4 Col2(InA._13, InA._23, InA._33, InA._43);
+			Vector4 Col3(InA._14, InA._24, InA._34, InA._44);
 
 			return Vector4(
-				Dot(Col0, B),
-				Dot(Col1, B),
-				Dot(Col2, B),
-				Dot(Col3, B)
+				Dot(Col0, InB),
+				Dot(Col1, InB),
+				Dot(Col2, InB),
+				Dot(Col3, InB)
 			);
 		}
 
-		bool operator==(_In_ const Vector4& A, _In_ const Vector4& B)
+		bool operator==(_In_ const Vector4& InA, _In_ const Vector4& InB)
 		{
-			return A.x == B.x
-				&& A.y == B.y
-				&& A.z == B.z
-				&& A.w == B.w;
+			return InA.x == InB.x
+				&& InA.y == InB.y
+				&& InA.z == InB.z
+				&& InA.w == InB.w;
 		}
-		bool operator==(_In_ const Vector3& A, _In_ const Vector3& B)
+		bool operator==(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
-			return A.x == B.x
-				&& A.y == B.y
-				&& A.z == B.z;
+			return InA.x == InB.x
+				&& InA.y == InB.y
+				&& InA.z == InB.z;
 		}
-		bool operator!=(_In_ const Vector3& A, _In_ const Vector3& B)
+		bool operator!=(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
-			return !(A == B);
+			return !(InA == InB);
 		}
-		Vector3 operator<(_In_ const Vector3& A, _In_ const Vector3& B)
-		{
-			return Vector3(
-				A.x < B.x ? Float0xFFFFFFFF : 0.0f,
-				A.y < B.y ? Float0xFFFFFFFF : 0.0f,
-				A.z < B.z ? Float0xFFFFFFFF : 0.0f
-			);
-		}
-		Vector3 operator>(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 operator<(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.x > B.x ? Float0xFFFFFFFF : 0.0f,
-				A.y > B.y ? Float0xFFFFFFFF : 0.0f,
-				A.z > B.z ? Float0xFFFFFFFF : 0.0f
+				InA.x < InB.x ? Float0xFFFFFFFF : 0.0f,
+				InA.y < InB.y ? Float0xFFFFFFFF : 0.0f,
+				InA.z < InB.z ? Float0xFFFFFFFF : 0.0f
 			);
 		}
-		Vector3 operator<=(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 operator>(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.x <= B.x ? Float0xFFFFFFFF : 0.0f,
-				A.y <= B.y ? Float0xFFFFFFFF : 0.0f,
-				A.z <= B.z ? Float0xFFFFFFFF : 0.0f
+				InA.x > InB.x ? Float0xFFFFFFFF : 0.0f,
+				InA.y > InB.y ? Float0xFFFFFFFF : 0.0f,
+				InA.z > InB.z ? Float0xFFFFFFFF : 0.0f
 			);
 		}
-		Vector3 operator>=(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 operator<=(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.x >= B.x ? Float0xFFFFFFFF : 0.0f,
-				A.y >= B.y ? Float0xFFFFFFFF : 0.0f,
-				A.z >= B.z ? Float0xFFFFFFFF : 0.0f
+				InA.x <= InB.x ? Float0xFFFFFFFF : 0.0f,
+				InA.y <= InB.y ? Float0xFFFFFFFF : 0.0f,
+				InA.z <= InB.z ? Float0xFFFFFFFF : 0.0f
 			);
 		}
-		Vector2 operator<(_In_ const Vector2& A, _In_ const Vector2& B)
+		Vector3 operator>=(_In_ const Vector3& InA, _In_ const Vector3& InB)
+		{
+			return Vector3(
+				InA.x >= InB.x ? Float0xFFFFFFFF : 0.0f,
+				InA.y >= InB.y ? Float0xFFFFFFFF : 0.0f,
+				InA.z >= InB.z ? Float0xFFFFFFFF : 0.0f
+			);
+		}
+		Vector2 operator<(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
 			return Vector2(
-				A.x < B.x ? Float0xFFFFFFFF : 0.0f,
-				A.y < B.y ? Float0xFFFFFFFF : 0.0f
+				InA.x < InB.x ? Float0xFFFFFFFF : 0.0f,
+				InA.y < InB.y ? Float0xFFFFFFFF : 0.0f
 			);
 		}
-		Vector2 operator>=(_In_ const Vector2& A, _In_ const Vector2& B)
+		Vector2 operator>=(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
 			return Vector2(
-				A.x >= B.x ? Float0xFFFFFFFF : 0.0f,
-				A.y >= B.y ? Float0xFFFFFFFF : 0.0f
+				InA.x >= InB.x ? Float0xFFFFFFFF : 0.0f,
+				InA.y >= InB.y ? Float0xFFFFFFFF : 0.0f
 			);
 		}
 
@@ -358,76 +358,76 @@ namespace Eternal
 			);
 		}
 
-		Vector4 Min(_In_ const Vector4& A, _In_ const Vector4& B)
+		Vector4 Min(_In_ const Vector4& InA, _In_ const Vector4& InB)
 		{
 			return Vector4(
-				std::min(A.x, B.x),
-				std::min(A.y, B.y),
-				std::min(A.z, B.z),
-				std::min(A.w, B.w)
+				std::min(InA.x, InB.x),
+				std::min(InA.y, InB.y),
+				std::min(InA.z, InB.z),
+				std::min(InA.w, InB.w)
 			);
 		}
-		Vector3 Min(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 Min(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				std::min(A.x, B.x),
-				std::min(A.y, B.y),
-				std::min(A.z, B.z)
+				std::min(InA.x, InB.x),
+				std::min(InA.y, InB.y),
+				std::min(InA.z, InB.z)
 			);
 		}
-		Vector2 Min(_In_ const Vector2& A, _In_ const Vector2& B)
+		Vector2 Min(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
 			return Vector2(
-				std::min(A.x, B.x),
-				std::min(A.y, B.y)
+				std::min(InA.x, InB.x),
+				std::min(InA.y, InB.y)
 			);
 		}
-		Vector4 Max(_In_ const Vector4& A, _In_ const Vector4& B)
+		Vector4 Max(_In_ const Vector4& InA, _In_ const Vector4& InB)
 		{
 			return Vector4(
-				std::max(A.x, B.x),
-				std::max(A.y, B.y),
-				std::max(A.z, B.z),
-				std::max(A.w, B.w)
+				std::max(InA.x, InB.x),
+				std::max(InA.y, InB.y),
+				std::max(InA.z, InB.z),
+				std::max(InA.w, InB.w)
 			);
 		}
-		Vector3 Max(_In_ const Vector3& A, _In_ const Vector3& B)
+		Vector3 Max(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				std::max(A.x, B.x),
-				std::max(A.y, B.y),
-				std::max(A.z, B.z)
+				std::max(InA.x, InB.x),
+				std::max(InA.y, InB.y),
+				std::max(InA.z, InB.z)
 			);
 		}
-		Vector2 Max(_In_ const Vector2& A, _In_ const Vector2& B)
+		Vector2 Max(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
 			return Vector2(
-				std::max(A.x, B.x),
-				std::max(A.y, B.y)
+				std::max(InA.x, InB.x),
+				std::max(InA.y, InB.y)
 			);
 		}
-		Vector4 Abs(_In_ const Vector4& A)
+		Vector4 Abs(_In_ const Vector4& InA)
 		{
 			return Vector4(
-				std::abs(A.x),
-				std::abs(A.y),
-				std::abs(A.z),
-				std::abs(A.w)
+				std::abs(InA.x),
+				std::abs(InA.y),
+				std::abs(InA.z),
+				std::abs(InA.w)
 			);
 		}
-		Vector3 Abs(_In_ const Vector3& A)
+		Vector3 Abs(_In_ const Vector3& InA)
 		{
 			return Vector3(
-				std::abs(A.x),
-				std::abs(A.y),
-				std::abs(A.z)
+				std::abs(InA.x),
+				std::abs(InA.y),
+				std::abs(InA.z)
 			);
 		}
-		Vector2 Abs(_In_ const Vector2& A)
+		Vector2 Abs(_In_ const Vector2& InA)
 		{
 			return Vector2(
-				std::abs(A.x),
-				std::abs(A.y)
+				std::abs(InA.x),
+				std::abs(InA.y)
 			);
 		}
 
@@ -436,45 +436,49 @@ namespace Eternal
 			return ((*(const uint32_t*)&(InF) & 0x7FFFFFFF) == 0x7F800000);
 		}
 
-		bool IsInfinite(_In_ const Vector3& A)
+		bool IsInfinite(_In_ const Vector3& InA)
 		{
-			return IsInfinite(A.x)
-				|| IsInfinite(A.y)
-				|| IsInfinite(A.z);
+			return IsInfinite(InA.x)
+				|| IsInfinite(InA.y)
+				|| IsInfinite(InA.z);
 		}
 
-		float Dot(_In_ const Vector3& A, _In_ const Vector3& B)
+		float Dot(_In_ const Vector2& InA, _In_ const Vector2& InB)
 		{
-			return A.x * B.x + A.y * B.y + A.z * B.z;
+			return InA.x * InB.x + InA.y * InB.y;
 		}
-		float Dot(_In_ const Vector4& A, _In_ const Vector4& B)
+		float Dot(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
-			return A.x * B.x + A.y * B.y + A.z * B.z + A.w * B.w;
+			return InA.x * InB.x + InA.y * InB.y + InA.z * InB.z;
 		}
-		Vector3 Cross(_In_ const Vector3& A, _In_ const Vector3& B)
+		float Dot(_In_ const Vector4& InA, _In_ const Vector4& InB)
+		{
+			return InA.x * InB.x + InA.y * InB.y + InA.z * InB.z + InA.w * InB.w;
+		}
+		Vector3 Cross(_In_ const Vector3& InA, _In_ const Vector3& InB)
 		{
 			return Vector3(
-				A.y * B.z - A.z * B.y,
-				A.z * B.x - A.x * B.z,
-				A.x * B.y - A.y * B.x
+				InA.y * InB.z - InA.z * InB.y,
+				InA.z * InB.x - InA.x * InB.z,
+				InA.x * InB.y - InA.y * InB.x
 			);
 		}
 
-		void Transpose(_Inout_ Matrix4x4& A)
+		void Transpose(_Inout_ Matrix4x4& InA)
 		{
-			std::swap(A._12, A._21);
-			std::swap(A._13, A._31);
-			std::swap(A._14, A._41);
-			std::swap(A._23, A._32);
-			std::swap(A._24, A._42);
-			std::swap(A._34, A._43);
+			std::swap(InA._12, InA._21);
+			std::swap(InA._13, InA._31);
+			std::swap(InA._14, InA._41);
+			std::swap(InA._23, InA._32);
+			std::swap(InA._24, InA._42);
+			std::swap(InA._34, InA._43);
 		}
 
-		Quaternion ToQuaternion(_In_ const Euler& R)
+		Quaternion ToQuaternion(_In_ const Euler& InR)
 		{
-			const float Pitch	= R.x;
-			const float Yaw		= R.y;
-			const float Roll	= R.z;
+			const float Pitch	= InR.x;
+			const float Yaw		= InR.y;
+			const float Roll	= InR.z;
 
 			const float HalfPitch = Pitch * 0.5f;
 			const float CosHalfPitch = cosf(HalfPitch);
@@ -581,17 +585,17 @@ namespace Eternal
 
 		static inline void ScalarSinCos
 		(
-			float* OutSin,
-			float* OutCos,
-			float  Value
+			_Out_ float* OutSin,
+			_Out_ float* OutCos,
+			_In_  float  InValue
 		) noexcept
 		{
 			ETERNAL_ASSERT(OutSin);
 			ETERNAL_ASSERT(OutCos);
 
 			// Map Value to y in [-pi,pi], x = 2*pi*quotient + remainder.
-			float Quotient = PI_2_RCP * Value;
-			if (Value >= 0.0f)
+			float Quotient = PI_2_RCP * InValue;
+			if (InValue >= 0.0f)
 			{
 				Quotient = static_cast<float>(static_cast<int>(Quotient + 0.5f));
 			}
@@ -599,7 +603,7 @@ namespace Eternal
 			{
 				Quotient = static_cast<float>(static_cast<int>(Quotient - 0.5f));
 			}
-			float Y = Value - PI_2 * Quotient;
+			float Y = InValue - PI_2 * Quotient;
 
 			// Map y to [-pi/2,pi/2] with sin(y) = sin(Value).
 			float Sign;
@@ -703,12 +707,12 @@ namespace Eternal
 
 		static inline Matrix4x4 MatrixOrthographicOffCenterLH
 		(
-			float ViewLeft,
-			float ViewRight,
-			float ViewBottom,
-			float ViewTop,
-			float NearZ,
-			float FarZ
+			_In_ float ViewLeft,
+			_In_ float ViewRight,
+			_In_ float ViewBottom,
+			_In_ float ViewTop,
+			_In_ float NearZ,
+			_In_ float FarZ
 		) noexcept
 		{
 			ETERNAL_ASSERT(!ScalarNearEqual(ViewRight, ViewLeft, 0.00001f));
@@ -738,10 +742,10 @@ namespace Eternal
 
 		static inline Matrix4x4 MatrixInverseOrthographicOffCenterLH
 		(
-			float InNear,
-			float InFar,
-			float InWidth,
-			float InHeight
+			_In_ float InNear,
+			_In_ float InFar,
+			_In_ float InWidth,
+			_In_ float InHeight
 		)
 		{
 			ETERNAL_ASSERT(InWidth >= 0.00001f);

@@ -199,13 +199,6 @@ namespace Eternal
 			));
 			return Result;
 		}
-		Vector2 operator*(_In_ const Matrix2x2& InM, _In_ const Vector2& InV)
-		{
-			return Vector2(
-				InM.m[0][0] * InV.x + InM.m[1][0] * InV.y,
-				InM.m[0][1] * InV.x + InM.m[1][1] * InV.y
-			);
-		}
 
 		bool operator==(_In_ const Vector4& A, _In_ const Vector4& B)
 		{
@@ -598,17 +591,6 @@ namespace Eternal
 				XMLoadFloat3(&InForward),
 				XMLoadFloat3(&InUp)
 			));
-		}
-
-		RotationMatrix2x2::RotationMatrix2x2(_In_ float InAngle)
-		{
-			float CosAngle = Math::Cos(InAngle);
-			float SinAngle = Math::Sin(InAngle);
-
-			_11 =  CosAngle;
-			_12 = -SinAngle;
-			_21 =  SinAngle;
-			_22 =  CosAngle;
 		}
 	}
 }

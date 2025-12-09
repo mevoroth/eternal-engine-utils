@@ -1,5 +1,6 @@
 #include "Types/Types.hpp"
 #include "Types/AxisAlignedBoundingBox.hpp"
+#include "Math/Math.hpp"
 #include <cmath>
 
 namespace Eternal
@@ -69,6 +70,13 @@ namespace Eternal
 		{
 			return B * A;
 		}
+		Vector2 operator*(_In_ const Matrix2x2& InM, _In_ const Vector2& InV)
+		{
+			return Vector2(
+				InM.m[0][0] * InV.x + InM.m[1][0] * InV.y,
+				InM.m[0][1] * InV.x + InM.m[1][1] * InV.y
+			);
+		}
 		float SquareLength(_In_ const Vector4& InVector)
 		{
 			return Dot(InVector, InVector);
@@ -110,6 +118,19 @@ namespace Eternal
 			float VectorLength = Length(InVector);
 			ETERNAL_ASSERT(VectorLength > 0.0f);
 			return InVector / VectorLength;
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		RotationMatrix2x2::RotationMatrix2x2(_In_ float InAngle)
+		{
+			float CosAngle = Math::Cos(InAngle);
+			float SinAngle = Math::Sin(InAngle);
+
+			_11 = CosAngle;
+			_12 = -SinAngle;
+			_21 = SinAngle;
+			_22 = CosAngle;
 		}
 
 		//////////////////////////////////////////////////////////////////////////

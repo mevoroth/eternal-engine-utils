@@ -1,21 +1,15 @@
 #pragma once
 
-#ifdef ETERNAL_DEBUG
-
 #if ETERNAL_PLATFORM_ANDROID
-#define ETERNAL_BREAK()	\
-	do	\
-	{	\
-		__builtin_trap();	\
-	} while (false)
-#else
+#define __debugbreak()	__builtin_trap()
+#endif
+
+#ifdef ETERNAL_DEBUG
 #define ETERNAL_BREAK()	\
 	do	\
 	{	\
 		__debugbreak();	\
 	} while (false)
-#endif
-
 #else
 #define ETERNAL_BREAK()
 #endif
