@@ -5,6 +5,9 @@
 #if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 #include "Log/ConsoleLog/Windows/WindowsConsoleLog.hpp"
 #endif
+#if ETERNAL_PLATFORM_ANDROID
+#include "Log/ConsoleLog/Android/AndroidConsoleLog.hpp"
+#endif
 #if ETERNAL_USE_PRIVATE
 #include "Log/ConsoleLog/ConsoleLogFactoryPrivate.hpp"
 #endif
@@ -23,6 +26,9 @@ namespace Eternal
 			case LogType::LOG_TYPE_CONSOLE:
 #if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 				return new WindowsConsoleLog();
+#endif
+#if ETERNAL_PLATFORM_ANDROID
+				return new AndroidConsoleLog();
 #endif
 #if ETERNAL_USE_PRIVATE
 				return CreateConsoleLogPrivate();
