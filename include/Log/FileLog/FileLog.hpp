@@ -21,7 +21,7 @@ namespace Eternal
 			virtual void Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage) override;
 
 		private:
-			File* _LogFiles[LogLevelCount];
+			File* _LogFiles[LogLevelCount] = {};
 			File* _LogAllFile = nullptr;
 		};
 	}

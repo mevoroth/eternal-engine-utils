@@ -12,8 +12,11 @@ namespace Eternal
 		class WindowsConsoleLog final : public Log
 		{
 		public:
-			WindowsConsoleLog();
-			virtual void Write(_In_ const LogLevel& Level, _In_ const LogCategory& Category, _In_ const string& Message) override final;
+
+			using Log::Log;
+			
+			virtual void Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage) override final;
+	
 		};
 	}
 }

@@ -21,12 +21,16 @@ namespace Eternal
 			class LogLevel
 			{
 			public:
-				LogLevel(_In_ int Index, _In_ const char* Tag)
-					: Index(Index)
-					, Tag(Tag)
-				{}
-				int Index;
-				const char* Tag = nullptr;
+				LogLevel(_In_ int InIndex, _In_ const char* InTag)
+					: Tag(InTag)
+					, Index(InIndex)
+				{
+				}
+
+				bool operator==(_In_ const LogLevel& InLogLevel) const;
+
+				const char* Tag	= nullptr;
+				int Index		= -1;
 			};
 			static constexpr int LogLevelCount = 4;
 			static const LogLevel Info;
@@ -37,8 +41,8 @@ namespace Eternal
 			class LogCategory
 			{
 			public:
-				LogCategory(_In_ const char* Category)
-					: Category(Category)
+				LogCategory(_In_ const char* InCategory)
+					: Category(InCategory)
 				{}
 				const char* Category = nullptr;
 			};
@@ -60,6 +64,10 @@ namespace Eternal
 
 			virtual void Write(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage) = 0;
 			TimeMicroSecondsT GetElaspedTime() const;
+
+		protected:
+
+			string FormatLogMessage(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage);
 
 		private:
 			static Log* _Instance;

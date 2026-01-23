@@ -27,11 +27,14 @@ namespace Eternal
 #if ETERNAL_USE_PRIVATE
 				return CreateConsoleLogPrivate();
 #endif
+				break;
 
 			case LogType::LOG_TYPE_MULTI_CHANNEL:
 				ETERNAL_BREAK(); // Multi Channel Log must be created with CreateMultiChannelLog()
 				break;
 			}
+
+			ETERNAL_BREAK();
 			return nullptr;
 		}
 

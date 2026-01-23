@@ -18,6 +18,15 @@ namespace Eternal
 		const Log::LogCategory Log::Import("Import");
 		const Log::LogCategory Log::Components("Components");
 
+		//////////////////////////////////////////////////////////////////////////
+
+		bool Log::LogLevel::operator==(_In_ const Log::LogLevel& InLogLevel) const
+		{
+			return Index == InLogLevel.Index;
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
 		Log* Log::_Instance = nullptr;
 
 		Log::Log()
@@ -41,6 +50,18 @@ namespace Eternal
 		TimeMicroSecondsT Log::GetElaspedTime() const
 		{
 			return Eternal::Time::Timer::Get()->GetTimeMicroSeconds() - _InitialTime;
+		}
+
+		string Log::FormatLogMessage(_In_ const LogLevel& InLevel, _In_ const LogCategory& InCategory, _In_ const string& InMessage)
+		{
+			char HumanReadableTime[24];
+			Eternal::Time::Timer::ToHumanReadable(GetElaspedTime(), HumanReadableTime);
+			string Temp = HumanReadableTime;
+			Temp.append("[").append(InCategory.Category).append("]");
+			Temp.append("[").append(InLevel.Tag).append("]");
+			Temp.append(InMessage);
+			Temp.append("\n");
+			return Temp;
 		}
 	}
 	
