@@ -14,11 +14,14 @@ namespace Eternal
 			INPUT_TYPE_XINPUT,
 			INPUT_TYPE_SCE_PAD,
 			INPUT_TYPE_MOUSE,
-			INPUT_TYPE_MULTI
+			INPUT_TYPE_MULTI,
+			INPUT_TYPE_TOUCH
 #if ETERNAL_USE_PRIVATE
 			#include "Input/InputFactoryInputTypePrivate.hpp"
 #else
+			#if ETERNAL_PLATFORM_WINDOWS
 			, INPUT_TYPE_DEFAULT_PAD = INPUT_TYPE_XINPUT
+			#endif
 #endif
 		};
 

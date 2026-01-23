@@ -1,8 +1,8 @@
 #pragma once
 
-#include <array>
 #include "Input/InputDefines.hpp"
 #include "Types/Enums.hpp"
+#include <array>
 
 namespace Eternal
 {

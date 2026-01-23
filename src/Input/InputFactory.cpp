@@ -4,6 +4,7 @@
 #include "Input/KeyboardInput/KeyboardInput.hpp"
 #include "Input/MouseInput/MouseInput.hpp"
 #include "Input/XInput/XInput.hpp"
+#include "Input/TouchInput/AndroidTouchInput.hpp"
 #include "Input/MultiInput/MultiInput.hpp"
 
 #if ETERNAL_USE_PRIVATE
@@ -40,6 +41,7 @@ namespace Eternal
 				#if ETERNAL_USE_PRIVATE
 				return CreateScePadInputPrivate();
 				#endif
+				break;
 
 			case InputType::INPUT_TYPE_MOUSE:
 				#if ETERNAL_PLATFORM_WINDOWS
@@ -49,6 +51,13 @@ namespace Eternal
 				#if ETERNAL_USE_PRIVATE
 				return CreateMousePrivate();
 				#endif
+				break;
+
+			case InputType::INPUT_TYPE_TOUCH:
+				#if ETERNAL_PLATFORM_ANDROID
+				return new AndroidTouchInput();
+				#endif
+				break;
 
 			case InputType::INPUT_TYPE_MULTI:	// Must be created with CreateMultiInput
 			default:
