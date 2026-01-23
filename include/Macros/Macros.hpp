@@ -1,7 +1,7 @@
 #pragma once
 
 #if ETERNAL_PLATFORM_ANDROID
-#define __debugbreak()	__builtin_trap()
+#define __debugbreak()	__builtin_debugtrap()
 #endif
 
 #ifdef ETERNAL_DEBUG
