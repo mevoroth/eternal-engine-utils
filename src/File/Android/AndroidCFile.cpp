@@ -1,6 +1,6 @@
-#include "File/Android/AndroidCFile.hpp"
-
 #if ETERNAL_PLATFORM_ANDROID
+
+#include "File/Android/AndroidCFile.hpp"
 
 namespace Eternal
 {
