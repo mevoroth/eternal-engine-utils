@@ -1,6 +1,7 @@
 #include "Time/TimeFactory.hpp"
 
 #include "Time/Windows/WindowsTimer.hpp"
+#include "Time/Android/AndroidTimer.hpp"
 #if ETERNAL_USE_PRIVATE
 #include "Time/TimeFactoryPrivate.hpp"
 #endif
@@ -14,6 +15,11 @@ namespace Eternal
 #if ETERNAL_PLATFORM_WINDOWS || ETERNAL_PLATFORM_SCARLETT
 			if (InTimeType == TimeType::TIME_TYPE_WINDOWS)
 				return new WindowsTimer();
+#endif
+
+#if ETERNAL_PLATFORM_ANDROID
+			if (InTimeType == TimeType::TIME_TYPE_ANDROID)
+				return new AndroidTimer();
 #endif
 
 #if ETERNAL_USE_PRIVATE

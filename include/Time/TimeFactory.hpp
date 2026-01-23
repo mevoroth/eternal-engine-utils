@@ -11,12 +11,18 @@ namespace Eternal
 #if ETERNAL_PLATFORM_WINDOWS
 			TIME_TYPE_WINDOWS
 #endif
+#if ETERNAL_PLATFORM_ANDROID
+			TIME_TYPE_ANDROID
+#endif
 #if ETERNAL_USE_PRIVATE
 			#include "Time/TimeFactoryTimeTypePrivate.hpp"
 #else
 
 	#if ETERNAL_PLATFORM_WINDOWS
 			, TIME_TYPE_DEFAULT = TIME_TYPE_WINDOWS
+	#endif
+	#if ETERNAL_PLATFORM_ANDROID
+			, TIME_TYPE_DEFAULT = TIME_TYPE_ANDROID
 	#endif
 
 #endif
