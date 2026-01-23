@@ -1,5 +1,6 @@
 #include "Time/Timer.hpp"
 
+#include "DebugTools/Debug.hpp"
 #include <cstdio>
 
 namespace Eternal
@@ -52,6 +53,20 @@ namespace Eternal
 		TimeSecondsT Timer::GetTimeSeconds() const
 		{
 			return GetTimeMicroSeconds() * MicroSecondsToSeconds;
+		}
+
+		void Timer::Update()
+		{
+			TimeMicroSecondsT PreviousTimeMicroSeconds = _PreviousTimeMicroSeconds;
+#if ETERNAL_DEBUG
+			static constexpr double TimerThreshold = 333000;
+			TimeMicroSecondsT DeltaTimeMicroSeconds = GetTimeMicroSeconds() - PreviousTimeMicroSeconds;
+			if (DeltaTimeMicroSeconds > TimerThreshold && Eternal::DebugTools::IsDebuggerPresent())
+				PreviousTimeMicroSeconds = GetTimeMicroSeconds();
+#endif
+			_PreviousTimeMicroSeconds = GetTimeMicroSeconds();
+			_DeltaTimeMicroSeconds = _PreviousTimeMicroSeconds - PreviousTimeMicroSeconds;
+			_DeltaTimeSeconds = (double)_DeltaTimeMicroSeconds / 1000000.0;
 		}
 	}
 }
