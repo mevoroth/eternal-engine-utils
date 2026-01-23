@@ -8,16 +8,9 @@ namespace Eternal
 {
 	namespace DebugTools
 	{
-		void WaitForDebugger(bool BreakIfNotPresent)
+		bool IsDebuggerPresent()
 		{
-			//return;
-			while (!IsDebuggerPresent())
-			{
-				if (BreakIfNotPresent)
-				{
-					ETERNAL_BREAK();
-				}
-			}
+			return ::IsDebuggerPresent();
 		}
 	}
 }
