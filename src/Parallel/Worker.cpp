@@ -11,6 +11,8 @@
 #include "Parallel/Task.hpp"
 #include "Parallel/Sleep.hpp"
 
+#undef CreateMutex
+
 namespace Eternal
 {
 	namespace Parallel
