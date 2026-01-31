@@ -1,8 +1,11 @@
 #include "File/FileFactory.hpp"
 
 #include "UtilsSettings.hpp"
-#ifdef ETERNAL_USE_CFILE
+#if ETERNAL_USE_CFILE
 #include "File/CFile.hpp"
+#endif
+#if ETERNAL_USE_ANDROID_ASSET_MANAGER_FILE
+#include "File/Android/AndroidAssetManagerFile.hpp"
 #endif
 
 namespace Eternal
@@ -11,11 +14,17 @@ namespace Eternal
 	{
 		File* CreateFileHandle(_In_ const std::string& InFileName)
 		{
-#ifdef ETERNAL_USE_CFILE
+#if ETERNAL_USE_CFILE
 			return new CFile(InFileName);
-#else
-			return nullptr;
 #endif
+
+#if ETERNAL_USE_ANDROID_ASSET_MANAGER_FILE
+			return new AndroidAssetManagerFile(InFileName);
+#endif
+
+			ETERNAL_BREAK();
+			return nullptr;
+
 		}
 
 		void DestroyFileHandle(_Inout_ File*& InFile)
@@ -26,11 +35,16 @@ namespace Eternal
 
 		bool FileExists(_In_ const std::string& InFileName)
 		{
-#ifdef ETERNAL_USE_CFILE
+#if ETERNAL_USE_CFILE
 			return CFile::Exists(InFileName);
-#else
-			return false;
 #endif
+
+#if ETERNAL_USE_ANDROID_ASSET_MANAGER_FILE
+			return AndroidAssetManagerFile::Exists(InFileName);
+#endif
+
+			ETERNAL_BREAK();
+			return false;
 		}
 
 		FileContent LoadFileToMemory(_In_ const std::string& InFileName)

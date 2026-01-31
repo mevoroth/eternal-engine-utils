@@ -1,7 +1,7 @@
 #include "File/CFile.hpp"
 
 #include "Types/Enums.hpp"
-#include "File/Android/AndroidCFile.hpp"
+#include "File/Android/AndroidAssetManagerFile.hpp"
 
 namespace Eternal
 {
