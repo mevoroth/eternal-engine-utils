@@ -69,7 +69,7 @@ namespace Eternal
 
 		Input* CreateMultiInput(_In_ const std::vector<InputType>& InInputTypes)
 		{
-			LogWrite(LogInfo, LogEngine, "[Input::CreateMultiInput]Creating Multi input");
+			LogWrite(LogInfo, LogEngine, "[InputSystem::CreateMultiInput]Creating Multi input");
 			MultiInput* OutMultiInput = new MultiInput();
 			for (uint32_t InputIndex = 0; InputIndex < InInputTypes.size(); ++InputIndex)
 				OutMultiInput->Add(CreateInput(InInputTypes[InputIndex]));
