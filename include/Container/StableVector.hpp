@@ -98,7 +98,7 @@ namespace Eternal
 				uint32_t FreeIndex = _FreeIndices.back();
 				_FreeIndices.pop_back();
 				_UsedIndices.push_back(FreeIndex);
-				_Container[FreeIndex] = move(InElement);
+				_Container[FreeIndex] = std::move(InElement);
 				return FreeIndex;
 			}
 
