@@ -67,7 +67,6 @@ namespace Eternal
 		void FilePath::Register(_In_ const string& InFolderPath, _In_ const FileType& InFileType)
 		{
 			ETERNAL_ASSERT(static_cast<uint32_t>(InFileType) < static_cast<uint32_t>(FileType::FILE_TYPE_COUNT));
-			ETERNAL_ASSERT(InFolderPath.size() > 0);
 			_FolderPaths[static_cast<int32_t>(InFileType)].push_back(InFolderPath);
 		}
 
