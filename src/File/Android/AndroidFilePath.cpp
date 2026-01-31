@@ -1,6 +1,7 @@
 #if ETERNAL_PLATFORM_ANDROID
 
 #include "File/FilePath.hpp"
+#include <algorithm>
 
 namespace Eternal
 {
@@ -30,7 +31,25 @@ namespace Eternal
 
 		string FilePath::MakePath(_In_ const string& InFilePath)
 		{
-			return /*string("/app0/") +*/ InFilePath;
+			static const string Prefixes[] =
+			{
+				"assets\\",
+				"eternal-engine-shaders\\",
+			};
+
+			string NormalizedPath = InFilePath;
+			for (uint32_t PrefixIndex = 0; PrefixIndex < ETERNAL_ARRAYSIZE(Prefixes); ++PrefixIndex)
+			{
+				if (!NormalizedPath.compare(0, Prefixes[PrefixIndex].length(), Prefixes[PrefixIndex]))
+				{
+					NormalizedPath = NormalizedPath.substr(Prefixes[PrefixIndex].length());
+					break;
+				}
+			}
+
+			std::replace(NormalizedPath.begin(), NormalizedPath.end(), '\\', '/');
+
+			return NormalizedPath;
 		}
 	}
 }
