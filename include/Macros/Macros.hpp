@@ -17,7 +17,7 @@
 #ifdef ETERNAL_DEBUG
 #define ETERNAL_ASSERT(Condition)	if (!(Condition)) { ETERNAL_BREAK(); }
 #else
-#define ETERNAL_ASSERT(Condition)
+#define ETERNAL_ASSERT(Condition)	(void)(Condition)
 #endif
 
 #ifdef ETERNAL_DEBUG
