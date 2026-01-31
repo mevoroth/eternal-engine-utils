@@ -31,6 +31,25 @@
 #define ETERNAL_OFFSETOF(Structure, Member)		((unsigned long long)&(((Structure*)nullptr)->Member))
 #define __ETERNAL_STRINGIFY_INTERNAL(Macro)		#Macro
 #define ETERNAL_STRINGIFY(Macro)				__ETERNAL_STRINGIFY_INTERNAL(Macro)
+#define ETERNAL_STRINGIFY_MACRO(Macro)			#Macro
+
+//////////////////////////////////////////////////////////////////////////
+// Platform
+#if ETERNAL_PLATFORM_WINDOWS
+#define ETERNAL_PLATFORM_NAME					ETERNAL_STRINGIFY_MACRO(ETERNAL_PLATFORM_WINDOWS)
+#endif
+
+#if ETERNAL_PLATFORM_PROSPERO
+#define ETERNAL_PLATFORM_NAME					ETERNAL_STRINGIFY_MACRO(ETERNAL_PLATFORM_PROSPERO)
+#endif
+
+#if ETERNAL_PLATFORM_SCARLETT
+#define											ETERNAL_STRINGIFY_MACRO(ETERNAL_PLATFORM_SCARLETT)
+#endif
+
+#if ETERNAL_PLATFORM_ANDROID
+#define ETERNAL_PLATFORM_NAME					ETERNAL_STRINGIFY_MACRO(ETERNAL_PLATFORM_ANDROID)
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // Profiling
